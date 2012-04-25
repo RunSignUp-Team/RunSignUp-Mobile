@@ -1,0 +1,392 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		7761D0941544DAA600C6BB3F /* Gears.png in Resources */ = {isa = PBXBuildFile; fileRef = 7761D0921544DAA600C6BB3F /* Gears.png */; };
+		7761D0951544DAA600C6BB3F /* Gears@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7761D0931544DAA600C6BB3F /* Gears@2x.png */; };
+		7761D09A1544DBBB00C6BB3F /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7761D0981544DBBA00C6BB3F /* SettingsViewController.m */; };
+		7761D09B1544DBBB00C6BB3F /* SettingsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7761D0991544DBBB00C6BB3F /* SettingsViewController.xib */; };
+		77C5F2A0154309D6005CAB30 /* CheckerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77C5F29E154309D6005CAB30 /* CheckerViewController.m */; };
+		77C5F2A1154309D6005CAB30 /* CheckerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 77C5F29F154309D6005CAB30 /* CheckerViewController.xib */; };
+		77C5F2A715431B6A005CAB30 /* RedButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 77C5F2A315431B6A005CAB30 /* RedButton.png */; };
+		77C5F2A815431B6A005CAB30 /* RedButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 77C5F2A415431B6A005CAB30 /* RedButton@2x.png */; };
+		77C5F2A915431B6A005CAB30 /* RedButtonTap.png in Resources */ = {isa = PBXBuildFile; fileRef = 77C5F2A515431B6A005CAB30 /* RedButtonTap.png */; };
+		77C5F2AA15431B6A005CAB30 /* RedButtonTap@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 77C5F2A615431B6A005CAB30 /* RedButtonTap@2x.png */; };
+		77DC830315420B8E0021D240 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77DC830215420B8E0021D240 /* UIKit.framework */; };
+		77DC830515420B8E0021D240 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77DC830415420B8E0021D240 /* Foundation.framework */; };
+		77DC830715420B8E0021D240 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77DC830615420B8E0021D240 /* CoreGraphics.framework */; };
+		77DC830D15420B8E0021D240 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 77DC830B15420B8E0021D240 /* InfoPlist.strings */; };
+		77DC830F15420B8E0021D240 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 77DC830E15420B8E0021D240 /* main.m */; };
+		77DC831315420B8E0021D240 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 77DC831215420B8E0021D240 /* AppDelegate.m */; };
+		77DC831615420B8E0021D240 /* MainMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77DC831515420B8E0021D240 /* MainMenuViewController.m */; };
+		77DC831915420B8E0021D240 /* MainMenuViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 77DC831715420B8E0021D240 /* MainMenuViewController.xib */; };
+		77DC8326154212E80021D240 /* BlueButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 77DC8323154212E80021D240 /* BlueButton.png */; };
+		77DC8327154212E80021D240 /* BlueButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 77DC8324154212E80021D240 /* BlueButton@2x.png */; };
+		77DC8328154212E80021D240 /* Logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 77DC8325154212E80021D240 /* Logo.png */; };
+		77DC832B1542134B0021D240 /* BlueButtonTap.png in Resources */ = {isa = PBXBuildFile; fileRef = 77DC83291542134B0021D240 /* BlueButtonTap.png */; };
+		77DC832C1542134B0021D240 /* BlueButtonTap@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 77DC832A1542134B0021D240 /* BlueButtonTap@2x.png */; };
+		77DC8330154216710021D240 /* TimerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77DC832E154216710021D240 /* TimerViewController.m */; };
+		77DC8331154216710021D240 /* TimerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 77DC832F154216710021D240 /* TimerViewController.xib */; };
+		77DC836015421A990021D240 /* TimerLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 77DC835F15421A990021D240 /* TimerLabel.m */; };
+		77DC8362154243B50021D240 /* GrayButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 77DC8361154243B50021D240 /* GrayButton@2x.png */; };
+		77DC8364154243C60021D240 /* GrayButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 77DC8363154243C60021D240 /* GrayButton.png */; };
+		77DC836B154246860021D240 /* RecordTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 77DC836A154246860021D240 /* RecordTableViewCell.m */; };
+		77DC83771542682A0021D240 /* ChuteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77DC8375154268290021D240 /* ChuteViewController.m */; };
+		77DC83781542682A0021D240 /* ChuteViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 77DC83761542682A0021D240 /* ChuteViewController.xib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		7761D0921544DAA600C6BB3F /* Gears.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Gears.png; sourceTree = "<group>"; };
+		7761D0931544DAA600C6BB3F /* Gears@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Gears@2x.png"; sourceTree = "<group>"; };
+		7761D0971544DBBA00C6BB3F /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
+		7761D0981544DBBA00C6BB3F /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
+		7761D0991544DBBB00C6BB3F /* SettingsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingsViewController.xib; sourceTree = "<group>"; };
+		77C5F29D154309D6005CAB30 /* CheckerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CheckerViewController.h; sourceTree = "<group>"; };
+		77C5F29E154309D6005CAB30 /* CheckerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CheckerViewController.m; sourceTree = "<group>"; };
+		77C5F29F154309D6005CAB30 /* CheckerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CheckerViewController.xib; sourceTree = "<group>"; };
+		77C5F2A315431B6A005CAB30 /* RedButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = RedButton.png; sourceTree = "<group>"; };
+		77C5F2A415431B6A005CAB30 /* RedButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "RedButton@2x.png"; sourceTree = "<group>"; };
+		77C5F2A515431B6A005CAB30 /* RedButtonTap.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = RedButtonTap.png; sourceTree = "<group>"; };
+		77C5F2A615431B6A005CAB30 /* RedButtonTap@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "RedButtonTap@2x.png"; sourceTree = "<group>"; };
+		77DC82FE15420B8E0021D240 /* RunSignup.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RunSignup.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		77DC830215420B8E0021D240 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		77DC830415420B8E0021D240 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		77DC830615420B8E0021D240 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		77DC830A15420B8E0021D240 /* RunSignup-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "RunSignup-Info.plist"; sourceTree = "<group>"; };
+		77DC830C15420B8E0021D240 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		77DC830E15420B8E0021D240 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		77DC831015420B8E0021D240 /* RunSignup-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RunSignup-Prefix.pch"; sourceTree = "<group>"; };
+		77DC831115420B8E0021D240 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		77DC831215420B8E0021D240 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		77DC831415420B8E0021D240 /* MainMenuViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainMenuViewController.h; sourceTree = "<group>"; };
+		77DC831515420B8E0021D240 /* MainMenuViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainMenuViewController.m; sourceTree = "<group>"; };
+		77DC831815420B8E0021D240 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenuViewController.xib; sourceTree = "<group>"; };
+		77DC8323154212E80021D240 /* BlueButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BlueButton.png; sourceTree = "<group>"; };
+		77DC8324154212E80021D240 /* BlueButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "BlueButton@2x.png"; sourceTree = "<group>"; };
+		77DC8325154212E80021D240 /* Logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Logo.png; sourceTree = "<group>"; };
+		77DC83291542134B0021D240 /* BlueButtonTap.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BlueButtonTap.png; sourceTree = "<group>"; };
+		77DC832A1542134B0021D240 /* BlueButtonTap@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "BlueButtonTap@2x.png"; sourceTree = "<group>"; };
+		77DC832D154216710021D240 /* TimerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimerViewController.h; sourceTree = "<group>"; };
+		77DC832E154216710021D240 /* TimerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimerViewController.m; sourceTree = "<group>"; };
+		77DC832F154216710021D240 /* TimerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TimerViewController.xib; sourceTree = "<group>"; };
+		77DC835E15421A990021D240 /* TimerLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimerLabel.h; sourceTree = "<group>"; };
+		77DC835F15421A990021D240 /* TimerLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimerLabel.m; sourceTree = "<group>"; };
+		77DC8361154243B50021D240 /* GrayButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GrayButton@2x.png"; sourceTree = "<group>"; };
+		77DC8363154243C60021D240 /* GrayButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = GrayButton.png; sourceTree = "<group>"; };
+		77DC8369154246860021D240 /* RecordTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecordTableViewCell.h; sourceTree = "<group>"; };
+		77DC836A154246860021D240 /* RecordTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecordTableViewCell.m; sourceTree = "<group>"; };
+		77DC8374154268290021D240 /* ChuteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChuteViewController.h; sourceTree = "<group>"; };
+		77DC8375154268290021D240 /* ChuteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChuteViewController.m; sourceTree = "<group>"; };
+		77DC83761542682A0021D240 /* ChuteViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChuteViewController.xib; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		77DC82FB15420B8E0021D240 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				77DC830315420B8E0021D240 /* UIKit.framework in Frameworks */,
+				77DC830515420B8E0021D240 /* Foundation.framework in Frameworks */,
+				77DC830715420B8E0021D240 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		77DC82F315420B8B0021D240 = {
+			isa = PBXGroup;
+			children = (
+				77DC830815420B8E0021D240 /* RunSignup */,
+				77DC830115420B8E0021D240 /* Frameworks */,
+				77DC82FF15420B8E0021D240 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		77DC82FF15420B8E0021D240 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				77DC82FE15420B8E0021D240 /* RunSignup.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		77DC830115420B8E0021D240 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				77DC830215420B8E0021D240 /* UIKit.framework */,
+				77DC830415420B8E0021D240 /* Foundation.framework */,
+				77DC830615420B8E0021D240 /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		77DC830815420B8E0021D240 /* RunSignup */ = {
+			isa = PBXGroup;
+			children = (
+				77DC8322154212E80021D240 /* Resources */,
+				77DC831115420B8E0021D240 /* AppDelegate.h */,
+				77DC831215420B8E0021D240 /* AppDelegate.m */,
+				77DC835E15421A990021D240 /* TimerLabel.h */,
+				77DC835F15421A990021D240 /* TimerLabel.m */,
+				77DC831415420B8E0021D240 /* MainMenuViewController.h */,
+				77DC831515420B8E0021D240 /* MainMenuViewController.m */,
+				77DC831715420B8E0021D240 /* MainMenuViewController.xib */,
+				77DC832D154216710021D240 /* TimerViewController.h */,
+				77DC832E154216710021D240 /* TimerViewController.m */,
+				77DC832F154216710021D240 /* TimerViewController.xib */,
+				77DC8374154268290021D240 /* ChuteViewController.h */,
+				77DC8375154268290021D240 /* ChuteViewController.m */,
+				77DC83761542682A0021D240 /* ChuteViewController.xib */,
+				77C5F29D154309D6005CAB30 /* CheckerViewController.h */,
+				77C5F29E154309D6005CAB30 /* CheckerViewController.m */,
+				77C5F29F154309D6005CAB30 /* CheckerViewController.xib */,
+				77DC8369154246860021D240 /* RecordTableViewCell.h */,
+				77DC836A154246860021D240 /* RecordTableViewCell.m */,
+				7761D0971544DBBA00C6BB3F /* SettingsViewController.h */,
+				7761D0981544DBBA00C6BB3F /* SettingsViewController.m */,
+				7761D0991544DBBB00C6BB3F /* SettingsViewController.xib */,
+				77DC830915420B8E0021D240 /* Supporting Files */,
+			);
+			path = RunSignup;
+			sourceTree = "<group>";
+		};
+		77DC830915420B8E0021D240 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				77DC830A15420B8E0021D240 /* RunSignup-Info.plist */,
+				77DC830B15420B8E0021D240 /* InfoPlist.strings */,
+				77DC830E15420B8E0021D240 /* main.m */,
+				77DC831015420B8E0021D240 /* RunSignup-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		77DC8322154212E80021D240 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				7761D0921544DAA600C6BB3F /* Gears.png */,
+				7761D0931544DAA600C6BB3F /* Gears@2x.png */,
+				77C5F2A315431B6A005CAB30 /* RedButton.png */,
+				77C5F2A415431B6A005CAB30 /* RedButton@2x.png */,
+				77C5F2A515431B6A005CAB30 /* RedButtonTap.png */,
+				77C5F2A615431B6A005CAB30 /* RedButtonTap@2x.png */,
+				77DC8363154243C60021D240 /* GrayButton.png */,
+				77DC8361154243B50021D240 /* GrayButton@2x.png */,
+				77DC83291542134B0021D240 /* BlueButtonTap.png */,
+				77DC832A1542134B0021D240 /* BlueButtonTap@2x.png */,
+				77DC8323154212E80021D240 /* BlueButton.png */,
+				77DC8324154212E80021D240 /* BlueButton@2x.png */,
+				77DC8325154212E80021D240 /* Logo.png */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		77DC82FD15420B8E0021D240 /* RunSignup */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 77DC831C15420B8E0021D240 /* Build configuration list for PBXNativeTarget "RunSignup" */;
+			buildPhases = (
+				77DC82FA15420B8E0021D240 /* Sources */,
+				77DC82FB15420B8E0021D240 /* Frameworks */,
+				77DC82FC15420B8E0021D240 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = RunSignup;
+			productName = RunSignup;
+			productReference = 77DC82FE15420B8E0021D240 /* RunSignup.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		77DC82F515420B8B0021D240 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0430;
+			};
+			buildConfigurationList = 77DC82F815420B8B0021D240 /* Build configuration list for PBXProject "RunSignup" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 77DC82F315420B8B0021D240;
+			productRefGroup = 77DC82FF15420B8E0021D240 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				77DC82FD15420B8E0021D240 /* RunSignup */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		77DC82FC15420B8E0021D240 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				77DC830D15420B8E0021D240 /* InfoPlist.strings in Resources */,
+				77DC831915420B8E0021D240 /* MainMenuViewController.xib in Resources */,
+				77DC8326154212E80021D240 /* BlueButton.png in Resources */,
+				77DC8327154212E80021D240 /* BlueButton@2x.png in Resources */,
+				77DC8328154212E80021D240 /* Logo.png in Resources */,
+				77DC832B1542134B0021D240 /* BlueButtonTap.png in Resources */,
+				77DC832C1542134B0021D240 /* BlueButtonTap@2x.png in Resources */,
+				77DC8331154216710021D240 /* TimerViewController.xib in Resources */,
+				77DC8362154243B50021D240 /* GrayButton@2x.png in Resources */,
+				77DC8364154243C60021D240 /* GrayButton.png in Resources */,
+				77DC83781542682A0021D240 /* ChuteViewController.xib in Resources */,
+				77C5F2A1154309D6005CAB30 /* CheckerViewController.xib in Resources */,
+				77C5F2A715431B6A005CAB30 /* RedButton.png in Resources */,
+				77C5F2A815431B6A005CAB30 /* RedButton@2x.png in Resources */,
+				77C5F2A915431B6A005CAB30 /* RedButtonTap.png in Resources */,
+				77C5F2AA15431B6A005CAB30 /* RedButtonTap@2x.png in Resources */,
+				7761D0941544DAA600C6BB3F /* Gears.png in Resources */,
+				7761D0951544DAA600C6BB3F /* Gears@2x.png in Resources */,
+				7761D09B1544DBBB00C6BB3F /* SettingsViewController.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		77DC82FA15420B8E0021D240 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				77DC830F15420B8E0021D240 /* main.m in Sources */,
+				77DC831315420B8E0021D240 /* AppDelegate.m in Sources */,
+				77DC831615420B8E0021D240 /* MainMenuViewController.m in Sources */,
+				77DC8330154216710021D240 /* TimerViewController.m in Sources */,
+				77DC836015421A990021D240 /* TimerLabel.m in Sources */,
+				77DC836B154246860021D240 /* RecordTableViewCell.m in Sources */,
+				77DC83771542682A0021D240 /* ChuteViewController.m in Sources */,
+				77C5F2A0154309D6005CAB30 /* CheckerViewController.m in Sources */,
+				7761D09A1544DBBB00C6BB3F /* SettingsViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		77DC830B15420B8E0021D240 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				77DC830C15420B8E0021D240 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		77DC831715420B8E0021D240 /* MainMenuViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				77DC831815420B8E0021D240 /* en */,
+			);
+			name = MainMenuViewController.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		77DC831A15420B8E0021D240 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		77DC831B15420B8E0021D240 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		77DC831D15420B8E0021D240 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "RunSignup/RunSignup-Prefix.pch";
+				INFOPLIST_FILE = "RunSignup/RunSignup-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		77DC831E15420B8E0021D240 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "RunSignup/RunSignup-Prefix.pch";
+				INFOPLIST_FILE = "RunSignup/RunSignup-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		77DC82F815420B8B0021D240 /* Build configuration list for PBXProject "RunSignup" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				77DC831A15420B8E0021D240 /* Debug */,
+				77DC831B15420B8E0021D240 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		77DC831C15420B8E0021D240 /* Build configuration list for PBXNativeTarget "RunSignup" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				77DC831D15420B8E0021D240 /* Debug */,
+				77DC831E15420B8E0021D240 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 77DC82F515420B8B0021D240 /* Project object */;
+}
