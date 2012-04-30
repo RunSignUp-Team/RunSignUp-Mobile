@@ -8,9 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SettingsViewController : UIViewController{
+@interface SettingsViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>{
+    UITableView *settings;
 }
 
+@property (nonatomic, retain) IBOutlet UITableView *settings;
 @property (nonatomic, retain) IBOutlet UISwitch *bigRecordSwitch;
 @property (nonatomic, retain) IBOutlet UISwitch *timerHoursSwitch;
 

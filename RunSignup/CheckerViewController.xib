@@ -83,10 +83,7 @@
 						<int key="IBUIContentVerticalAlignment">0</int>
 						<string key="IBUINormalTitle">Close Numpad</string>
 						<reference key="IBUIHighlightedTitleColor" ref="868046484"/>
-						<object class="NSColor" key="IBUINormalTitleColor">
-							<int key="NSColorSpace">1</int>
-							<bytes key="NSRGB">MC4xOTYwNzg0MzE0IDAuMzA5ODAzOTIxNiAwLjUyMTU2ODYyNzUAA</bytes>
-						</object>
+						<reference key="IBUINormalTitleColor" ref="868046484"/>
 						<reference key="IBUINormalTitleShadowColor" ref="500470651"/>
 						<reference key="IBUIFontDescription" ref="135989957"/>
 						<reference key="IBUIFont" ref="272178133"/>

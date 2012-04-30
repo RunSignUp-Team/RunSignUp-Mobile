@@ -7,10 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7702C590154A07400004EDB5 /* SelectRaceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7702C58E154A07400004EDB5 /* SelectRaceViewController.m */; };
+		7702C591154A07400004EDB5 /* SelectRaceViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7702C58F154A07400004EDB5 /* SelectRaceViewController.xib */; };
 		7761D0941544DAA600C6BB3F /* Gears.png in Resources */ = {isa = PBXBuildFile; fileRef = 7761D0921544DAA600C6BB3F /* Gears.png */; };
 		7761D0951544DAA600C6BB3F /* Gears@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7761D0931544DAA600C6BB3F /* Gears@2x.png */; };
 		7761D09A1544DBBB00C6BB3F /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7761D0981544DBBA00C6BB3F /* SettingsViewController.m */; };
 		7761D09B1544DBBB00C6BB3F /* SettingsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7761D0991544DBBB00C6BB3F /* SettingsViewController.xib */; };
+		777A50561549F5BD004AC93A /* RaceDirectorSigninViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 777A50541549F5BD004AC93A /* RaceDirectorSigninViewController.m */; };
+		777A50571549F5BD004AC93A /* RaceDirectorSigninViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 777A50551549F5BD004AC93A /* RaceDirectorSigninViewController.xib */; };
+		777A505A1549F641004AC93A /* Coustard.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 777A50591549F641004AC93A /* Coustard.ttf */; };
 		77C5F2A0154309D6005CAB30 /* CheckerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77C5F29E154309D6005CAB30 /* CheckerViewController.m */; };
 		77C5F2A1154309D6005CAB30 /* CheckerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 77C5F29F154309D6005CAB30 /* CheckerViewController.xib */; };
 		77C5F2A715431B6A005CAB30 /* RedButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 77C5F2A315431B6A005CAB30 /* RedButton.png */; };
@@ -41,11 +46,18 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7702C58D154A07400004EDB5 /* SelectRaceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectRaceViewController.h; sourceTree = "<group>"; };
+		7702C58E154A07400004EDB5 /* SelectRaceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectRaceViewController.m; sourceTree = "<group>"; };
+		7702C58F154A07400004EDB5 /* SelectRaceViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SelectRaceViewController.xib; sourceTree = "<group>"; };
 		7761D0921544DAA600C6BB3F /* Gears.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Gears.png; sourceTree = "<group>"; };
 		7761D0931544DAA600C6BB3F /* Gears@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Gears@2x.png"; sourceTree = "<group>"; };
 		7761D0971544DBBA00C6BB3F /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		7761D0981544DBBA00C6BB3F /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		7761D0991544DBBB00C6BB3F /* SettingsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingsViewController.xib; sourceTree = "<group>"; };
+		777A50531549F5BD004AC93A /* RaceDirectorSigninViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RaceDirectorSigninViewController.h; sourceTree = "<group>"; };
+		777A50541549F5BD004AC93A /* RaceDirectorSigninViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RaceDirectorSigninViewController.m; sourceTree = "<group>"; };
+		777A50551549F5BD004AC93A /* RaceDirectorSigninViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RaceDirectorSigninViewController.xib; sourceTree = "<group>"; };
+		777A50591549F641004AC93A /* Coustard.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Coustard.ttf; sourceTree = "<group>"; };
 		77C5F29D154309D6005CAB30 /* CheckerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CheckerViewController.h; sourceTree = "<group>"; };
 		77C5F29E154309D6005CAB30 /* CheckerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CheckerViewController.m; sourceTree = "<group>"; };
 		77C5F29F154309D6005CAB30 /* CheckerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CheckerViewController.xib; sourceTree = "<group>"; };
@@ -99,6 +111,41 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		774AE4C0154B84BB00E4915C /* Main Views */ = {
+			isa = PBXGroup;
+			children = (
+				77DC831415420B8E0021D240 /* MainMenuViewController.h */,
+				77DC831515420B8E0021D240 /* MainMenuViewController.m */,
+				77DC831715420B8E0021D240 /* MainMenuViewController.xib */,
+				77DC832D154216710021D240 /* TimerViewController.h */,
+				77DC832E154216710021D240 /* TimerViewController.m */,
+				77DC832F154216710021D240 /* TimerViewController.xib */,
+				77DC8374154268290021D240 /* ChuteViewController.h */,
+				77DC8375154268290021D240 /* ChuteViewController.m */,
+				77DC83761542682A0021D240 /* ChuteViewController.xib */,
+				77C5F29D154309D6005CAB30 /* CheckerViewController.h */,
+				77C5F29E154309D6005CAB30 /* CheckerViewController.m */,
+				77C5F29F154309D6005CAB30 /* CheckerViewController.xib */,
+			);
+			name = "Main Views";
+			sourceTree = "<group>";
+		};
+		774AE4C2154B84D300E4915C /* Modal Views */ = {
+			isa = PBXGroup;
+			children = (
+				7761D0971544DBBA00C6BB3F /* SettingsViewController.h */,
+				7761D0981544DBBA00C6BB3F /* SettingsViewController.m */,
+				7761D0991544DBBB00C6BB3F /* SettingsViewController.xib */,
+				777A50531549F5BD004AC93A /* RaceDirectorSigninViewController.h */,
+				777A50541549F5BD004AC93A /* RaceDirectorSigninViewController.m */,
+				777A50551549F5BD004AC93A /* RaceDirectorSigninViewController.xib */,
+				7702C58D154A07400004EDB5 /* SelectRaceViewController.h */,
+				7702C58E154A07400004EDB5 /* SelectRaceViewController.m */,
+				7702C58F154A07400004EDB5 /* SelectRaceViewController.xib */,
+			);
+			name = "Modal Views";
+			sourceTree = "<group>";
+		};
 		77DC82F315420B8B0021D240 = {
 			isa = PBXGroup;
 			children = (
@@ -134,23 +181,10 @@
 				77DC831215420B8E0021D240 /* AppDelegate.m */,
 				77DC835E15421A990021D240 /* TimerLabel.h */,
 				77DC835F15421A990021D240 /* TimerLabel.m */,
-				77DC831415420B8E0021D240 /* MainMenuViewController.h */,
-				77DC831515420B8E0021D240 /* MainMenuViewController.m */,
-				77DC831715420B8E0021D240 /* MainMenuViewController.xib */,
-				77DC832D154216710021D240 /* TimerViewController.h */,
-				77DC832E154216710021D240 /* TimerViewController.m */,
-				77DC832F154216710021D240 /* TimerViewController.xib */,
-				77DC8374154268290021D240 /* ChuteViewController.h */,
-				77DC8375154268290021D240 /* ChuteViewController.m */,
-				77DC83761542682A0021D240 /* ChuteViewController.xib */,
-				77C5F29D154309D6005CAB30 /* CheckerViewController.h */,
-				77C5F29E154309D6005CAB30 /* CheckerViewController.m */,
-				77C5F29F154309D6005CAB30 /* CheckerViewController.xib */,
 				77DC8369154246860021D240 /* RecordTableViewCell.h */,
 				77DC836A154246860021D240 /* RecordTableViewCell.m */,
-				7761D0971544DBBA00C6BB3F /* SettingsViewController.h */,
-				7761D0981544DBBA00C6BB3F /* SettingsViewController.m */,
-				7761D0991544DBBB00C6BB3F /* SettingsViewController.xib */,
+				774AE4C0154B84BB00E4915C /* Main Views */,
+				774AE4C2154B84D300E4915C /* Modal Views */,
 				77DC830915420B8E0021D240 /* Supporting Files */,
 			);
 			path = RunSignup;
@@ -170,6 +204,7 @@
 		77DC8322154212E80021D240 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				777A50591549F641004AC93A /* Coustard.ttf */,
 				7761D0921544DAA600C6BB3F /* Gears.png */,
 				7761D0931544DAA600C6BB3F /* Gears@2x.png */,
 				77C5F2A315431B6A005CAB30 /* RedButton.png */,
@@ -256,6 +291,9 @@
 				7761D0941544DAA600C6BB3F /* Gears.png in Resources */,
 				7761D0951544DAA600C6BB3F /* Gears@2x.png in Resources */,
 				7761D09B1544DBBB00C6BB3F /* SettingsViewController.xib in Resources */,
+				777A50571549F5BD004AC93A /* RaceDirectorSigninViewController.xib in Resources */,
+				777A505A1549F641004AC93A /* Coustard.ttf in Resources */,
+				7702C591154A07400004EDB5 /* SelectRaceViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -275,6 +313,8 @@
 				77DC83771542682A0021D240 /* ChuteViewController.m in Sources */,
 				77C5F2A0154309D6005CAB30 /* CheckerViewController.m in Sources */,
 				7761D09A1544DBBB00C6BB3F /* SettingsViewController.m in Sources */,
+				777A50561549F5BD004AC93A /* RaceDirectorSigninViewController.m in Sources */,
+				7702C590154A07400004EDB5 /* SelectRaceViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

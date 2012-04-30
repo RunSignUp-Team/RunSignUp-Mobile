@@ -10,22 +10,48 @@
 
 @interface MainMenuViewController : UIViewController{
     UIButton *timerButton;
+    UIButton *signInButton;
     UIButton *checkerButton;
+    UIButton *selectRaceButton;
     UIButton *chuteButton;
     
+    UIButton *signOutButton;
+    UILabel *signedInAs;
+    UILabel *emailLabel;
+    
+    NSString *raceDirectorEmail;
+    NSString *raceDirectorRaceID;
+    
     UILabel *copyrightLabel;
+    UILabel *hintLabel;
 }
 
 @property (nonatomic, retain) IBOutlet UIButton *timerButton;
+@property (nonatomic, retain) IBOutlet UIButton *signInButton;
 @property (nonatomic, retain) IBOutlet UIButton *checkerButton;
+@property (nonatomic, retain) IBOutlet UIButton *selectRaceButton;
 @property (nonatomic, retain) IBOutlet UIButton *chuteButton;
 @property (nonatomic, retain) IBOutlet UILabel *copyrightLabel;
+@property (nonatomic, retain) IBOutlet UILabel *hintLabel;
+
+@property (nonatomic, retain) IBOutlet UIButton *signOutButton;
+@property (nonatomic, retain) IBOutlet UILabel *signedInAs;
+@property (nonatomic, retain) IBOutlet UILabel *emailLabel;
+
+@property (nonatomic, retain) NSString *raceDirectorEmail;
+@property (nonatomic, retain) NSString *raceDirectorRaceID;
 
 - (IBAction)timer:(id)sender;
+- (IBAction)signIn:(id)sender;
 - (IBAction)checker:(id)sender;
+- (IBAction)selectRace:(id)sender;
 - (IBAction)chute:(id)sender;
 
 - (IBAction)showInfo:(id)sender;
 - (IBAction)showSettings:(id)sender;
+
+- (IBAction)didSignOut;
+- (BOOL)didSignInEmail:(NSString *)email password:(NSString *)password;
+- (BOOL)didSelectRace:(NSString *)raceID;
 
 @end
