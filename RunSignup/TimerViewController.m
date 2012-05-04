@@ -34,6 +34,7 @@
     self.timerLabel = [[TimerLabel alloc] initWithFrame:CGRectMake(0, 0, 320, 92)];
     [self.view addSubview: timerLabel];
     
+    // Images created for stretching to variably sized UIButtons (see buttons in resources)
     UIImage *blueButtonImage = [UIImage imageNamed:@"BlueButton.png"];
     UIImage *stretchedBlueButton = [blueButtonImage stretchableImageWithLeftCapWidth:12 topCapHeight:24];
     UIImage *blueButtonTapImage = [UIImage imageNamed:@"BlueButtonTap.png"];
@@ -51,12 +52,14 @@
     [recordButton setBackgroundImage:stretchedRedButtonTap forState:UIControlStateHighlighted];
     [recordButton setBackgroundImage:stretchedGrayButton forState:UIControlStateDisabled];
     
+    // Set up right bar button (upper right corner) of UINavigationBar to edit button
     UIBarButtonItem *editButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(toggleEditing)];
     [self.navigationItem setRightBarButtonItem:editButton animated:YES];
     [editButton release];
     
     [self.table setRowHeight: 54.0f];
     
+    // Check for user setting "BigRecordButton"
     if([[NSUserDefaults standardUserDefaults] boolForKey:@"BigRecordButton"]){        
         [startButton.titleLabel setLineBreakMode:UILineBreakModeWordWrap];
         [table setFrame:CGRectMake(0, 241, 320, 175)];
@@ -78,6 +81,7 @@
     }
 }
 
+// Record current time to next place in list
 - (IBAction)record:(id)sender{
     if([records count] < 10000){
         [records insertObject:[timerLabel formattedTime] atIndex:0];
@@ -88,6 +92,7 @@
     }
 }
 
+// Start timer and begin race
 - (IBAction)start:(id)sender{
     if(!started){
         if([[NSUserDefaults standardUserDefaults] boolForKey:@"BigRecordButton"]){
@@ -105,6 +110,7 @@
     }
 }
 
+// Delegate method for making sure the user actually wants to end the race
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex{
     if(buttonIndex == 1){
         [timerLabel stopTiming];
@@ -114,6 +120,7 @@
     }
 }
 
+// Create a blank cell for displaying a time paired with a place
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     static NSString *CellIdentifier = @"CellIdentifier";
     RecordTableViewCell *cell = (RecordTableViewCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -126,6 +133,7 @@
     return cell;
 }
 
+// Commit the deletion of a row
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
     if(editingStyle == UITableViewCellEditingStyleDelete){
         [records removeObjectAtIndex: indexPath.row];
@@ -134,6 +142,7 @@
     }
 }
 
+// Reload only the visible cells' place numbers after a deletion
 - (void)updateRecordNumbersAfterDeletion{
     NSArray *cells = [table visibleCells];
     NSMutableArray *indexPaths = [[NSMutableArray alloc] init];

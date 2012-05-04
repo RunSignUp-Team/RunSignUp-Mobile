@@ -42,11 +42,13 @@
     return cell;
 }
 
+// Change big record button setting
 - (IBAction)bigRecordChange:(id)sender{
     [[NSUserDefaults standardUserDefaults] setBool:bigRecordSwitch.on forKey:@"BigRecordButton"];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
+// Change timer shows hours setting
 - (IBAction)timerHoursChange:(id)sender{
     [[NSUserDefaults standardUserDefaults] setBool:timerHoursSwitch.on forKey:@"TimerHours"];
     [[NSUserDefaults standardUserDefaults] synchronize];

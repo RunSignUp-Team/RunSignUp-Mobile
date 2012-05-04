@@ -38,6 +38,7 @@
     UIImage *blueButtonTapImage = [UIImage imageNamed:@"BlueButtonTap.png"];
     UIImage *stretchedBlueButtonTap = [blueButtonTapImage stretchableImageWithLeftCapWidth:12 topCapHeight:0];
     
+    // Images created for stretching to variably sized UIButtons (see buttons in resources)
     [timerButton setBackgroundImage:stretchedBlueButton forState:UIControlStateNormal];
     [timerButton setBackgroundImage:stretchedBlueButtonTap forState:UIControlStateHighlighted];
     [signInButton setBackgroundImage:stretchedBlueButton forState:UIControlStateNormal];
@@ -51,6 +52,8 @@
     [signOutButton setBackgroundImage:stretchedBlueButton forState:UIControlStateNormal];
     [signOutButton setBackgroundImage:stretchedBlueButtonTap forState:UIControlStateHighlighted];
     
+    
+    // Date formatter set up to allow future-proof Copyright tag on bottom of main menu.
     NSDate *date = [NSDate date];
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:@"YYYY"];
@@ -65,6 +68,7 @@
     [self.navigationController setNavigationBarHidden:YES animated:animated];
 }
 
+// Push timer view onto UINavigationController's view stack
 - (IBAction)timer:(id)sender{
     TimerViewController *timerViewController = [[TimerViewController alloc] initWithNibName:@"TimerViewController" bundle:nil];
     AppDelegate *del = [[UIApplication sharedApplication] delegate];
@@ -72,6 +76,7 @@
     [timerViewController release];
 }
 
+// Push sign in view into modal view of MainMenuViewController
 - (IBAction)signIn:(id)sender{
     RaceDirectorSigninViewController *raceDirectorSignInViewController = [[RaceDirectorSigninViewController alloc] initWithNibName:@"RaceDirectorSigninViewController" bundle:nil];
     [raceDirectorSignInViewController setDelegate: self];
@@ -79,6 +84,7 @@
     [raceDirectorSignInViewController release];
 }
 
+// // Push checker view onto UINavigationController's view stack
 - (IBAction)checker:(id)sender{
     CheckerViewController *checkerViewController = [[CheckerViewController alloc] initWithNibName:@"CheckerViewController" bundle:nil];
     AppDelegate *del = [[UIApplication sharedApplication] delegate];
@@ -86,6 +92,7 @@
     [checkerViewController release];
 }
 
+// Push select race view into modal view of MainMenuViewController
 - (IBAction)selectRace:(id)sender{
     if(raceDirectorEmail != nil){
         SelectRaceViewController *selectRaceViewController = [[SelectRaceViewController alloc] initWithNibName:@"SelectRaceViewController" bundle:nil];
@@ -95,6 +102,7 @@
     }
 }
 
+// Push chute view onto UINavigationController's view stack
 - (IBAction)chute:(id)sender{
     ChuteViewController *chuteViewController = [[ChuteViewController alloc] initWithNibName:@"ChuteViewController" bundle:nil];
     AppDelegate *del = [[UIApplication sharedApplication] delegate];
@@ -102,6 +110,7 @@
     [chuteViewController release];
 }
 
+// Push settings view into modal view of MainMenuViewController
 - (IBAction)showSettings:(id)sender{
     SettingsViewController *settingsViewController = [[SettingsViewController alloc] initWithNibName:@"SettingsViewController" bundle:nil];
     [self presentModalViewController:settingsViewController animated:YES];
@@ -111,6 +120,7 @@
     
 }
 
+// Delegate style method for telling MainMenuViewController who to sign in and return BOOL if it was successful
 - (BOOL)didSignInEmail:(NSString *)email password:(NSString *)password{
     if([email isEqualToString:@"test"] && [password isEqualToString:@"test"]){
         raceDirectorEmail = @"emailaddress@emailvendor.com";
@@ -130,6 +140,7 @@
     }
 }
 
+// Delegate style method for telling MainMenuViewController which race to time for and return if successful
 - (BOOL)didSelectRace:(NSString *)raceID{
     [timerButton setHidden: NO];
     [chuteButton setHidden: NO];
@@ -141,6 +152,7 @@
     return YES;
 }
 
+// Delegate style method for telling MainMenuViewController to sign out and update view
 - (IBAction)didSignOut{
     [timerButton setHidden: YES];
     [chuteButton setHidden: YES];

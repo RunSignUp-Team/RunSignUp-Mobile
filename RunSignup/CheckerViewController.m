@@ -36,6 +36,7 @@
     self.timerLabel = [[TimerLabel alloc] initWithFrame:CGRectMake(0, 0, 320, 92)];
     [self.view addSubview: timerLabel];
     
+    // Images created for stretching to variably sized UIButtons (see buttons in resources)
     UIImage *blueButtonImage = [UIImage imageNamed:@"BlueButton.png"];
     UIImage *stretchedBlueButton = [blueButtonImage stretchableImageWithLeftCapWidth:12 topCapHeight:0];
     UIImage *blueButtonTapImage = [UIImage imageNamed:@"BlueButtonTap.png"];
@@ -55,6 +56,7 @@
     [recordButton setBackgroundImage:stretchedRedButtonTap forState:UIControlStateHighlighted];
     [recordButton setBackgroundImage:stretchedGrayButton forState:UIControlStateDisabled];
     
+    // Set up right bar button (upper right corner) of UINavigationBar to edit button
     UIBarButtonItem *editButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(toggleEditing)];
     [self.navigationItem setRightBarButtonItem:editButton animated:YES];
     [editButton release];
@@ -74,6 +76,7 @@
     }
 }
 
+// Record current time and bib number to list
 - (IBAction)record:(id)sender{
     if([records count] < 10000){
         if([[bibField text] length] > 0 && started){
@@ -90,6 +93,7 @@
     }
 }
 
+// Begin race and update buttons to reflect this
 - (IBAction)start:(id)sender{
     if(!started){
         [startButton setTitle:@"End Race" forState:UIControlStateNormal];
@@ -125,6 +129,7 @@
     [UIView commitAnimations];
 }
 
+// Delegate method for making sure the user really wants to end the race
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex{
     if(buttonIndex == 1){
         [timerLabel stopTiming];
@@ -134,6 +139,7 @@
     }
 }
 
+// Create empty cell for displaying a bib paired with a time
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     static NSString *CellIdentifier = @"CellIdentifier";
     RecordTableViewCell *cell = (RecordTableViewCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -146,6 +152,7 @@
     return cell;
 }
 
+// Commit a cell deletion
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
     if(editingStyle == UITableViewCellEditingStyleDelete){
         [records removeObjectAtIndex: indexPath.row];
@@ -154,6 +161,7 @@
     }
 }
 
+// Go through list and update cell place numbers
 - (void)updateRecordNumbersAfterDeletion{
     NSArray *cells = [table visibleCells];
     NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
@@ -164,6 +172,7 @@
     [indexPaths release];
 }
 
+// Limit what the user can enter to the string "1234567890-", dash was added just in case a bib is 12-34 or something
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
     if([string length] != 0){
         if(textField.text.length < 5 && strchr("1234567890-", [string characterAtIndex: 0])){

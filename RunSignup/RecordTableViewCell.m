@@ -11,11 +11,13 @@
 @implementation RecordTableViewCell
 @synthesize dataLabel;
 
+// Create RecordTableViewCell. Mode is 0 for Timer, 1 for Checker, 2 for Chute
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier withMode:(int)mode{
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if(self){     
         self.shouldIndentWhileEditing = YES;
         
+        // Depending on mode, layout view
         if(mode == 0){
             self.dataLabel = [[UILabel alloc] initWithFrame:CGRectMake(95, 12, 200, 28)];
         }else if(mode == 1){
@@ -34,18 +36,18 @@
         [placeLabel setTextColor: [UIColor lightGrayColor]];
         [self addSubview: placeLabel];*/
         
+        // Make a vertical divider, depends on mode
         UIView *divider;
         if(mode == 0){
             divider = [[UIView alloc] initWithFrame:CGRectMake(90, 0, 1, 54)];
         }else if(mode == 1){
             divider = [[UIView alloc] initWithFrame:CGRectMake(130, 0, 1, 44)];
         }else{
-            divider = [[UIView alloc] initWithFrame:CGRectMake(105, 0, 1, 44)];
+            divider = [[UIView alloc] initWithFrame:CGRectMake(105, 0, 1, 54)];
         }
         
-        [divider setBackgroundColor: [UIColor colorWithWhite:0.878f alpha:1.0f]]; // 0.878 grabbed from screenshot to match uitableview HRs
+        [divider setBackgroundColor: [UIColor colorWithWhite:0.878f alpha:1.0f]]; // 0.878 grabbed from screenshot to match UITableView
         [self addSubview: divider];
-        
     }
     return self;
 }

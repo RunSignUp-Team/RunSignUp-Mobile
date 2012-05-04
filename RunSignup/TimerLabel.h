@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
+// Timer Label is a class made to display (in a green/black style) time and hold a timer to update this
 @interface TimerLabel : UILabel{
     
     NSTimer *timer;

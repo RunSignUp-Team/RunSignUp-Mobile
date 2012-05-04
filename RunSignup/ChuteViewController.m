@@ -29,6 +29,7 @@
 - (void)viewDidLoad{
     [super viewDidLoad];
     
+    // Images created for stretching to variably sized UIButtons (see buttons in resources)
     UIImage *redButtonImage = [UIImage imageNamed:@"RedButton.png"];
     UIImage *stretchedRedButton = [redButtonImage stretchableImageWithLeftCapWidth:12 topCapHeight:0];
     UIImage *redButtonTapImage = [UIImage imageNamed:@"RedButtonTap.png"];
@@ -40,6 +41,7 @@
     [recordButton setBackgroundImage:stretchedRedButtonTap forState:UIControlStateHighlighted];
     [recordButton setBackgroundImage:stretchedGrayButton forState:UIControlStateDisabled];
     
+    // Set up right bar button (upper right corner) of UINavigationBar to edit button
     UIBarButtonItem *editButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(toggleEditing)];
     [self.navigationItem setRightBarButtonItem:editButton animated:YES];
     [editButton release];

@@ -11,6 +11,7 @@
 @implementation TimerLabel
 @synthesize startDate;
 
+// Timer Label is a class made to display (in a green/black style) time and hold a timer to update this
 - (id)initWithFrame:(CGRect)frame{
     self = [super initWithFrame:CGRectMake(frame.origin.x, frame.origin.y, 320, 92)];
     if (self) {
@@ -34,6 +35,7 @@
     return self;
 }
 
+// Return formatter's formatted date to either HH:mm:ss.SS or mm:ss.SS
 - (NSString *)formattedTime{
     NSDate *currentDate = [NSDate date];
     
@@ -44,6 +46,7 @@
     return timeString;
 }
 
+// Called every 1/100.0 seconds
 - (void)updateTimer{
     NSDate *currentDate = [NSDate date];
     
@@ -55,6 +58,7 @@
     pauseTimeInterval = timeInterval;
 }
 
+// Start timing (called by Start Race button in timer and checker)
 - (void)startTiming{    
     self.startDate = [NSDate date];
     timer = [NSTimer scheduledTimerWithTimeInterval:1.0/100.0 target:self selector:@selector(updateTimer) userInfo:nil repeats:YES];

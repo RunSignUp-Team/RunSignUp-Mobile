@@ -18,10 +18,7 @@
     [super viewDidLoad];
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return 10;
-}
-
+// Create empty cell to display race for director
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     static NSString *CellIdentifier = @"CellIdentifier";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -36,6 +33,7 @@
     return @"Races You Are Directing";
 }
 
+// Select a race to time for (of many that a given director could be directing in the future)
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     self.raceIndex = indexPath;
     NSString *raceID = [NSString stringWithFormat:@"Race number %i", raceIndex.row];
@@ -44,6 +42,7 @@
     [alert release];
 }
 
+// Delegate method to check if the selected race is really the one to time for
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex{
     if(buttonIndex == 1){
         if([delegate respondsToSelector:@selector(didSelectRace:)]){
@@ -61,6 +60,10 @@
             [table deselectRowAtIndexPath:raceIndex animated:YES];
         }
     }
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    return 10;
 }
 
 - (IBAction)cancel:(id)sender{

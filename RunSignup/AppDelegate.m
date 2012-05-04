@@ -22,10 +22,10 @@
     [super dealloc];
 }
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions{
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
     
+    //Set up default values for various settings (first thing called when app launches for the first time)
     if([[NSUserDefaults standardUserDefaults] objectForKey:@"BigRecordButton"] == nil){
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"BigRecordButton"];
         [[NSUserDefaults standardUserDefaults] synchronize];
@@ -35,6 +35,7 @@
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
     
+    // Push main menu onto stack as the first view controller
     MainMenuViewController *mainMenuViewController = [[[MainMenuViewController alloc] initWithNibName:@"MainMenuViewController" bundle:nil] autorelease];
     self.navController = [[UINavigationController alloc] initWithRootViewController: mainMenuViewController];    
     self.window.rootViewController = self.navController;
@@ -42,6 +43,7 @@
     return YES;
 }
 
+// Comments I did not write
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
