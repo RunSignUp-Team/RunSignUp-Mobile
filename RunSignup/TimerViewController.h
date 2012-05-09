@@ -18,6 +18,8 @@
     NSMutableArray *records;
     
     BOOL started;
+    NSString *raceID;
+    NSString *fileToSave;
 }
 
 @property (nonatomic, retain) IBOutlet UIButton *startButton;
@@ -25,11 +27,15 @@
 @property (nonatomic, retain) IBOutlet UITableView *table;
 @property (nonatomic, retain) NSMutableArray *records;
 @property (nonatomic, retain) TimerLabel *timerLabel;
+@property (nonatomic, retain) NSString *raceID;
+@property (nonatomic, retain) NSString *fileToSave;
 
 - (IBAction)record:(id)sender;
 - (IBAction)start:(id)sender;
 
 - (void)toggleEditing;
 - (void)updateRecordNumbersAfterDeletion;
+
+- (void)saveToFile;
 
 @end

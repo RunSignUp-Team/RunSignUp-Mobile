@@ -15,16 +15,23 @@
     NSMutableArray *records;
     
     UITextField *bibField;
+    
+    NSString *raceID;
+    NSString *fileToSave;
 }
 
 @property (nonatomic, retain) IBOutlet UIButton *recordButton;
 @property (nonatomic, retain) IBOutlet UITableView *table;
 @property (nonatomic, retain) IBOutlet UITextField *bibField;
+@property (nonatomic, retain) NSString *raceID;
+@property (nonatomic, retain) NSString *fileToSave;
 @property (nonatomic, retain) NSMutableArray *records;
 
 - (IBAction)record:(id)sender;
 
 - (void)toggleEditing;
 - (void)updateRecordNumbersAfterDeletion;
+
+- (void)saveToFile;
 
 @end

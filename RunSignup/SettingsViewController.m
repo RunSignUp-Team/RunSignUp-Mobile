@@ -39,6 +39,21 @@
     if(cell == nil)
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     
+    [cell.textLabel setText: [[NSArray arrayWithObjects:@"Big Record Button:", @"Timer Shows Hours:", nil] objectAtIndex:indexPath.row]];
+    
+    switch(indexPath.row){
+        case 0:
+            [bigRecordSwitch setFrame: CGRectMake(220, 9, 0, 0)];
+            [cell addSubview: bigRecordSwitch];
+            break;
+        case 1:
+            [timerHoursSwitch setFrame: CGRectMake(220, 9, 0, 0)];
+            [cell addSubview: timerHoursSwitch];
+            break;
+        default:
+            break;
+    }
+    
     return cell;
 }
 
@@ -56,7 +71,7 @@
 
 - (void)viewDidLoad{
     [bigRecordSwitch setOn: [[NSUserDefaults standardUserDefaults] boolForKey:@"BigRecordButton"]];
-    [timerHoursSwitch setOn: [[NSUserDefaults standardUserDefaults] boolForKey:@"TimerHours"]]; 
+    [timerHoursSwitch setOn: [[NSUserDefaults standardUserDefaults] boolForKey:@"TimerHours"]];     
     [super viewDidLoad];
 }
 

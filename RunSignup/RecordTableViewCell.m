@@ -18,42 +18,32 @@
         self.shouldIndentWhileEditing = YES;
         
         // Depending on mode, layout view
-        if(mode == 0){
-            self.dataLabel = [[UILabel alloc] initWithFrame:CGRectMake(95, 12, 200, 28)];
-        }else if(mode == 1){
-            self.dataLabel = [[UILabel alloc] initWithFrame:CGRectMake(135, 7, 200, 28)];
-        }else{
-            self.dataLabel = [[UILabel alloc] initWithFrame:CGRectMake(110, 12, 200, 28)];
-        }
+        self.dataLabel = [[UILabel alloc] initWithFrame:CGRectMake(75, 8, 200, 28)];
         [dataLabel setFont: [UIFont systemFontOfSize: 26.0f]];
         [dataLabel setTextColor: [UIColor blackColor]];
-        [self addSubview: dataLabel];
+        [self.contentView addSubview: dataLabel];
         
-        /*self.placeLabel = [[UILabel alloc] initWithFrame: CGRectMake(60, 12, 220, 20)];
-        [placeLabel setFont: [UIFont systemFontOfSize:18.0f]];
-        [placeLabel setBackgroundColor: [UIColor clearColor]];
-        [placeLabel setText:@"Place #                   Bib #"];
-        [placeLabel setTextColor: [UIColor lightGrayColor]];
-        [self addSubview: placeLabel];*/
+        [self.textLabel setBackgroundColor: [UIColor clearColor]];
         
         // Make a vertical divider, depends on mode
-        UIView *divider;
-        if(mode == 0){
-            divider = [[UIView alloc] initWithFrame:CGRectMake(90, 0, 1, 54)];
-        }else if(mode == 1){
-            divider = [[UIView alloc] initWithFrame:CGRectMake(130, 0, 1, 44)];
-        }else{
-            divider = [[UIView alloc] initWithFrame:CGRectMake(105, 0, 1, 54)];
-        }
-        
+        UIView *divider = [[UIView alloc] initWithFrame:CGRectMake(70, 0, 1, 44)];
         [divider setBackgroundColor: [UIColor colorWithWhite:0.878f alpha:1.0f]]; // 0.878 grabbed from screenshot to match UITableView
-        [self addSubview: divider];
+        [self.contentView addSubview: divider];
     }
     return self;
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated{
     [super setSelected:NO animated:animated];
+}
+
+- (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated{
+    if(highlighted){
+        [dataLabel setTextColor:[UIColor whiteColor]];
+    }else{
+        [dataLabel setTextColor: [UIColor blackColor]];
+    }
+    [super setHighlighted:highlighted animated:animated];
 }
 
 /*

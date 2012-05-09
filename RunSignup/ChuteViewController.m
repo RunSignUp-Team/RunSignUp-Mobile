@@ -8,11 +8,14 @@
 
 #import "ChuteViewController.h"
 #import "RecordTableViewCell.h"
+#import "JSON.h"
 
 @implementation ChuteViewController
 @synthesize recordButton;
 @synthesize table;
 @synthesize records;
+@synthesize fileToSave;
+@synthesize raceID;
 @synthesize bibField;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -20,6 +23,25 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         self.title = @"Chute";
+        
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:(NSString *)[paths objectAtIndex:0] error:nil];
+        self.fileToSave = @"";
+        
+        int number = 0;
+        while(YES){
+            BOOL numberIsAvailable = YES;
+            for(NSString *string in files){
+                if([string isEqualToString:[NSString stringWithFormat:@"%i.json", number]]){
+                    numberIsAvailable = NO;
+                }
+            }
+            if(numberIsAvailable){
+                self.fileToSave = [NSString stringWithFormat:@"%@/%i.json", [paths objectAtIndex:0], number];
+                break;
+            }
+            number++;
+        }
         
         self.records = [[NSMutableArray alloc] init];
     }
@@ -61,6 +83,20 @@
     }
 }
 
+- (void)saveToFile{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateStyle:NSDateFormatterFullStyle];
+    [formatter setTimeStyle:NSDateFormatterNoStyle];
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+    [dict setObject:raceID forKey:@"RaceID"];
+    [dict setObject:[formatter stringFromDate:[NSDate date]] forKey:@"Date"];
+    [dict setObject:records forKey:@"Data"];
+    [dict setObject:[NSNumber numberWithInt:2] forKey:@"Type"];
+    
+    NSString *data = [dict JSONRepresentation];
+    [data writeToFile:fileToSave atomically:YES encoding:NSUTF8StringEncoding error:nil];
+}
+
 - (IBAction)record:(id)sender{
     if([records count] < 10000){
         [records insertObject:[bibField text] atIndex:0];
@@ -71,6 +107,7 @@
         
         [bibField setText:@""];
         [recordButton setEnabled:NO];
+        [self saveToFile];
     }
 }
 
@@ -91,7 +128,7 @@
     static NSString *CellIdentifier = @"CellIdentifier";
     RecordTableViewCell *cell = (RecordTableViewCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if(cell == nil){
-        cell = [[RecordTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier withMode:1];
+        cell = [[RecordTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier withMode:2];
         cell.showsReorderControl = YES;
     }
     
@@ -106,13 +143,9 @@
         [records removeObjectAtIndex: indexPath.row];
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationBottom];
         [self performSelector:@selector(updateRecordNumbersAfterDeletion) withObject:nil afterDelay:0.4f];
+        [self saveToFile];
     }
 }
-
-/*- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath{
-    return YES;
-}
-*/
 
 - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath{
     NSString *bibNumberToMove = [[records objectAtIndex:fromIndexPath.row] retain];
@@ -121,7 +154,7 @@
     [bibNumberToMove release];
     
     [self performSelector:@selector(updateRecordNumbersAfterDeletion) withObject:nil afterDelay:0.25f];
-    // Above call is a bit of a misnomer, it's actually after a movement but the function is the same.
+    // Above call is a bit of a misnomer, it's actually updating after a cell movement but the function is the same.
 }
 
 - (void)updateRecordNumbersAfterDeletion{
@@ -147,7 +180,7 @@
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation{
-    return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+    return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
 @end

@@ -8,6 +8,7 @@
 
 #import "TimerViewController.h"
 #import "RecordTableViewCell.h"
+#import "JSON.h"
 
 @implementation TimerViewController
 @synthesize startButton;
@@ -15,13 +16,33 @@
 @synthesize table;
 @synthesize records;
 @synthesize timerLabel;
+@synthesize raceID;
+@synthesize fileToSave;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil{
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         self.title = @"Timer";
         started = NO;
+        
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:(NSString *)[paths objectAtIndex:0] error:nil];
+        self.fileToSave = @"";
+        
+        int number = 0;
+        while(YES){
+            BOOL numberIsAvailable = YES;
+            for(NSString *string in files){
+                if([string isEqualToString:[NSString stringWithFormat:@"%i.json", number]]){
+                    numberIsAvailable = NO;
+                }
+            }
+            if(numberIsAvailable){
+                self.fileToSave = [NSString stringWithFormat:@"%@/%i.json", [paths objectAtIndex:0], number];
+                break;
+            }
+            number++;
+        }
         
         self.records = [[NSMutableArray alloc] init];
     }
@@ -56,9 +77,7 @@
     UIBarButtonItem *editButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(toggleEditing)];
     [self.navigationItem setRightBarButtonItem:editButton animated:YES];
     [editButton release];
-    
-    [self.table setRowHeight: 54.0f];
-    
+        
     // Check for user setting "BigRecordButton"
     if([[NSUserDefaults standardUserDefaults] boolForKey:@"BigRecordButton"]){        
         [startButton.titleLabel setLineBreakMode:UILineBreakModeWordWrap];
@@ -81,6 +100,20 @@
     }
 }
 
+- (void)saveToFile{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateStyle:NSDateFormatterFullStyle];
+    [formatter setTimeStyle:NSDateFormatterNoStyle];
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+    [dict setObject:raceID forKey:@"RaceID"];
+    [dict setObject:[formatter stringFromDate:[NSDate date]] forKey:@"Date"];
+    [dict setObject:records forKey:@"Data"];
+    [dict setObject:[NSNumber numberWithInt:0] forKey:@"Type"];
+
+    NSString *data = [dict JSONRepresentation];
+    [data writeToFile:fileToSave atomically:YES encoding:NSUTF8StringEncoding error:nil];
+}
+
 // Record current time to next place in list
 - (IBAction)record:(id)sender{
     if([records count] < 10000){
@@ -89,6 +122,7 @@
         [table beginUpdates];
         [table insertRowsAtIndexPaths:[NSArray arrayWithObject:index] withRowAnimation:UITableViewRowAnimationTop];
         [table endUpdates];
+        [self saveToFile];
     }
 }
 
@@ -139,6 +173,7 @@
         [records removeObjectAtIndex: indexPath.row];
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationBottom];
         [self performSelector:@selector(updateRecordNumbersAfterDeletion) withObject:nil afterDelay:0.4f];
+        [self saveToFile];
     }
 }
 
@@ -166,7 +201,7 @@
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation{
-    return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+    return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
 @end
