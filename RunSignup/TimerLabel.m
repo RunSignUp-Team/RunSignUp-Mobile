@@ -42,8 +42,18 @@
     NSTimeInterval timeInterval = [currentDate timeIntervalSinceDate:startDate];    
     NSDate *timerDate = [NSDate dateWithTimeIntervalSince1970:timeInterval];
     
+    // Force old format so json files are all standardized to HH:mm:ss.SS
+    NSString *oldFormat = [formatter dateFormat];
+    [formatter setDateFormat:@"HH:mm:ss.SS"];
     NSString *timeString = [formatter stringFromDate:timerDate];
+    [formatter setDateFormat:oldFormat];
+    
     return timeString;
+}
+
+- (NSTimeInterval)elapsedTime{
+    NSDate *currentDate = [NSDate date];
+    return [currentDate timeIntervalSinceDate:startDate];    
 }
 
 // Called every 1/100.0 seconds

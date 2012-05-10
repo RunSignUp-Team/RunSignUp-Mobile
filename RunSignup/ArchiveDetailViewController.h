@@ -18,7 +18,6 @@
     
     NSString *file;
     NSMutableDictionary *fileDict;
-    
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil;

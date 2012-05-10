@@ -8,6 +8,7 @@
 
 #import "ArchiveDetailViewController.h"
 #import "RecordTableViewCell.h"
+#import "ArchiveEditCellViewController.h"
 #import "JSON.h"
 
 @implementation ArchiveDetailViewController
@@ -57,15 +58,19 @@
     if(cell == nil)
         cell = [[RecordTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier withMode:[[fileDict objectForKey:@"Type"] intValue]];
     
+    /*UIImageView *editAccessoryView = [[UIImageView alloc] initWithImage: [UIImage imageNamed:@"EditIcon.png"]];
+    [cell setAccessoryView: editAccessoryView];*/
+    [cell setEditingAccessoryType: UITableViewCellAccessoryDetailDisclosureButton];
+    
     if([[fileDict objectForKey:@"Type"] intValue] == 0){
-        [[cell textLabel] setText: [NSString stringWithFormat:@"%.4i", [records count] - indexPath.row]];
-        [[cell dataLabel] setText: [records objectAtIndex: indexPath.row]];
+        [[cell textLabel] setText: [[records objectAtIndex: indexPath.row] objectForKey:@"Place"]];
+        [[cell dataLabel] setText: [[records objectAtIndex: indexPath.row] objectForKey:@"FTime"]];
     }else if([[fileDict objectForKey:@"Type"] intValue] == 1){
         [[cell textLabel] setText: [[records objectAtIndex: indexPath.row] objectForKey:@"Bib"]];
-        [[cell dataLabel] setText: [[records objectAtIndex: indexPath.row] objectForKey:@"Time"]];
+        [[cell dataLabel] setText: [[records objectAtIndex: indexPath.row] objectForKey:@"FTime"]];
     }else{
-        [[cell textLabel] setText: [NSString stringWithFormat:@"%.4i", [records count] - indexPath.row]];
-        [[cell dataLabel] setText: [records objectAtIndex: indexPath.row]];
+        [[cell textLabel] setText: [[records objectAtIndex: indexPath.row] objectForKey:@"Place"]];
+        [[cell dataLabel] setText: [[records objectAtIndex: indexPath.row] objectForKey:@"Bib"]];
     }
     return cell;
 }
@@ -90,12 +95,33 @@
     if(editingStyle == UITableViewCellEditingStyleDelete && file != nil){
         [records removeObjectAtIndex: indexPath.row];
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-        [self saveToFile];
         [self performSelector:@selector(updateRecordNumbersAfterDeletion) withObject:nil afterDelay:0.4f];
     }
 }
 
+- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath{
+    return ([[fileDict objectForKey:@"Type"] intValue] == 2);
+}
+
+- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath{
+    if([[fileDict objectForKey:@"Type"] intValue] == 2){
+        NSString *bibNumberToMove = [[records objectAtIndex:fromIndexPath.row] retain];
+        [records removeObject:bibNumberToMove];
+        [records insertObject:bibNumberToMove atIndex:toIndexPath.row];
+        [bibNumberToMove release];
+        
+        [self performSelector:@selector(updateRecordNumbersAfterDeletion) withObject:nil afterDelay:0.25f];
+        // Above call is a bit of a misnomer, it's actually updating after a cell movement but the function is the same.
+    }
+}
+
 - (void)updateRecordNumbersAfterDeletion{
+    if([[fileDict objectForKey:@"Type"] intValue] == 0 || [[fileDict objectForKey:@"Type"] intValue] == 2){
+        for(int x = 0; x < [records count]; x++){
+            [[records objectAtIndex: x] setObject:[NSString stringWithFormat:@"%.4i", [records count] - x] forKey:@"Place"];
+        }
+    }
+    
     NSArray *cells = [table visibleCells];
     NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
     for (UITableViewCell *cell in cells) {
@@ -103,8 +129,26 @@
     }
     [table reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
     [indexPaths release];
+    
+    [self saveToFile];
 }
 
+- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath{
+    ArchiveEditCellViewController *archiveEditCellViewController = [[ArchiveEditCellViewController alloc] initWithNibName:@"ArchiveEditCellViewController" bundle:nil type:[[fileDict objectForKey:@"Type"] intValue]];
+    if([[fileDict objectForKey:@"Type"] intValue] == 0){
+        [archiveEditCellViewController setTime: [[[records objectAtIndex: indexPath.row] objectForKey:@"Time"] doubleValue]];
+        [archiveEditCellViewController setPlace: [[records objectAtIndex: indexPath.row] objectForKey:@"Place"]];
+    }else if([[fileDict objectForKey:@"Type"] intValue] == 1){
+        [archiveEditCellViewController setTime: [[[records objectAtIndex: indexPath.row] objectForKey:@"Time"] doubleValue]];
+        [archiveEditCellViewController setBib: [[records objectAtIndex: indexPath.row] objectForKey:@"Bib"]];
+    }else{
+        [archiveEditCellViewController setPlace: [[records objectAtIndex: indexPath.row] objectForKey:@"Place"]];
+        [archiveEditCellViewController setBib: [[records objectAtIndex: indexPath.row] objectForKey:@"Bib"]];
+    }
+    
+    [self.navigationController pushViewController:archiveEditCellViewController animated:YES];
+    [archiveEditCellViewController release];
+}
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     return 1;

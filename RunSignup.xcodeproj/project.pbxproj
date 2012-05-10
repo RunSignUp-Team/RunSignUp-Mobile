@@ -23,6 +23,10 @@
 		777A50561549F5BD004AC93A /* RaceDirectorSigninViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 777A50541549F5BD004AC93A /* RaceDirectorSigninViewController.m */; };
 		777A50571549F5BD004AC93A /* RaceDirectorSigninViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 777A50551549F5BD004AC93A /* RaceDirectorSigninViewController.xib */; };
 		777A505A1549F641004AC93A /* Coustard.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 777A50591549F641004AC93A /* Coustard.ttf */; };
+		777C1FE4155B2EB3000EEBB4 /* EditIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 777C1FE2155B2EB3000EEBB4 /* EditIcon.png */; };
+		777C1FE5155B2EB3000EEBB4 /* EditIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 777C1FE3155B2EB3000EEBB4 /* EditIcon@2x.png */; };
+		777C1FEA155B3403000EEBB4 /* ArchiveEditCellViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 777C1FE8155B3403000EEBB4 /* ArchiveEditCellViewController.m */; };
+		777C1FEB155B3403000EEBB4 /* ArchiveEditCellViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 777C1FE9155B3403000EEBB4 /* ArchiveEditCellViewController.xib */; };
 		777C2C71155592F600AEC90B /* ArchiveViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 777C2C6F155592F600AEC90B /* ArchiveViewController.m */; };
 		777C2C72155592F600AEC90B /* ArchiveViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 777C2C70155592F600AEC90B /* ArchiveViewController.xib */; };
 		777C2C761555B47F00AEC90B /* ArchiveTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 777C2C751555B47F00AEC90B /* ArchiveTableViewCell.m */; };
@@ -88,6 +92,11 @@
 		777A50541549F5BD004AC93A /* RaceDirectorSigninViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RaceDirectorSigninViewController.m; sourceTree = "<group>"; };
 		777A50551549F5BD004AC93A /* RaceDirectorSigninViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RaceDirectorSigninViewController.xib; sourceTree = "<group>"; };
 		777A50591549F641004AC93A /* Coustard.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Coustard.ttf; sourceTree = "<group>"; };
+		777C1FE2155B2EB3000EEBB4 /* EditIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = EditIcon.png; sourceTree = "<group>"; };
+		777C1FE3155B2EB3000EEBB4 /* EditIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditIcon@2x.png"; sourceTree = "<group>"; };
+		777C1FE7155B3403000EEBB4 /* ArchiveEditCellViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArchiveEditCellViewController.h; sourceTree = "<group>"; };
+		777C1FE8155B3403000EEBB4 /* ArchiveEditCellViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArchiveEditCellViewController.m; sourceTree = "<group>"; };
+		777C1FE9155B3403000EEBB4 /* ArchiveEditCellViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ArchiveEditCellViewController.xib; sourceTree = "<group>"; };
 		777C2C6E155592F600AEC90B /* ArchiveViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArchiveViewController.h; sourceTree = "<group>"; };
 		777C2C6F155592F600AEC90B /* ArchiveViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArchiveViewController.m; sourceTree = "<group>"; };
 		777C2C70155592F600AEC90B /* ArchiveViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ArchiveViewController.xib; sourceTree = "<group>"; };
@@ -199,6 +208,9 @@
 				775A8A251557221000FAC1F3 /* ArchiveDetailViewController.h */,
 				775A8A261557221000FAC1F3 /* ArchiveDetailViewController.m */,
 				775A8A271557221000FAC1F3 /* ArchiveDetailViewController.xib */,
+				777C1FE7155B3403000EEBB4 /* ArchiveEditCellViewController.h */,
+				777C1FE8155B3403000EEBB4 /* ArchiveEditCellViewController.m */,
+				777C1FE9155B3403000EEBB4 /* ArchiveEditCellViewController.xib */,
 			);
 			name = Archive;
 			sourceTree = "<group>";
@@ -224,6 +236,8 @@
 		777C2C771555BEA400AEC90B /* Icons */ = {
 			isa = PBXGroup;
 			children = (
+				777C1FE2155B2EB3000EEBB4 /* EditIcon.png */,
+				777C1FE3155B2EB3000EEBB4 /* EditIcon@2x.png */,
 				777C2C781555BEAF00AEC90B /* CheckerIcon.png */,
 				777C2C791555BEAF00AEC90B /* CheckerIcon@2x.png */,
 				777C2C7A1555BEAF00AEC90B /* ChuteIcon.png */,
@@ -392,6 +406,9 @@
 				777C2C821555BEAF00AEC90B /* TimerIcon.png in Resources */,
 				777C2C831555BEAF00AEC90B /* TimerIcon@2x.png in Resources */,
 				775A8A291557221000FAC1F3 /* ArchiveDetailViewController.xib in Resources */,
+				777C1FE4155B2EB3000EEBB4 /* EditIcon.png in Resources */,
+				777C1FE5155B2EB3000EEBB4 /* EditIcon@2x.png in Resources */,
+				777C1FEB155B3403000EEBB4 /* ArchiveEditCellViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -421,6 +438,7 @@
 				775A8A3A155740E600FAC1F3 /* SBJsonBase.m in Sources */,
 				775A8A3B155740E600FAC1F3 /* SBJsonParser.m in Sources */,
 				775A8A3C155740E600FAC1F3 /* SBJsonWriter.m in Sources */,
+				777C1FEA155B3403000EEBB4 /* ArchiveEditCellViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

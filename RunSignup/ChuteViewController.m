@@ -99,7 +99,9 @@
 
 - (IBAction)record:(id)sender{
     if([records count] < 10000){
-        [records insertObject:[bibField text] atIndex:0];
+        NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:[bibField text], @"Bib", [NSString stringWithFormat:@"%.4i", [records count]+1], @"Place", nil];
+        [records insertObject:dict atIndex:0];
+        
         NSIndexPath *index = [NSIndexPath indexPathForRow:0 inSection:0];
         [table beginUpdates];
         [table insertRowsAtIndexPaths:[NSArray arrayWithObject:index] withRowAnimation:UITableViewRowAnimationBottom];
@@ -132,8 +134,8 @@
         cell.showsReorderControl = YES;
     }
     
-    [[cell textLabel] setText: [NSString stringWithFormat:@"%.4i", [records count] - indexPath.row]];
-    [[cell dataLabel] setText: [records objectAtIndex: indexPath.row]];
+    [[cell textLabel] setText: [[records objectAtIndex: indexPath.row] objectForKey:@"Place"]];
+    [[cell dataLabel] setText: [[records objectAtIndex: indexPath.row] objectForKey:@"Bib"]];
     
     return cell;
 }
@@ -143,7 +145,6 @@
         [records removeObjectAtIndex: indexPath.row];
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationBottom];
         [self performSelector:@selector(updateRecordNumbersAfterDeletion) withObject:nil afterDelay:0.4f];
-        [self saveToFile];
     }
 }
 
@@ -158,6 +159,10 @@
 }
 
 - (void)updateRecordNumbersAfterDeletion{
+    for(int x = 0; x < [records count]; x++){
+        [[records objectAtIndex: x] setObject:[NSString stringWithFormat:@"%.4i", [records count] - x] forKey:@"Place"];
+    }
+    
     NSArray *cells = [table visibleCells];
     NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
     for (UITableViewCell *cell in cells) {
@@ -165,6 +170,8 @@
     }
     [table reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
     [indexPaths release];
+    
+    [self saveToFile];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{

@@ -117,7 +117,12 @@
 // Record current time to next place in list
 - (IBAction)record:(id)sender{
     if([records count] < 10000){
-        [records insertObject:[timerLabel formattedTime] atIndex:0];
+        NSTimeInterval elapsedTime = [timerLabel elapsedTime];
+        NSString *formattedTime = [timerLabel formattedTime];
+        NSString *place = [NSString stringWithFormat:@"%.4i", [records count]+1];
+        NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithDouble:elapsedTime],@"Time",formattedTime,@"FTime",place,@"Place",nil];
+        [records insertObject:dict atIndex:0];
+        [dict release];
         NSIndexPath *index = [NSIndexPath indexPathForRow:0 inSection:0];
         [table beginUpdates];
         [table insertRowsAtIndexPaths:[NSArray arrayWithObject:index] withRowAnimation:UITableViewRowAnimationTop];
@@ -161,8 +166,8 @@
     if(cell == nil)
         cell = [[RecordTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier withMode:0];
     
-    [[cell textLabel] setText: [NSString stringWithFormat:@"%.4i", [records count] - indexPath.row]];
-    [[cell dataLabel] setText: [records objectAtIndex: indexPath.row]];
+    [[cell textLabel] setText: [[records objectAtIndex: indexPath.row] objectForKey:@"Place"]];
+    [[cell dataLabel] setText: [[records objectAtIndex: indexPath.row] objectForKey:@"FTime"]];
     
     return cell;
 }
@@ -173,12 +178,15 @@
         [records removeObjectAtIndex: indexPath.row];
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationBottom];
         [self performSelector:@selector(updateRecordNumbersAfterDeletion) withObject:nil afterDelay:0.4f];
-        [self saveToFile];
     }
 }
 
 // Reload only the visible cells' place numbers after a deletion
 - (void)updateRecordNumbersAfterDeletion{
+    for(int x = 0; x < [records count]; x++){
+        [[records objectAtIndex: x] setObject:[NSString stringWithFormat:@"%.4i", [records count] - x] forKey:@"Place"];
+    }
+    
     NSArray *cells = [table visibleCells];
     NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
     for (UITableViewCell *cell in cells) {
@@ -186,6 +194,8 @@
     }
     [table reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
     [indexPaths release];
+    
+    [self saveToFile];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{

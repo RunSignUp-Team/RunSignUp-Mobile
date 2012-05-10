@@ -114,7 +114,9 @@
 - (IBAction)record:(id)sender{
     if([records count] < 10000){
         if([[bibField text] length] > 0 && started){
-            NSDictionary *record = [[NSDictionary alloc] initWithObjectsAndKeys:[NSString stringWithFormat:@"%.5i", [[bibField text] intValue]], @"Bib", [timerLabel formattedTime], @"Time", nil];
+            NSTimeInterval elapsedTime = [timerLabel elapsedTime];
+            NSString *formattedTime = [timerLabel formattedTime];
+            NSMutableDictionary *record = [[NSMutableDictionary alloc] initWithObjectsAndKeys:[NSString stringWithFormat:@"%.5i", [[bibField text] intValue]], @"Bib", formattedTime, @"FTime", [NSNumber numberWithDouble:elapsedTime], @"Time", nil];
             [records insertObject:record atIndex:0];
             [record release];
             NSIndexPath *index = [NSIndexPath indexPathForRow:0 inSection:0];
@@ -182,7 +184,7 @@
         cell = [[RecordTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier withMode:1];
     
     [[cell textLabel] setText: [[records objectAtIndex: indexPath.row] objectForKey:@"Bib"]];
-    [[cell dataLabel] setText: [[records objectAtIndex: indexPath.row] objectForKey:@"Time"]];
+    [[cell dataLabel] setText: [[records objectAtIndex: indexPath.row] objectForKey:@"FTime"]];
     
     return cell;
 }
@@ -192,21 +194,9 @@
     if(editingStyle == UITableViewCellEditingStyleDelete){
         [records removeObjectAtIndex: indexPath.row];
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationBottom];
-        [self performSelector:@selector(updateRecordNumbersAfterDeletion) withObject:nil afterDelay:0.4f];
-        [self saveToFile];
     }
 }
 
-// Go through list and update cell place numbers
-- (void)updateRecordNumbersAfterDeletion{
-    NSArray *cells = [table visibleCells];
-    NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
-    for (UITableViewCell *cell in cells) {
-        [indexPaths addObject:[table indexPathForCell:cell]];
-    }
-    [table reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
-    [indexPaths release];
-}
 
 // Limit what the user can enter to the string "1234567890-", dash was added just in case a bib is 12-34 or something
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{

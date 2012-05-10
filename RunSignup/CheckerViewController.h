@@ -41,7 +41,6 @@
 - (IBAction)start:(id)sender;
 
 - (void)toggleEditing;
-- (void)updateRecordNumbersAfterDeletion;
 - (IBAction)showCloseNumpadButton:(id)sender;
 - (IBAction)hideCloseNumpadButton:(id)sender;
 

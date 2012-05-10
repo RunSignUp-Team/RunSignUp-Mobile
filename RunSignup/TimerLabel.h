@@ -24,6 +24,7 @@
 - (void)startTiming;
 
 - (NSString *)formattedTime;
+- (NSTimeInterval)elapsedTime;
 - (void)stopTiming;
 
 @end
