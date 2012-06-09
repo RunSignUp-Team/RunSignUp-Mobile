@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		7702C590154A07400004EDB5 /* SelectRaceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7702C58E154A07400004EDB5 /* SelectRaceViewController.m */; };
 		7702C591154A07400004EDB5 /* SelectRaceViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7702C58F154A07400004EDB5 /* SelectRaceViewController.xib */; };
+		7728EB32158026B800280EA7 /* RSUModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7728EB31158026B800280EA7 /* RSUModel.m */; };
 		775A8A281557221000FAC1F3 /* ArchiveDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 775A8A261557221000FAC1F3 /* ArchiveDetailViewController.m */; };
 		775A8A291557221000FAC1F3 /* ArchiveDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 775A8A271557221000FAC1F3 /* ArchiveDetailViewController.xib */; };
 		775A8A38155740E600FAC1F3 /* NSObject+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 775A8A2F155740E600FAC1F3 /* NSObject+SBJSON.m */; };
@@ -36,6 +37,9 @@
 		777C2C811555BEAF00AEC90B /* ChuteIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 777C2C7B1555BEAF00AEC90B /* ChuteIcon@2x.png */; };
 		777C2C821555BEAF00AEC90B /* TimerIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 777C2C7C1555BEAF00AEC90B /* TimerIcon.png */; };
 		777C2C831555BEAF00AEC90B /* TimerIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 777C2C7D1555BEAF00AEC90B /* TimerIcon@2x.png */; };
+		7791C0A81582E7CD00E6837C /* RXMLElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 7791C0A71582E7CD00E6837C /* RXMLElement.m */; };
+		7791C0AB1582EA2800E6837C /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7791C0AA1582EA2800E6837C /* libz.dylib */; };
+		7791C0AD1582EA3100E6837C /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7791C0AC1582EA3100E6837C /* libxml2.dylib */; };
 		77C5F2A0154309D6005CAB30 /* CheckerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77C5F29E154309D6005CAB30 /* CheckerViewController.m */; };
 		77C5F2A1154309D6005CAB30 /* CheckerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 77C5F29F154309D6005CAB30 /* CheckerViewController.xib */; };
 		77C5F2A715431B6A005CAB30 /* RedButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 77C5F2A315431B6A005CAB30 /* RedButton.png */; };
@@ -69,6 +73,8 @@
 		7702C58D154A07400004EDB5 /* SelectRaceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectRaceViewController.h; sourceTree = "<group>"; };
 		7702C58E154A07400004EDB5 /* SelectRaceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectRaceViewController.m; sourceTree = "<group>"; };
 		7702C58F154A07400004EDB5 /* SelectRaceViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SelectRaceViewController.xib; sourceTree = "<group>"; };
+		7728EB30158026B800280EA7 /* RSUModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSUModel.h; sourceTree = "<group>"; };
+		7728EB31158026B800280EA7 /* RSUModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSUModel.m; sourceTree = "<group>"; };
 		775A8A251557221000FAC1F3 /* ArchiveDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArchiveDetailViewController.h; sourceTree = "<group>"; };
 		775A8A261557221000FAC1F3 /* ArchiveDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArchiveDetailViewController.m; sourceTree = "<group>"; };
 		775A8A271557221000FAC1F3 /* ArchiveDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ArchiveDetailViewController.xib; sourceTree = "<group>"; };
@@ -108,6 +114,10 @@
 		777C2C7B1555BEAF00AEC90B /* ChuteIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ChuteIcon@2x.png"; sourceTree = "<group>"; };
 		777C2C7C1555BEAF00AEC90B /* TimerIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TimerIcon.png; sourceTree = "<group>"; };
 		777C2C7D1555BEAF00AEC90B /* TimerIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TimerIcon@2x.png"; sourceTree = "<group>"; };
+		7791C0A61582E7CD00E6837C /* RXMLElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RXMLElement.h; sourceTree = "<group>"; };
+		7791C0A71582E7CD00E6837C /* RXMLElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RXMLElement.m; sourceTree = "<group>"; };
+		7791C0AA1582EA2800E6837C /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		7791C0AC1582EA3100E6837C /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		77C5F29D154309D6005CAB30 /* CheckerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CheckerViewController.h; sourceTree = "<group>"; };
 		77C5F29E154309D6005CAB30 /* CheckerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CheckerViewController.m; sourceTree = "<group>"; };
 		77C5F29F154309D6005CAB30 /* CheckerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CheckerViewController.xib; sourceTree = "<group>"; };
@@ -152,6 +162,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7791C0AD1582EA3100E6837C /* libxml2.dylib in Frameworks */,
+				7791C0AB1582EA2800E6837C /* libz.dylib in Frameworks */,
 				77DC830315420B8E0021D240 /* UIKit.framework in Frameworks */,
 				77DC830515420B8E0021D240 /* Foundation.framework in Frameworks */,
 				77DC830715420B8E0021D240 /* CoreGraphics.framework in Frameworks */,
@@ -184,7 +196,6 @@
 			isa = PBXGroup;
 			children = (
 				775A8A2B1557222600FAC1F3 /* Archive */,
-				7702C58F154A07400004EDB5 /* SelectRaceViewController.xib */,
 				7761D0971544DBBA00C6BB3F /* SettingsViewController.h */,
 				7761D0981544DBBA00C6BB3F /* SettingsViewController.m */,
 				7761D0991544DBBB00C6BB3F /* SettingsViewController.xib */,
@@ -193,6 +204,7 @@
 				777A50551549F5BD004AC93A /* RaceDirectorSigninViewController.xib */,
 				7702C58D154A07400004EDB5 /* SelectRaceViewController.h */,
 				7702C58E154A07400004EDB5 /* SelectRaceViewController.m */,
+				7702C58F154A07400004EDB5 /* SelectRaceViewController.xib */,
 			);
 			name = "Modal Views";
 			sourceTree = "<group>";
@@ -270,6 +282,8 @@
 		77DC830115420B8E0021D240 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7791C0AC1582EA3100E6837C /* libxml2.dylib */,
+				7791C0AA1582EA2800E6837C /* libz.dylib */,
 				77DC830215420B8E0021D240 /* UIKit.framework */,
 				77DC830415420B8E0021D240 /* Foundation.framework */,
 				77DC830615420B8E0021D240 /* CoreGraphics.framework */,
@@ -280,6 +294,8 @@
 		77DC830815420B8E0021D240 /* RunSignup */ = {
 			isa = PBXGroup;
 			children = (
+				7791C0A61582E7CD00E6837C /* RXMLElement.h */,
+				7791C0A71582E7CD00E6837C /* RXMLElement.m */,
 				775A8A2C155740D200FAC1F3 /* JSON */,
 				77DC8322154212E80021D240 /* Resources */,
 				77DC831115420B8E0021D240 /* AppDelegate.h */,
@@ -288,6 +304,8 @@
 				77DC835F15421A990021D240 /* TimerLabel.m */,
 				77DC8369154246860021D240 /* RecordTableViewCell.h */,
 				77DC836A154246860021D240 /* RecordTableViewCell.m */,
+				7728EB30158026B800280EA7 /* RSUModel.h */,
+				7728EB31158026B800280EA7 /* RSUModel.m */,
 				774AE4C0154B84BB00E4915C /* Main Views */,
 				774AE4C2154B84D300E4915C /* Modal Views */,
 				77DC830915420B8E0021D240 /* Supporting Files */,
@@ -439,6 +457,8 @@
 				775A8A3B155740E600FAC1F3 /* SBJsonParser.m in Sources */,
 				775A8A3C155740E600FAC1F3 /* SBJsonWriter.m in Sources */,
 				777C1FEA155B3403000EEBB4 /* ArchiveEditCellViewController.m in Sources */,
+				7728EB32158026B800280EA7 /* RSUModel.m in Sources */,
+				7791C0A81582E7CD00E6837C /* RXMLElement.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -512,7 +532,9 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "RunSignup/RunSignup-Prefix.pch";
+				HEADER_SEARCH_PATHS = "\"$(SDK_DIR)\"/usr/include/libxml2/**";
 				INFOPLIST_FILE = "RunSignup/RunSignup-Info.plist";
+				LIBRARY_SEARCH_PATHS = "\"$(SDK_DIR)\"/usr/lib/**";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -523,7 +545,9 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "RunSignup/RunSignup-Prefix.pch";
+				HEADER_SEARCH_PATHS = "\"$(SDK_DIR)\"/usr/include/libxml2/**";
 				INFOPLIST_FILE = "RunSignup/RunSignup-Info.plist";
+				LIBRARY_SEARCH_PATHS = "\"$(SDK_DIR)\"/usr/lib/**";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

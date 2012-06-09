@@ -53,7 +53,10 @@
 
 - (NSTimeInterval)elapsedTime{
     NSDate *currentDate = [NSDate date];
-    return [currentDate timeIntervalSinceDate:startDate];    
+    NSTimeInterval interval = [currentDate timeIntervalSinceDate:startDate];
+    interval = (int)(interval * 100);
+    interval /= 100.0;
+    return interval;
 }
 
 // Called every 1/100.0 seconds

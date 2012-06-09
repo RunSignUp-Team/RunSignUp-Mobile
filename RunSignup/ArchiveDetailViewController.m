@@ -146,8 +146,32 @@
         [archiveEditCellViewController setBib: [[records objectAtIndex: indexPath.row] objectForKey:@"Bib"]];
     }
     
+    [archiveEditCellViewController setDelegate: self];
+    [archiveEditCellViewController setIndex: indexPath];
     [self.navigationController pushViewController:archiveEditCellViewController animated:YES];
     [archiveEditCellViewController release];
+}
+
+- (void)updateRow:(NSIndexPath *)indexPath withDict:(NSMutableDictionary *)updateDict{
+    if([[fileDict objectForKey:@"Type"] intValue] == 0 || [[fileDict objectForKey:@"Type"] intValue] == 1){
+        [records removeObjectAtIndex:indexPath.row];
+        double time = [[updateDict objectForKey:@"Time"] doubleValue];
+        int lowestIndex;
+        for(lowestIndex = 0; lowestIndex < [records count]; lowestIndex++){
+            if(time < [[[records objectAtIndex: lowestIndex] objectForKey:@"Time"] doubleValue]){
+                break;
+            }
+        }
+        
+        NSLog(@"%i", lowestIndex);
+        [records insertObject:updateDict atIndex:lowestIndex];
+        [self updateRecordNumbersAfterDeletion];
+        // Not after a deletion, but function is the same
+    }else{
+        [records replaceObjectAtIndex:indexPath.row withObject:updateDict];
+    }
+    [self saveToFile];
+    [table reloadData];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{

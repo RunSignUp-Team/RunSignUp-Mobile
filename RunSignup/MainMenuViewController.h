@@ -57,7 +57,7 @@
 - (IBAction)showSettings:(id)sender;
 
 - (IBAction)didSignOut;
-- (BOOL)didSignInEmail:(NSString *)email password:(NSString *)password;
+- (int)didSignInEmail:(NSString *)email password:(NSString *)password;
 - (BOOL)didSelectRace:(NSString *)raceID;
 
 @end

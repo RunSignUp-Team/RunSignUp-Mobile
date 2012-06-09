@@ -35,4 +35,6 @@
 - (void)saveToFile;
 - (void)updateRecordNumbersAfterDeletion;
 
+- (void)updateRow:(NSIndexPath *)indexPath withDict:(NSMutableDictionary *)updateDict;
+
 @end

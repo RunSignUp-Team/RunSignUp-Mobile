@@ -15,6 +15,7 @@
 #import "SelectRaceViewController.h"
 #import "ArchiveViewController.h"
 #import "AppDelegate.h"
+#import "RSUModel.h"
 
 @implementation MainMenuViewController
 @synthesize timerButton;
@@ -132,9 +133,12 @@
 }
 
 // Delegate style method for telling MainMenuViewController who to sign in and return BOOL if it was successful
-- (BOOL)didSignInEmail:(NSString *)email password:(NSString *)password{
-    if([email isEqualToString:@"test"] && [password isEqualToString:@"test"]){
-        self.raceDirectorEmail = @"emailaddress@emailvendor.com";
+- (int)didSignInEmail:(NSString *)email password:(NSString *)password{
+    RSUModel *model = [RSUModel sharedModel];
+    int attempt = [model attemptLoginWithEmail:email pass:password];
+    
+    if(attempt == Success){
+        self.raceDirectorEmail = email;
         [emailLabel setHidden: NO];
         [emailLabel setText:raceDirectorEmail];
         [signedInAs setHidden: NO];
@@ -150,9 +154,9 @@
         [selectRaceButton setHidden: NO];
         [selectRaceButton setFrame: CGRectMake(50, 128, 220, 46)];
         [signInButton setHidden: YES];
-        return YES;
+        return Success;
     }else{
-        return NO;
+        return attempt;
     }
 }
 
@@ -180,6 +184,7 @@
 
 // Delegate style method for telling MainMenuViewController to sign out and update view
 - (IBAction)didSignOut{
+    [[RSUModel sharedModel] logout];
     [timerButton setHidden: YES];
     [chuteButton setHidden: YES];
     [checkerButton setHidden: YES];

@@ -8,7 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ArchiveEditCellViewController : UIViewController <UITextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource>{
+@class ArchiveDetailViewController;
+
+@interface ArchiveEditCellViewController : UIViewController <UIAlertViewDelegate, UITextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource>{
     UITextField *bibField;
     UIPickerView *timePicker;
     
@@ -23,7 +25,12 @@
     NSString *place;
     NSString *bib;
     
+    NSIndexPath *index;
+    
     int type;
+    BOOL didChangeTime;
+    
+    ArchiveDetailViewController *delegate;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil type:(int)t;
@@ -39,7 +46,10 @@
 @property NSTimeInterval time;
 @property (nonatomic, retain) NSString *place;
 @property (nonatomic, retain) NSString *bib;
+@property (nonatomic, retain) ArchiveDetailViewController *delegate;
+@property (nonatomic, retain) NSIndexPath *index;
 
+- (void)actuallySaveChanges;
 - (IBAction)saveChanges:(id)sender;
 - (void)setPickerGivenTime;
 

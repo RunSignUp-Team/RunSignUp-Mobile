@@ -14,10 +14,13 @@
     UITableView *table;    
     NSIndexPath *raceIndex;
     
+    NSArray *raceList;
+    
     MainMenuViewController *delegate;
 }
 
 @property (nonatomic, retain) IBOutlet UITableView *table;
+@property (nonatomic, retain) NSArray *raceList;
 @property (nonatomic, retain) NSIndexPath *raceIndex;
 @property (nonatomic, retain) MainMenuViewController *delegate;
 

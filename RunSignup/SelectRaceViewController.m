@@ -8,13 +8,18 @@
 
 #import "SelectRaceViewController.h"
 #import "MainMenuViewController.h"
+#import "RSUModel.h"
 
 @implementation SelectRaceViewController
+@synthesize table;
+@synthesize raceList;
 @synthesize raceIndex;
 @synthesize delegate;
-@synthesize table;
 
 - (void)viewDidLoad{
+    RSUModel *model = [RSUModel sharedModel];
+    self.raceList = [model attemptRetreiveRaceList];
+
     [super viewDidLoad];
 }
 
@@ -25,7 +30,12 @@
     if(cell == nil)
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     
-    [[cell textLabel] setText: [NSString stringWithFormat:@"Race number %i", indexPath.row]];
+    if(raceList == nil){
+        [[cell textLabel] setText: @"No races found. Please try again."];
+    }else{
+        [[cell textLabel] setText: [[raceList objectAtIndex:indexPath.row] objectForKey:@"Name"]];
+
+    }
     return cell;
 }
 
@@ -36,7 +46,7 @@
 // Select a race to time for (of many that a given director could be directing in the future)
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     self.raceIndex = indexPath;
-    NSString *raceID = [NSString stringWithFormat:@"Race number %i", raceIndex.row];
+    NSString *raceID = [[raceList objectAtIndex:indexPath.row] objectForKey:@"Name"];
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Are You Sure?" message:[NSString stringWithFormat:@"Are you sure you wish to select \"%@\" as the race to time?", raceID] delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
     [alert show];
     [alert release];
@@ -46,7 +56,7 @@
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex{
     if(buttonIndex == 1){
         if([delegate respondsToSelector:@selector(didSelectRace:)]){
-            NSString *raceID = [NSString stringWithFormat:@"Race number %i", raceIndex.row];
+            NSString *raceID = [[raceList objectAtIndex:raceIndex.row] objectForKey:@"Name"];
             if([delegate didSelectRace:raceID]){
                 [self dismissModalViewControllerAnimated:YES];
             }else{
@@ -63,15 +73,17 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return 10;
+    if(raceList != nil)
+        return [raceList count];
+    else
+        return 1;
 }
 
 - (IBAction)cancel:(id)sender{
     [self dismissModalViewControllerAnimated:YES];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation{
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 

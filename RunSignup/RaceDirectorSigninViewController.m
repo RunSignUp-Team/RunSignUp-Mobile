@@ -8,6 +8,7 @@
 
 #import "RaceDirectorSigninViewController.h"
 #import "MainMenuViewController.h"
+#import "RSUModel.h"
 
 @implementation RaceDirectorSigninViewController
 @synthesize delegate;
@@ -60,15 +61,28 @@
 // Sign in, query if email and password are valid
 - (IBAction)signIn:(id)sender{
     if([delegate respondsToSelector:@selector(didSignInEmail:password:)]){
-        [activityIndicator startAnimating];
-        if([delegate didSignInEmail:[emailField text] password:[passField text]]){
-            [activityIndicator stopAnimating];
-            [self dismissModalViewControllerAnimated: YES];
-        }else{
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"The email or password is incorrect." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
-            [alert show];
-            [alert release];
-            [activityIndicator stopAnimating];
+        if([[emailField text] length] > 0 && [[passField text] length] > 0){
+            [activityIndicator startAnimating];
+            int response = [delegate didSignInEmail:[emailField text] password:[passField text]];
+            if(response == Success){
+                [activityIndicator stopAnimating];
+                [self dismissModalViewControllerAnimated: YES];
+            }else if(response == InvalidEmail){
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"No user exists with that email address. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+                [alert show];
+                [alert release];
+                [activityIndicator stopAnimating];
+            }else if(response == InvalidPassword){
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"The password is invalid. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+                [alert show];
+                [alert release];
+                [activityIndicator stopAnimating];
+            }else{
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+                [alert show];
+                [alert release];
+                [activityIndicator stopAnimating];
+            }
         }
     }
     
