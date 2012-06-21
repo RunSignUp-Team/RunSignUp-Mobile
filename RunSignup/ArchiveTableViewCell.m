@@ -20,7 +20,7 @@
         self.dataTypeImage = [[UIImageView alloc] initWithFrame:CGRectMake(288, 0, 32, 44)];
         [self.contentView addSubview: dataTypeImage];
         
-        self.raceNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 2, 276, 18)];
+        self.raceNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 2, 276, 20)];
         [raceNameLabel setFont: [UIFont boldSystemFontOfSize:18.0f]];
         [self.contentView addSubview: raceNameLabel];
         

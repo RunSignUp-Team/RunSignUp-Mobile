@@ -19,6 +19,7 @@
     
     BOOL started;
     NSString *raceID;
+    NSString *raceName;
     NSString *fileToSave;
 }
 
@@ -28,6 +29,7 @@
 @property (nonatomic, retain) NSMutableArray *records;
 @property (nonatomic, retain) TimerLabel *timerLabel;
 @property (nonatomic, retain) NSString *raceID;
+@property (nonatomic, retain) NSString *raceName;
 @property (nonatomic, retain) NSString *fileToSave;
 
 - (IBAction)record:(id)sender;

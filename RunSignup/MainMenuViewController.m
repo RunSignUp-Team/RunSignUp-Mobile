@@ -34,6 +34,7 @@
 @synthesize raceLabel;
 
 @synthesize raceDirectorEmail;
+@synthesize raceDirectorRaceName;
 @synthesize raceDirectorRaceID;
 
 - (void)viewDidLoad{
@@ -76,6 +77,7 @@
 - (IBAction)timer:(id)sender{
     TimerViewController *timerViewController = [[TimerViewController alloc] initWithNibName:@"TimerViewController" bundle:nil];
     [timerViewController setRaceID:raceDirectorRaceID];
+    [timerViewController setRaceName:raceDirectorRaceName];
     AppDelegate *del = [[UIApplication sharedApplication] delegate];
     [[del navController] pushViewController:timerViewController animated:YES];
     [timerViewController release];
@@ -93,6 +95,7 @@
 - (IBAction)checker:(id)sender{
     CheckerViewController *checkerViewController = [[CheckerViewController alloc] initWithNibName:@"CheckerViewController" bundle:nil];
     [checkerViewController setRaceID:raceDirectorRaceID];
+    [checkerViewController setRaceName:raceDirectorRaceName];
     AppDelegate *del = [[UIApplication sharedApplication] delegate];
     [[del navController] pushViewController:checkerViewController animated:YES];
     [checkerViewController release];
@@ -112,6 +115,7 @@
 - (IBAction)chute:(id)sender{
     ChuteViewController *chuteViewController = [[ChuteViewController alloc] initWithNibName:@"ChuteViewController" bundle:nil];
     [chuteViewController setRaceID:raceDirectorRaceID];
+    [chuteViewController setRaceName:raceDirectorRaceName];
     AppDelegate *del = [[UIApplication sharedApplication] delegate];
     [[del navController] pushViewController:chuteViewController animated:YES];
     [chuteViewController release];
@@ -124,7 +128,7 @@
     [settingsViewController release];
 }
 
-- (IBAction)showInfo:(id)sender{
+- (IBAction)showArchive:(id)sender{
     ArchiveViewController *archiveViewController = [[ArchiveViewController alloc] initWithNibName:@"ArchiveViewController" bundle:nil];
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:archiveViewController];
     [self presentModalViewController:navigationController animated:YES];
@@ -143,7 +147,7 @@
         [emailLabel setText:raceDirectorEmail];
         [signedInAs setHidden: NO];
         [signOutButton setHidden: NO];
-        [signOutButton setFrame: CGRectMake(22, 376, 278, 46)];
+        [signOutButton setFrame: CGRectMake(22, 355, 278, 46)];
         [raceLabel setHidden: NO];
         [raceLabel setText:@"No Race Selected"];
         [timingFor setHidden: NO];
@@ -152,7 +156,7 @@
         [chuteButton setHidden: YES];
         [checkerButton setHidden: YES];
         [selectRaceButton setHidden: NO];
-        [selectRaceButton setFrame: CGRectMake(50, 128, 220, 46)];
+        [selectRaceButton setFrame: CGRectMake(50, 107, 220, 46)];
         [signInButton setHidden: YES];
         return Success;
     }else{
@@ -161,10 +165,11 @@
 }
 
 // Delegate style method for telling MainMenuViewController which race to time for and return if successful
-- (BOOL)didSelectRace:(NSString *)raceID{
+- (void)didSelectRace:(NSString *)raceName withID:(NSString *)raceID{
+    self.raceDirectorRaceName = raceName;
     self.raceDirectorRaceID = raceID;
     [timingFor setHidden: NO];
-    [raceLabel setText: raceDirectorRaceID];
+    [raceLabel setText: raceDirectorRaceName];
     [timerButton setHidden: NO];
     [chuteButton setHidden: NO];
     [checkerButton setHidden: NO];
@@ -173,13 +178,12 @@
     if(selectRaceButton.frame.origin.x == 50){ //50,128,220,46 to 166,376,138,46
         [UIView beginAnimations:nil context:nil];
         [UIView setAnimationDuration: 0.75f];
-        [signOutButton setFrame: CGRectMake(22, 376, 138, 46)];
-        [selectRaceButton setFrame: CGRectMake(166, 376, 138, 46)];
+        [signOutButton setFrame: CGRectMake(22, 355, 138, 46)];
+        [selectRaceButton setFrame: CGRectMake(166, 355, 138, 46)];
         [UIView commitAnimations];
     }
     [signInButton setHidden: YES];
     [hintLabel setHidden: YES];
-    return YES;
 }
 
 // Delegate style method for telling MainMenuViewController to sign out and update view
@@ -196,7 +200,7 @@
     [raceLabel setHidden: YES];
     [signOutButton setHidden: YES];
     [selectRaceButton setHidden: YES];
-    [selectRaceButton setFrame:CGRectMake(50, 128, 220, 46)];
+    [selectRaceButton setFrame:CGRectMake(50, 107, 220, 46)];
     raceDirectorEmail = @"";
     raceDirectorRaceID = @"";
     [hintLabel setText:@"Race Director? Sign in here."];

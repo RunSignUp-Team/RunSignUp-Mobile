@@ -18,14 +18,10 @@
         formatter = [[NSDateFormatter alloc] init];
         [formatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0.0]];
         self.startDate = nil;
+                
+        [formatter setDateFormat:@"mm:ss.SS"];
+        self.text = @"00:00.00";
         
-        if([[NSUserDefaults standardUserDefaults] boolForKey:@"TimerHours"]){
-            [formatter setDateFormat:@"HH:mm:ss.SS"];
-            self.text = @"00:00:00.00";
-        }else{
-            [formatter setDateFormat:@"mm:ss.SS"];
-            self.text = @"00:00.00";
-        }
         
         self.font = [UIFont systemFontOfSize: 54.0f];
         self.textAlignment = UITextAlignmentCenter;
@@ -35,14 +31,13 @@
     return self;
 }
 
-// Return formatter's formatted date to either HH:mm:ss.SS or mm:ss.SS
+
 - (NSString *)formattedTime{
     NSDate *currentDate = [NSDate date];
     
     NSTimeInterval timeInterval = [currentDate timeIntervalSinceDate:startDate];    
     NSDate *timerDate = [NSDate dateWithTimeIntervalSince1970:timeInterval];
     
-    // Force old format so json files are all standardized to HH:mm:ss.SS
     NSString *oldFormat = [formatter dateFormat];
     [formatter setDateFormat:@"HH:mm:ss.SS"];
     NSString *timeString = [formatter stringFromDate:timerDate];
@@ -63,7 +58,10 @@
 - (void)updateTimer{
     NSDate *currentDate = [NSDate date];
     
-    NSTimeInterval timeInterval = [currentDate timeIntervalSinceDate:startDate];    
+    NSTimeInterval timeInterval = [currentDate timeIntervalSinceDate:startDate];
+
+    if(timeInterval >= 3600.0)
+        [formatter setDateFormat:@"HH:mm:ss.SS"];
     NSDate *timerDate = [NSDate dateWithTimeIntervalSince1970:timeInterval];
     
     NSString *timeString = [formatter stringFromDate:timerDate];
@@ -75,7 +73,6 @@
 - (void)startTiming{    
     self.startDate = [NSDate date];
     timer = [NSTimer scheduledTimerWithTimeInterval:1.0/100.0 target:self selector:@selector(updateTimer) userInfo:nil repeats:YES];
-
 }
 
 - (void)stopTiming{

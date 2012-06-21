@@ -60,7 +60,10 @@
     
     /*UIImageView *editAccessoryView = [[UIImageView alloc] initWithImage: [UIImage imageNamed:@"EditIcon.png"]];
     [cell setAccessoryView: editAccessoryView];*/
-    [cell setEditingAccessoryType: UITableViewCellAccessoryDetailDisclosureButton];
+    
+    // !!! Uncomment here to enable buggy individual row editing !!! //
+    //[cell setEditingAccessoryType: UITableViewCellAccessoryDetailDisclosureButton];
+    // !!! Uncomment here to enable buggy individual row editing !!! //
     
     if([[fileDict objectForKey:@"Type"] intValue] == 0){
         [[cell textLabel] setText: [[records objectAtIndex: indexPath.row] objectForKey:@"Place"]];

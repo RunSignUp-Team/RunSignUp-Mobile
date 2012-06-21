@@ -23,6 +23,7 @@
     UILabel *raceLabel;
     
     NSString *raceDirectorEmail;
+    NSString *raceDirectorRaceName;
     NSString *raceDirectorRaceID;
     
     UILabel *copyrightLabel;
@@ -45,6 +46,7 @@
 @property (nonatomic, retain) IBOutlet UILabel *raceLabel;
 
 @property (nonatomic, retain) NSString *raceDirectorEmail;
+@property (nonatomic, retain) NSString *raceDirectorRaceName;
 @property (nonatomic, retain) NSString *raceDirectorRaceID;
 
 - (IBAction)timer:(id)sender;
@@ -53,11 +55,11 @@
 - (IBAction)selectRace:(id)sender;
 - (IBAction)chute:(id)sender;
 
-- (IBAction)showInfo:(id)sender;
+- (IBAction)showArchive:(id)sender;
 - (IBAction)showSettings:(id)sender;
 
 - (IBAction)didSignOut;
 - (int)didSignInEmail:(NSString *)email password:(NSString *)password;
-- (BOOL)didSelectRace:(NSString *)raceID;
+- (void)didSelectRace:(NSString *)raceName withID:(NSString *)raceID;
 
 @end

@@ -21,12 +21,16 @@ enum{
     
     NSString *email;
     NSString *password;
+    
+    NSTimer *renewTimer;
 }
 
 @property (nonatomic, retain) NSString *key;
 @property (nonatomic, retain) NSString *secret;
 @property (nonatomic, retain) NSString *email;
 @property (nonatomic, retain) NSString *password;
+
+@property (nonatomic, retain) NSTimer *renewTimer;
 
 + (id)sharedModel;
 

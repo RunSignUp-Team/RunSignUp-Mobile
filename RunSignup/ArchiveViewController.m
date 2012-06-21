@@ -54,7 +54,7 @@
         cell = [[ArchiveTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     
     [cell setType: [[[fileArray objectAtIndex: indexPath.row] objectForKey: @"Type"] intValue]];
-    [[cell raceNameLabel] setText:[[fileArray objectAtIndex: indexPath.row] objectForKey: @"RaceID"]];
+    [[cell raceNameLabel] setText:[[fileArray objectAtIndex: indexPath.row] objectForKey: @"RaceName"]];
     [[cell dateLabel] setText:[[fileArray objectAtIndex: indexPath.row] objectForKey: @"Date"]];
     return cell;
 }

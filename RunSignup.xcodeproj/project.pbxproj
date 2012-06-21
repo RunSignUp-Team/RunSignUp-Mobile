@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		7702C590154A07400004EDB5 /* SelectRaceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7702C58E154A07400004EDB5 /* SelectRaceViewController.m */; };
 		7702C591154A07400004EDB5 /* SelectRaceViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7702C58F154A07400004EDB5 /* SelectRaceViewController.xib */; };
+		7702E5F8158CECFF00B9D2D6 /* Logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7702E5F7158CECFF00B9D2D6 /* Logo@2x.png */; };
+		7714EA761592CC0000610C97 /* ArchiveIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7714EA741592CC0000610C97 /* ArchiveIcon.png */; };
+		7714EA771592CC0000610C97 /* ArchiveIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7714EA751592CC0000610C97 /* ArchiveIcon@2x.png */; };
 		7728EB32158026B800280EA7 /* RSUModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7728EB31158026B800280EA7 /* RSUModel.m */; };
 		775A8A281557221000FAC1F3 /* ArchiveDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 775A8A261557221000FAC1F3 /* ArchiveDetailViewController.m */; };
 		775A8A291557221000FAC1F3 /* ArchiveDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 775A8A271557221000FAC1F3 /* ArchiveDetailViewController.xib */; };
@@ -73,6 +76,9 @@
 		7702C58D154A07400004EDB5 /* SelectRaceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectRaceViewController.h; sourceTree = "<group>"; };
 		7702C58E154A07400004EDB5 /* SelectRaceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectRaceViewController.m; sourceTree = "<group>"; };
 		7702C58F154A07400004EDB5 /* SelectRaceViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SelectRaceViewController.xib; sourceTree = "<group>"; };
+		7702E5F7158CECFF00B9D2D6 /* Logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Logo@2x.png"; sourceTree = "<group>"; };
+		7714EA741592CC0000610C97 /* ArchiveIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ArchiveIcon.png; sourceTree = "<group>"; };
+		7714EA751592CC0000610C97 /* ArchiveIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ArchiveIcon@2x.png"; sourceTree = "<group>"; };
 		7728EB30158026B800280EA7 /* RSUModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSUModel.h; sourceTree = "<group>"; };
 		7728EB31158026B800280EA7 /* RSUModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSUModel.m; sourceTree = "<group>"; };
 		775A8A251557221000FAC1F3 /* ArchiveDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArchiveDetailViewController.h; sourceTree = "<group>"; };
@@ -248,6 +254,8 @@
 		777C2C771555BEA400AEC90B /* Icons */ = {
 			isa = PBXGroup;
 			children = (
+				7714EA741592CC0000610C97 /* ArchiveIcon.png */,
+				7714EA751592CC0000610C97 /* ArchiveIcon@2x.png */,
 				777C1FE2155B2EB3000EEBB4 /* EditIcon.png */,
 				777C1FE3155B2EB3000EEBB4 /* EditIcon@2x.png */,
 				777C2C781555BEAF00AEC90B /* CheckerIcon.png */,
@@ -340,6 +348,7 @@
 				77DC8323154212E80021D240 /* BlueButton.png */,
 				77DC8324154212E80021D240 /* BlueButton@2x.png */,
 				77DC8325154212E80021D240 /* Logo.png */,
+				7702E5F7158CECFF00B9D2D6 /* Logo@2x.png */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -427,6 +436,9 @@
 				777C1FE4155B2EB3000EEBB4 /* EditIcon.png in Resources */,
 				777C1FE5155B2EB3000EEBB4 /* EditIcon@2x.png in Resources */,
 				777C1FEB155B3403000EEBB4 /* ArchiveEditCellViewController.xib in Resources */,
+				7702E5F8158CECFF00B9D2D6 /* Logo@2x.png in Resources */,
+				7714EA761592CC0000610C97 /* ArchiveIcon.png in Resources */,
+				7714EA771592CC0000610C97 /* ArchiveIcon@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

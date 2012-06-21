@@ -33,6 +33,7 @@
 @property (nonatomic, retain) IBOutlet UITableView *table;
 @property (nonatomic, retain) IBOutlet UITextField *bibField;
 @property (nonatomic, retain) NSString *raceID;
+@property (nonatomic, retain) NSString *raceName;
 @property (nonatomic, retain) NSString *fileToSave;
 @property (nonatomic, retain) NSMutableArray *records;
 @property (nonatomic, retain) TimerLabel *timerLabel;

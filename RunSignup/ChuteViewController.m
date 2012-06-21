@@ -16,10 +16,10 @@
 @synthesize records;
 @synthesize fileToSave;
 @synthesize raceID;
+@synthesize raceName;
 @synthesize bibField;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil{
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         self.title = @"Chute";
@@ -89,6 +89,7 @@
     [formatter setTimeStyle:NSDateFormatterNoStyle];
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
     [dict setObject:raceID forKey:@"RaceID"];
+    [dict setObject:raceName forKey:@"RaceName"];
     [dict setObject:[formatter stringFromDate:[NSDate date]] forKey:@"Date"];
     [dict setObject:records forKey:@"Data"];
     [dict setObject:[NSNumber numberWithInt:2] forKey:@"Type"];

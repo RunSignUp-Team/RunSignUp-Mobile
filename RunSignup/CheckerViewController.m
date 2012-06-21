@@ -18,11 +18,11 @@
 @synthesize records;
 @synthesize timerLabel;
 @synthesize raceID;
+@synthesize raceName;
 @synthesize fileToSave;
 @synthesize bibField;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil{
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         self.title = @"Checker";
@@ -102,6 +102,7 @@
     [formatter setTimeStyle:NSDateFormatterNoStyle];
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
     [dict setObject:raceID forKey:@"RaceID"];
+    [dict setObject:raceName forKey:@"RaceName"];
     [dict setObject:[formatter stringFromDate:[NSDate date]] forKey:@"Date"];
     [dict setObject:records forKey:@"Data"];
     [dict setObject:[NSNumber numberWithInt:1] forKey:@"Type"];
@@ -116,7 +117,7 @@
         if([[bibField text] length] > 0 && started){
             NSTimeInterval elapsedTime = [timerLabel elapsedTime];
             NSString *formattedTime = [timerLabel formattedTime];
-            NSMutableDictionary *record = [[NSMutableDictionary alloc] initWithObjectsAndKeys:[NSString stringWithFormat:@"%.5i", [[bibField text] intValue]], @"Bib", formattedTime, @"FTime", [NSNumber numberWithDouble:elapsedTime], @"Time", nil];
+            NSMutableDictionary *record = [[NSMutableDictionary alloc] initWithObjectsAndKeys:[bibField text], @"Bib", formattedTime, @"FTime", [NSNumber numberWithDouble:elapsedTime], @"Time", nil];
             [records insertObject:record atIndex:0];
             [record release];
             NSIndexPath *index = [NSIndexPath indexPathForRow:0 inSection:0];
@@ -150,7 +151,7 @@
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration: 0.25f];
     [closeNumpadButton setFrame: CGRectMake(165, 149, 150, 46)];
-    [startButton setFrame: CGRectMake(8, 149, 150, 46)];
+    [recordButton setFrame: CGRectMake(8, 149, 150, 46)];
     [UIView commitAnimations];
 }
 
@@ -162,7 +163,7 @@
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration: 0.25f];
     [closeNumpadButton setFrame: CGRectMake(320, 149, 150, 46)];
-    [startButton setFrame: CGRectMake(8, 149, 307, 46)];
+    [recordButton setFrame: CGRectMake(8, 149, 307, 46)];
     [UIView commitAnimations];
 }
 
