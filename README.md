@@ -1,22 +1,15 @@
 RunSignUp-Mobile Timer
 ======================
 
+RunSignup Mobile Timer is a mobile application that allows three users to time and place a race in real time. It does this through integration with RunSignup.com, and requires a Race Director account.
+
+
 Roadmap
 1. Cleanup, signing in to RunSignup (downloading race list) (Andrew+Stephen)
 2. Work on archiving data (JSON, update on lostconnection->Regained connection)
 3. Push data up to server (time field, bib # field, place field).
 
 
-Different features to implement
-Implement big record button in other two views
+Different features to implement:
 Barcode scanner for Chute
-Setting for Checkers enter bib first or time first
-Archive JSON for offline
-Archived JSONs viewer
-Expand timer from min->hours real time.
-Send whole race list to update server every time (200 people * (time+place+bib))
 Bluetooth enabled phones to send to master device (one of the three timers)
-
-Andrew - Generalist, full time. Some PHP
-Stephen - Wrote the API, super smart, works well via Email
-Ed - Part time contractor, getting up to speed, results
