@@ -18,19 +18,20 @@
 @synthesize raceDirectorSignInLabel;
 @synthesize emailLabel;
 @synthesize passLabel;
-@synthesize activityIndicator;
+@synthesize rememberSwitch;
+@synthesize rli;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+        self.rli = [[RoundedLoadingIndicator alloc] initWithYLocation:100];
+        [self.view addSubview: rli];
     }
     return self;
 }
 
 - (void)viewDidLoad{
-    
     // Images created for stretching to variably sized UIButtons (see buttons in resources)
     UIImage *blueButtonImage = [UIImage imageNamed:@"BlueButton.png"];
     UIImage *stretchedBlueButton = [blueButtonImage stretchableImageWithLeftCapWidth:12 topCapHeight:0];
@@ -41,7 +42,13 @@
     [signInButton setBackgroundImage:stretchedBlueButtonTap forState:UIControlStateHighlighted];
     
     // Set email field to have keyboard open on load
-    [emailField becomeFirstResponder];
+    if([[NSUserDefaults standardUserDefaults] objectForKey:@"RememberEmail"] != nil){
+        [emailField setText:[[NSUserDefaults standardUserDefaults] objectForKey:@"RememberEmail"]];
+        [rememberSwitch setOn:YES];
+        [passField becomeFirstResponder];
+    }else{
+        [emailField becomeFirstResponder];
+    }
     
     [super viewDidLoad];
 }
@@ -60,29 +67,45 @@
 
 // Sign in, query if email and password are valid
 - (IBAction)signIn:(id)sender{
-    if([delegate respondsToSelector:@selector(didSignInEmail:password:)]){
+    if([delegate respondsToSelector:@selector(didSignInEmail:password:response:)]){
         if([[emailField text] length] > 0 && [[passField text] length] > 0){
-            [activityIndicator startAnimating];
-            int response = [delegate didSignInEmail:[emailField text] password:[passField text]];
-            if(response == Success){
-                [activityIndicator stopAnimating];
-                [self dismissModalViewControllerAnimated: YES];
-            }else if(response == InvalidEmail){
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"No user exists with that email address. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
-                [alert show];
-                [alert release];
-                [activityIndicator stopAnimating];
-            }else if(response == InvalidPassword){
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"The password is invalid. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
-                [alert show];
-                [alert release];
-                [activityIndicator stopAnimating];
-            }else{
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
-                [alert show];
-                [alert release];
-                [activityIndicator stopAnimating];
-            }
+            [rli fadeIn];
+            void (^success)(int) = ^(int response){
+                if(response == Success){
+                    [rli fadeOut];
+                    
+                    if([[NSUserDefaults standardUserDefaults] objectForKey:@"RememberEmail"] == nil){
+                        if([rememberSwitch isOn]){
+                            [[NSUserDefaults standardUserDefaults] setObject:[emailField text] forKey:@"RememberEmail"];
+                            [[NSUserDefaults standardUserDefaults] synchronize];
+                        }
+                    }else{
+                        if(![rememberSwitch isOn]){
+                            [[NSUserDefaults standardUserDefaults] setObject:nil forKey:@"RememberEmail"];
+                            [[NSUserDefaults standardUserDefaults] synchronize];
+                        }
+                    }
+                    
+                    [self dismissModalViewControllerAnimated:YES];
+                }else if(response == InvalidEmail){
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"No user exists with that email address. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+                    [alert show];
+                    [alert release];
+                    [rli fadeOut];
+                }else if(response == InvalidPassword){
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"The password is invalid. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+                    [alert show];
+                    [alert release];
+                    [rli fadeOut];
+                }else{
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+                    [alert show];
+                    [alert release];
+                    [rli fadeOut];
+                }
+            };
+            
+            [delegate didSignInEmail:[emailField text] password:[passField text] response:success];
         }
     }
     

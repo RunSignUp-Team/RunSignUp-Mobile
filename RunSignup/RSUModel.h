@@ -36,8 +36,8 @@ enum{
 
 - (id)init;
 - (int)renewCredentials;
-- (int)attemptLoginWithEmail:(NSString *)em pass:(NSString *)pa;
+- (void)attemptLoginWithEmail:(NSString *)em pass:(NSString *)pa response:(void (^)(int))responseBlock;
 - (void)logout;
-- (NSArray *)attemptRetreiveRaceList;
+- (void)attemptRetreiveRaceList:(void (^)(NSArray *))responseBlock;
 
 @end

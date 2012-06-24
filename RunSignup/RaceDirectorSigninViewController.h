@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "RoundedLoadingIndicator.h"
 
 @class MainMenuViewController;
 
@@ -19,9 +20,11 @@
     UILabel *emailLabel;
     UILabel *passLabel;
     
+    UISwitch *rememberSwitch;
+    
     MainMenuViewController *delegate;
     
-    UIActivityIndicatorView *activityIndicator;
+    RoundedLoadingIndicator *rli;
 }
 
 @property (nonatomic, retain) MainMenuViewController *delegate;
@@ -32,7 +35,8 @@
 @property (nonatomic, retain) IBOutlet UILabel *raceDirectorSignInLabel;
 @property (nonatomic, retain) IBOutlet UILabel *emailLabel;
 @property (nonatomic, retain) IBOutlet UILabel *passLabel;
-@property (nonatomic, retain) IBOutlet UIActivityIndicatorView *activityIndicator;
+@property (nonatomic, retain) IBOutlet UISwitch *rememberSwitch;
+@property (nonatomic, retain) RoundedLoadingIndicator *rli;
 
 - (IBAction)signIn:(id)sender;
 - (IBAction)cancel:(id)sender;

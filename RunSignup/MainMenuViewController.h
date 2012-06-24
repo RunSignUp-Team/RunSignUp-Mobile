@@ -59,7 +59,7 @@
 - (IBAction)showSettings:(id)sender;
 
 - (IBAction)didSignOut;
-- (int)didSignInEmail:(NSString *)email password:(NSString *)password;
+- (void)didSignInEmail:(NSString *)email password:(NSString *)password response:(void (^)(int))responseBlock;
 - (void)didSelectRace:(NSString *)raceName withID:(NSString *)raceID;
 
 @end

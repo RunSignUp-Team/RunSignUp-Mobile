@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "RoundedLoadingIndicator.h"
 
 @class MainMenuViewController;
 
@@ -17,12 +18,15 @@
     NSArray *raceList;
     
     MainMenuViewController *delegate;
+    
+    RoundedLoadingIndicator *rli;
 }
 
 @property (nonatomic, retain) IBOutlet UITableView *table;
 @property (nonatomic, retain) NSArray *raceList;
 @property (nonatomic, retain) NSIndexPath *raceIndex;
 @property (nonatomic, retain) MainMenuViewController *delegate;
+@property (nonatomic, retain) RoundedLoadingIndicator *rli;
 
 - (IBAction)cancel:(id)sender;
 

@@ -13,11 +13,12 @@
 @synthesize raceNameLabel;
 @synthesize dateLabel;
 
-// Layout done programatically because of the difficulty of using Nibs for UITableViewCell
+// Layout done programatically because of the hackishness of using Nibs for UITableViewCell
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if(self){
         self.dataTypeImage = [[UIImageView alloc] initWithFrame:CGRectMake(288, 0, 32, 44)];
+        [dataTypeImage setBackgroundColor: [UIColor whiteColor]];
         [self.contentView addSubview: dataTypeImage];
         
         self.raceNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 2, 276, 20)];

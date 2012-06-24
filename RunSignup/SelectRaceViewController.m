@@ -15,12 +15,29 @@
 @synthesize raceList;
 @synthesize raceIndex;
 @synthesize delegate;
+@synthesize rli;
 
 - (void)viewDidLoad{
-    RSUModel *model = [RSUModel sharedModel];
-    self.raceList = [model attemptRetreiveRaceList];
-
     [super viewDidLoad];
+}
+
+- (void)viewDidAppear:(BOOL)animated{
+    RSUModel *model = [RSUModel sharedModel];
+    
+    self.rli = [[RoundedLoadingIndicator alloc] initWithYLocation:200];
+    [[rli label] setText:@"Retrieving list..."];
+    [self.view addSubview: rli];
+    
+    void (^response)(NSArray *) = ^(NSArray *list){
+        NSLog(@"Some");
+        self.raceList = list;
+        [table reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
+        [rli fadeOut];
+    };
+    
+    self.raceList = nil;
+    [rli fadeIn];
+    [model attemptRetreiveRaceList: response];
 }
 
 // Create empty cell to display race for director
@@ -29,21 +46,34 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if(cell == nil){
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        
         UILabel *nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 5, 310, 20)];
         [nameLabel setFont: [UIFont boldSystemFontOfSize:18.0f]];
+        [nameLabel setBackgroundColor:[UIColor clearColor]];
         [nameLabel setTag: 12];
         [cell addSubview: nameLabel];
+        
         UILabel *dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 26, 100, 16)];
         [dateLabel setFont: [UIFont systemFontOfSize:14.0f]];
+        [dateLabel setBackgroundColor:[UIColor clearColor]];
         [dateLabel setTextColor: [UIColor lightGrayColor]];
         [dateLabel setTag: 13];
         [cell addSubview: dateLabel];
     }
     if(raceList == nil){
-        [[cell textLabel] setText: @"No races found. Please try again."];
+        [[cell textLabel] setText: @"No races found. Please retry."];
+        [(UILabel *)[cell viewWithTag:12] setText:@""];
+        [(UILabel *)[cell viewWithTag:13] setText:@""];
     }else{
+        [[cell textLabel] setText:@""];
         [(UILabel *)[cell viewWithTag:12] setText: [[raceList objectAtIndex:indexPath.row] objectForKey:@"Name"]];
-        [(UILabel *)[cell viewWithTag:13] setText:[[raceList objectAtIndex:indexPath.row] objectForKey:@"Date"]];
+        if([[raceList objectAtIndex:indexPath.row] objectForKey:@"NDate"] != nil){
+            [(UILabel *)[cell viewWithTag:13] setText:[[raceList objectAtIndex:indexPath.row] objectForKey:@"NDate"]];
+        }else if([[raceList objectAtIndex:indexPath.row] objectForKey:@"LDate"]){
+            [(UILabel *)[cell viewWithTag:13] setText:[[raceList objectAtIndex:indexPath.row] objectForKey:@"LDate"]];
+        }else{
+            [(UILabel *)[cell viewWithTag:13] setText:@"No date scheduled"];
+        }
     }
     return cell;
 }

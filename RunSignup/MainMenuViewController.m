@@ -65,7 +65,7 @@
     [formatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0.0]];
     [copyrightLabel setText:[NSString stringWithFormat:@"© %@ RunSignup, LLC", [formatter stringFromDate: date]]];
     [formatter release];
-        
+    
     [super viewDidLoad];
 }
 
@@ -137,31 +137,32 @@
 }
 
 // Delegate style method for telling MainMenuViewController who to sign in and return BOOL if it was successful
-- (int)didSignInEmail:(NSString *)email password:(NSString *)password{
+- (void)didSignInEmail:(NSString *)email password:(NSString *)password response:(void (^)(int))responseBlock{
     RSUModel *model = [RSUModel sharedModel];
-    int attempt = [model attemptLoginWithEmail:email pass:password];
     
-    if(attempt == Success){
+    void (^success)(int) = ^(int didSucceed){
+        if(didSucceed == Success){
         self.raceDirectorEmail = email;
-        [emailLabel setHidden: NO];
-        [emailLabel setText:raceDirectorEmail];
-        [signedInAs setHidden: NO];
-        [signOutButton setHidden: NO];
-        [signOutButton setFrame: CGRectMake(22, 355, 278, 46)];
-        [raceLabel setHidden: NO];
-        [raceLabel setText:@"No Race Selected"];
-        [timingFor setHidden: NO];
-        [hintLabel setText:@"Cool! Now select a race to time for."];
-        [timerButton setHidden: YES];
-        [chuteButton setHidden: YES];
-        [checkerButton setHidden: YES];
-        [selectRaceButton setHidden: NO];
-        [selectRaceButton setFrame: CGRectMake(50, 107, 220, 46)];
-        [signInButton setHidden: YES];
-        return Success;
-    }else{
-        return attempt;
-    }
+            [emailLabel setHidden: NO];
+            [emailLabel setText:raceDirectorEmail];
+            [signedInAs setHidden: NO];
+            [signOutButton setHidden: NO];
+            [signOutButton setFrame: CGRectMake(22, 355, 278, 46)];
+            [raceLabel setHidden: NO];
+            [raceLabel setText:@"No Race Selected"];
+            [timingFor setHidden: NO];
+            [hintLabel setText:@"Cool! Now select a race to time for."];
+            [timerButton setHidden: YES];
+            [chuteButton setHidden: YES];
+            [checkerButton setHidden: YES];
+            [selectRaceButton setHidden: NO];
+            [selectRaceButton setFrame: CGRectMake(50, 107, 220, 46)];
+            [signInButton setHidden: YES];
+        }
+        dispatch_async(dispatch_get_main_queue(),^(){responseBlock(didSucceed);});            
+    };
+
+    [model attemptLoginWithEmail:email pass:password response:success];
 }
 
 // Delegate style method for telling MainMenuViewController which race to time for and return if successful
