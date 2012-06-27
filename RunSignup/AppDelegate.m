@@ -36,8 +36,9 @@
     }
     
     // Push main menu onto stack as the first view controller
+    
     MainMenuViewController *mainMenuViewController = [[[MainMenuViewController alloc] initWithNibName:@"MainMenuViewController" bundle:nil] autorelease];
-    self.navController = [[UINavigationController alloc] initWithRootViewController: mainMenuViewController];    
+    self.navController = [[UINavigationController alloc] initWithRootViewController: mainMenuViewController];
     self.window.rootViewController = self.navController;
     [self.window makeKeyAndVisible];
     return YES;

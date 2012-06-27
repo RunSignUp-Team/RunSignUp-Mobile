@@ -14,16 +14,20 @@
 @synthesize label;
 
 - (id)initWithYLocation:(int)loc{
-    self = [super initWithFrame:CGRectMake(80, loc, 160, 100)];
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+        self = [super initWithFrame:CGRectMake(80, loc, 160, 100)];
+    else
+        self = [super initWithFrame:CGRectMake(402, loc + 40, 160, 100)];
     if(self){
         self.activity = [[UIActivityIndicatorView alloc] initWithFrame: CGRectMake(62, 20, 36, 36)];
+        self.label = [[UILabel alloc] initWithFrame: CGRectMake(10, 70, 140, 20)];
+        [label setFont: [UIFont systemFontOfSize: 18.0f]];
+        
         [activity setActivityIndicatorViewStyle: UIActivityIndicatorViewStyleWhiteLarge];
         [activity setBackgroundColor: [UIColor clearColor]];
         [activity startAnimating];
         [self addSubview: activity];
         
-        self.label = [[UILabel alloc] initWithFrame: CGRectMake(10, 70, 140, 20)];
-        [label setFont: [UIFont systemFontOfSize: 18.0f]];
         [label setBackgroundColor: [UIColor clearColor]];
         [label setTextColor: [UIColor whiteColor]];
         [label setTextAlignment: UITextAlignmentCenter];

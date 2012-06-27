@@ -60,23 +60,27 @@
     
     // Images created for stretching to variably sized UIButtons (see buttons in resources)
     UIImage *blueButtonImage = [UIImage imageNamed:@"BlueButton.png"];
-    UIImage *stretchedBlueButton = [blueButtonImage stretchableImageWithLeftCapWidth:12 topCapHeight:0];
+    UIImage *stretchedBlueButton = [blueButtonImage stretchableImageWithLeftCapWidth:12 topCapHeight:12];
     UIImage *blueButtonTapImage = [UIImage imageNamed:@"BlueButtonTap.png"];
-    UIImage *stretchedBlueButtonTap = [blueButtonTapImage stretchableImageWithLeftCapWidth:12 topCapHeight:0];
+    UIImage *stretchedBlueButtonTap = [blueButtonTapImage stretchableImageWithLeftCapWidth:12 topCapHeight:12];
     UIImage *redButtonImage = [UIImage imageNamed:@"RedButton.png"];
-    UIImage *stretchedRedButton = [redButtonImage stretchableImageWithLeftCapWidth:12 topCapHeight:0];
+    UIImage *stretchedRedButton = [redButtonImage stretchableImageWithLeftCapWidth:12 topCapHeight:12];
     UIImage *redButtonTapImage = [UIImage imageNamed:@"RedButtonTap.png"];
-    UIImage *stretchedRedButtonTap = [redButtonTapImage stretchableImageWithLeftCapWidth:12 topCapHeight:0];
+    UIImage *stretchedRedButtonTap = [redButtonTapImage stretchableImageWithLeftCapWidth:12 topCapHeight:12];
     UIImage *grayButtonImage = [UIImage imageNamed:@"GrayButton.png"];
-    UIImage *stretchedGrayButton = [grayButtonImage stretchableImageWithLeftCapWidth:12 topCapHeight:0];
+    UIImage *stretchedGrayButton = [grayButtonImage stretchableImageWithLeftCapWidth:12 topCapHeight:12];
     
     [startButton setBackgroundImage:stretchedBlueButton forState:UIControlStateNormal];
     [startButton setBackgroundImage:stretchedBlueButtonTap forState:UIControlStateHighlighted];
-    [closeNumpadButton setBackgroundImage:stretchedBlueButton forState:UIControlStateNormal];
-    [closeNumpadButton setBackgroundImage:stretchedBlueButtonTap forState:UIControlStateHighlighted];
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
+        [closeNumpadButton setBackgroundImage:stretchedBlueButton forState:UIControlStateNormal];
+        [closeNumpadButton setBackgroundImage:stretchedBlueButtonTap forState:UIControlStateHighlighted];
+    }
     [recordButton setBackgroundImage:stretchedRedButton forState:UIControlStateNormal];
     [recordButton setBackgroundImage:stretchedRedButtonTap forState:UIControlStateHighlighted];
     [recordButton setBackgroundImage:stretchedGrayButton forState:UIControlStateDisabled];
+    
+    [bibField becomeFirstResponder];
     
     // Set up right bar button (upper right corner) of UINavigationBar to edit button
     UIBarButtonItem *editButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(toggleEditing)];
@@ -147,24 +151,28 @@
 }
 
 - (IBAction)showCloseNumpadButton:(id)sender{
-    [closeNumpadButton setFrame: CGRectMake(320, 149, 150, 46)];
-    [UIView beginAnimations:nil context:nil];
-    [UIView setAnimationDuration: 0.25f];
-    [closeNumpadButton setFrame: CGRectMake(165, 149, 150, 46)];
-    [recordButton setFrame: CGRectMake(8, 149, 150, 46)];
-    [UIView commitAnimations];
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
+        [closeNumpadButton setFrame: CGRectMake(320, 149, 150, 46)];
+        [UIView beginAnimations:nil context:nil];
+        [UIView setAnimationDuration: 0.25f];
+        [closeNumpadButton setFrame: CGRectMake(165, 149, 150, 46)];
+        [recordButton setFrame: CGRectMake(8, 149, 150, 46)];
+        [UIView commitAnimations];
+    }
 }
 
 - (IBAction)hideCloseNumpadButton:(id)sender{
-    [bibField resignFirstResponder];
-    [bibField setText:@""];
-    [recordButton setEnabled: NO];
-    [closeNumpadButton setFrame: CGRectMake(165, 149, 150, 46)];
-    [UIView beginAnimations:nil context:nil];
-    [UIView setAnimationDuration: 0.25f];
-    [closeNumpadButton setFrame: CGRectMake(320, 149, 150, 46)];
-    [recordButton setFrame: CGRectMake(8, 149, 307, 46)];
-    [UIView commitAnimations];
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
+        [bibField resignFirstResponder];
+        [bibField setText:@""];
+        [recordButton setEnabled: NO];
+        [closeNumpadButton setFrame: CGRectMake(165, 149, 150, 46)];
+        [UIView beginAnimations:nil context:nil];
+        [UIView setAnimationDuration: 0.25f];
+        [closeNumpadButton setFrame: CGRectMake(320, 149, 150, 46)];
+        [recordButton setFrame: CGRectMake(8, 149, 307, 46)];
+        [UIView commitAnimations];
+    }
 }
 
 // Delegate method for making sure the user really wants to end the race
@@ -216,6 +224,21 @@
     }
 }
 
+- (void)textFieldDidEndEditing:(UITextField *)textField{
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
+        [table setFrame: CGRectMake(0, 92, 1024, 612)];
+    }
+}
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField{
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
+        [UIView beginAnimations:nil context:nil];
+        [UIView setAnimationDuration: 0.25f];
+        [table setFrame: CGRectMake(0, 92, 1024, 260)];
+        [UIView commitAnimations];
+    }
+}
+
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
     return @"Bib #                      Time";
 }
@@ -229,7 +252,10 @@
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation{
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+        return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    else
+        return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft);
 }
 
 @end

@@ -29,7 +29,6 @@
     [self.view addSubview: rli];
     
     void (^response)(NSArray *) = ^(NSArray *list){
-        NSLog(@"Some");
         self.raceList = list;
         [table reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
         [rli fadeOut];
@@ -126,7 +125,10 @@
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation{
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+        return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    else
+        return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft);
 }
 
 @end

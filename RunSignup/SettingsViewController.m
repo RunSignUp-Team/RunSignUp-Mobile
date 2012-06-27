@@ -43,10 +43,18 @@
     
     switch(indexPath.row){
         case 0:
+            if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+                [bigRecordSwitch setFrame: CGRectMake(220, 9, 0, 0)];
+            else
+                [bigRecordSwitch setFrame: CGRectMake(220, 9, 0, 0)];
             [bigRecordSwitch setFrame: CGRectMake(220, 9, 0, 0)];
             [cell addSubview: bigRecordSwitch];
             break;
         case 1:
+            if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+                [timerHoursSwitch setFrame: CGRectMake(220, 9, 0, 0)];
+            else
+                [timerHoursSwitch setFrame: CGRectMake(892, 9, 0, 0)];
             [timerHoursSwitch setFrame: CGRectMake(220, 9, 0, 0)];
             [cell addSubview: timerHoursSwitch];
             break;
@@ -84,7 +92,10 @@
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation{
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+        return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    else
+        return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft);
 }
 
 @end

@@ -10,6 +10,7 @@
 
 @interface ArchiveDetailViewController : UIViewController <UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource>{
     UILabel *nameLabel;
+    UILabel *idLabel;
     UILabel *dateLabel;
     UILabel *typeLabel;
     
@@ -23,6 +24,7 @@
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil;
 
 @property (nonatomic, retain) IBOutlet UILabel *nameLabel;
+@property (nonatomic, retain) IBOutlet UILabel *idLabel;
 @property (nonatomic, retain) IBOutlet UILabel *dateLabel;
 @property (nonatomic, retain) IBOutlet UILabel *typeLabel;
 @property (nonatomic, retain) IBOutlet UITableView *table;

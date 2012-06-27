@@ -7,9 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ZBarSDK.h"
+#import "NumpadView.h"
 
-@interface ChuteViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate>{
+@interface ChuteViewController : UIViewController <ZBarReaderDelegate, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate>{
     UIButton *recordButton;
+    UIButton *barcodeButton;
     
     UITableView *table;
     NSMutableArray *records;
@@ -19,17 +22,26 @@
     NSString *raceID;
     NSString *raceName;
     NSString *fileToSave;
+    
+    ZBarReaderViewController *zbarReaderViewController;
+    
+    NumpadView *numpadView;
 }
 
 @property (nonatomic, retain) IBOutlet UIButton *recordButton;
+@property (nonatomic, retain) IBOutlet UIButton *barcodeButton;
 @property (nonatomic, retain) IBOutlet UITableView *table;
 @property (nonatomic, retain) IBOutlet UITextField *bibField;
 @property (nonatomic, retain) NSString *raceID;
 @property (nonatomic, retain) NSString *raceName;
 @property (nonatomic, retain) NSString *fileToSave;
 @property (nonatomic, retain) NSMutableArray *records;
+@property (nonatomic, retain) ZBarReaderViewController *zbarReaderViewController;
+@property (nonatomic, retain) NumpadView *numpadView;
+
 
 - (IBAction)record:(id)sender;
+- (IBAction)barcodeScanner:(id)sender;
 
 - (void)toggleEditing;
 - (void)updateRecordNumbersAfterDeletion;

@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "TimerLabel.h"
+#import "NumpadView.h"
 
 @interface TimerViewController : UIViewController <UIAlertViewDelegate, UITableViewDelegate, UITableViewDataSource>{
     UIButton *startButton;

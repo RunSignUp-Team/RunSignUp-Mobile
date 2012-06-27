@@ -9,15 +9,20 @@
 #import "ChuteViewController.h"
 #import "RecordTableViewCell.h"
 #import "JSON.h"
+#import "ZBarSDK.h"
+#import "RoundedBarcodeView.h"
 
 @implementation ChuteViewController
 @synthesize recordButton;
+@synthesize barcodeButton;
 @synthesize table;
 @synthesize records;
 @synthesize fileToSave;
 @synthesize raceID;
 @synthesize raceName;
 @synthesize bibField;
+@synthesize zbarReaderViewController;
+@synthesize numpadView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil{
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -44,6 +49,12 @@
         }
         
         self.records = [[NSMutableArray alloc] init];
+        
+        self.zbarReaderViewController = [[ZBarReaderViewController alloc] init];
+        zbarReaderViewController.readerDelegate = self;
+
+        RoundedBarcodeView *rbv = [[RoundedBarcodeView alloc] initWithYLocation: 100];
+        [zbarReaderViewController.view addSubview: rbv];
     }
     return self;
 }
@@ -52,23 +63,37 @@
     [super viewDidLoad];
     
     // Images created for stretching to variably sized UIButtons (see buttons in resources)
+    UIImage *blueButtonImage = [UIImage imageNamed:@"BlueButton.png"];
+    UIImage *stretchedBlueButton = [blueButtonImage stretchableImageWithLeftCapWidth:12 topCapHeight:12];
+    UIImage *blueButtonTapImage = [UIImage imageNamed:@"BlueButtonTap.png"];
+    UIImage *stretchedBlueButtonTap = [blueButtonTapImage stretchableImageWithLeftCapWidth:12 topCapHeight:12];
     UIImage *redButtonImage = [UIImage imageNamed:@"RedButton.png"];
-    UIImage *stretchedRedButton = [redButtonImage stretchableImageWithLeftCapWidth:12 topCapHeight:0];
+    UIImage *stretchedRedButton = [redButtonImage stretchableImageWithLeftCapWidth:12 topCapHeight:12];
     UIImage *redButtonTapImage = [UIImage imageNamed:@"RedButtonTap.png"];
-    UIImage *stretchedRedButtonTap = [redButtonTapImage stretchableImageWithLeftCapWidth:12 topCapHeight:0];
+    UIImage *stretchedRedButtonTap = [redButtonTapImage stretchableImageWithLeftCapWidth:12 topCapHeight:12];
     UIImage *grayButtonImage = [UIImage imageNamed:@"GrayButton.png"];
-    UIImage *stretchedGrayButton = [grayButtonImage stretchableImageWithLeftCapWidth:12 topCapHeight:0];
+    UIImage *stretchedGrayButton = [grayButtonImage stretchableImageWithLeftCapWidth:12 topCapHeight:12];
     
     [recordButton setBackgroundImage:stretchedRedButton forState:UIControlStateNormal];
     [recordButton setBackgroundImage:stretchedRedButtonTap forState:UIControlStateHighlighted];
     [recordButton setBackgroundImage:stretchedGrayButton forState:UIControlStateDisabled];
-    
+    [barcodeButton setBackgroundImage:stretchedBlueButton forState:UIControlStateNormal];
+    [barcodeButton setBackgroundImage:stretchedBlueButtonTap forState:UIControlStateHighlighted];
+
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+        [self.bibField becomeFirstResponder];
+        
     // Set up right bar button (upper right corner) of UINavigationBar to edit button
     UIBarButtonItem *editButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(toggleEditing)];
     [self.navigationItem setRightBarButtonItem:editButton animated:YES];
     [editButton release];
     
-    [self.bibField becomeFirstResponder];
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
+        self.numpadView = [[NumpadView alloc] initWithFrame: CGRectMake(576, 54, 448, 538)];
+        [numpadView setTextField: bibField];
+        [numpadView setRecordButton: recordButton];
+        [self.view addSubview: numpadView];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -111,6 +136,28 @@
         [bibField setText:@""];
         [recordButton setEnabled:NO];
         [self saveToFile];
+    }
+}
+
+- (IBAction)barcodeScanner:(id)sender{        
+    [self presentModalViewController:zbarReaderViewController animated:YES];
+}
+
+- (void)imagePickerController:(UIImagePickerController *)reader didFinishPickingMediaWithInfo:(NSDictionary *)info{
+    ZBarSymbolSet *results = [info objectForKey: ZBarReaderControllerResults];
+    
+    for(ZBarSymbol *symbol in results){
+        if([symbol.data length] <= 5 && [symbol.data length] != 0){
+            [bibField setText: symbol.data];
+            [self record:nil];
+            
+            RoundedBarcodeView *rbv = (RoundedBarcodeView *)[reader.view viewWithTag: 11];
+            [[rbv numberLabel] setText: symbol.data];
+            [NSObject cancelPreviousPerformRequestsWithTarget:rbv selector:@selector(fadeIn) object:nil];
+            [NSObject cancelPreviousPerformRequestsWithTarget:rbv selector:@selector(fadeOut) object:nil];
+            [rbv fadeIn];
+            [rbv performSelector:@selector(fadeOut) withObject:nil afterDelay:1.0f];
+        }
     }
 }
 
@@ -188,7 +235,10 @@
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation{
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+        return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    else
+        return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft);
 }
 
 @end

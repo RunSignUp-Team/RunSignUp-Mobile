@@ -58,15 +58,15 @@
     
     // Images created for stretching to variably sized UIButtons (see buttons in resources)
     UIImage *blueButtonImage = [UIImage imageNamed:@"BlueButton.png"];
-    UIImage *stretchedBlueButton = [blueButtonImage stretchableImageWithLeftCapWidth:12 topCapHeight:24];
+    UIImage *stretchedBlueButton = [blueButtonImage stretchableImageWithLeftCapWidth:12 topCapHeight:12];
     UIImage *blueButtonTapImage = [UIImage imageNamed:@"BlueButtonTap.png"];
-    UIImage *stretchedBlueButtonTap = [blueButtonTapImage stretchableImageWithLeftCapWidth:12 topCapHeight:24];
+    UIImage *stretchedBlueButtonTap = [blueButtonTapImage stretchableImageWithLeftCapWidth:12 topCapHeight:12];
     UIImage *redButtonImage = [UIImage imageNamed:@"RedButton.png"];
-    UIImage *stretchedRedButton = [redButtonImage stretchableImageWithLeftCapWidth:12 topCapHeight:24];
+    UIImage *stretchedRedButton = [redButtonImage stretchableImageWithLeftCapWidth:12 topCapHeight:12];
     UIImage *redButtonTapImage = [UIImage imageNamed:@"RedButtonTap.png"];
-    UIImage *stretchedRedButtonTap = [redButtonTapImage stretchableImageWithLeftCapWidth:12 topCapHeight:24];
+    UIImage *stretchedRedButtonTap = [redButtonTapImage stretchableImageWithLeftCapWidth:12 topCapHeight:12];
     UIImage *grayButtonImage = [UIImage imageNamed:@"GrayButton.png"];
-    UIImage *stretchedGrayButton = [grayButtonImage stretchableImageWithLeftCapWidth:12 topCapHeight:24];
+    UIImage *stretchedGrayButton = [grayButtonImage stretchableImageWithLeftCapWidth:12 topCapHeight:12];
     
     [startButton setBackgroundImage:stretchedBlueButton forState:UIControlStateNormal];
     [startButton setBackgroundImage:stretchedBlueButtonTap forState:UIControlStateHighlighted];
@@ -80,13 +80,12 @@
     [editButton release];
         
     // Check for user setting "BigRecordButton"
-    if([[NSUserDefaults standardUserDefaults] boolForKey:@"BigRecordButton"]){        
+    if([[NSUserDefaults standardUserDefaults] boolForKey:@"BigRecordButton"] && UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){        
         [startButton.titleLabel setLineBreakMode:UILineBreakModeWordWrap];
         [table setFrame:CGRectMake(0, 241, 320, 175)];
         [startButton setFrame:CGRectMake(9, 100, 80, 133)];
         [recordButton setFrame:CGRectMake(97, 100, 216, 133)];
     }
-         
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -213,7 +212,10 @@
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation{
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+        return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    else
+        return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft);
 }
 
 @end

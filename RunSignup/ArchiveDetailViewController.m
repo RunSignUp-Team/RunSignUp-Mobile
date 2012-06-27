@@ -13,6 +13,7 @@
 
 @implementation ArchiveDetailViewController
 @synthesize nameLabel;
+@synthesize idLabel;
 @synthesize dateLabel;
 @synthesize typeLabel;
 @synthesize table;
@@ -40,7 +41,11 @@
     self.fileDict = [data JSONValue];
     self.records = [fileDict objectForKey:@"Data"];
     
-    [nameLabel setText: [fileDict objectForKey:@"RaceID"]];
+    [nameLabel setText: [fileDict objectForKey:@"RaceName"]];
+    [idLabel setText: [fileDict objectForKey:@"RaceID"]];
+    if([[idLabel text] isEqualToString:@"0000"]){
+        [idLabel setText:@"Offline Race"];
+    }
     [dateLabel setText: [fileDict objectForKey:@"Date"]];
     if([[fileDict objectForKey:@"Type"] intValue] == 0){
         [typeLabel setText:@"Timer (Place # and Time)"];
@@ -194,7 +199,10 @@
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation{
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+        return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    else
+        return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft);
 }
 
 @end

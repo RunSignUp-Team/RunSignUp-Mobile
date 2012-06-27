@@ -5,11 +5,10 @@ RunSignup Mobile Timer is a mobile application that allows three users to time a
 
 
 Roadmap
-1. Cleanup, signing in to RunSignup (downloading race list) (Andrew+Stephen)
+1. Cleanup, signing in to RunSignup (downloading race list)
 2. Work on archiving data (JSON, update on lostconnection->Regained connection)
 3. Push data up to server (time field, bib # field, place field).
 
 
 Different features to implement:
-Barcode scanner for Chute
 Bluetooth enabled phones to send to master device (one of the three timers)

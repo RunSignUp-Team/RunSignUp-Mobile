@@ -39,7 +39,7 @@
     UIImage *redButtonTapImage = [UIImage imageNamed:@"RedButtonTap.png"];
     UIImage *stretchedRedButtonTap = [redButtonTapImage stretchableImageWithLeftCapWidth:12 topCapHeight:12];
     UIImage *grayButtonImage = [UIImage imageNamed:@"GrayButton.png"];
-    UIImage *stretchedGrayButton = [grayButtonImage stretchableImageWithLeftCapWidth:12 topCapHeight:0];
+    UIImage *stretchedGrayButton = [grayButtonImage stretchableImageWithLeftCapWidth:12 topCapHeight:12];
     
     [saveButton setBackgroundImage:stretchedRedButton forState:UIControlStateNormal];
     [saveButton setBackgroundImage:stretchedRedButtonTap forState:UIControlStateHighlighted];
@@ -175,7 +175,10 @@
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation{
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+        return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    else
+        return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft);
 }
 
 @end

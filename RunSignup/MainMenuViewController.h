@@ -11,11 +11,14 @@
 @interface MainMenuViewController : UIViewController{
     UIButton *timerButton;
     UIButton *signInButton;
+    UIButton *offlineButton;
     UIButton *checkerButton;
     UIButton *selectRaceButton;
     UIButton *chuteButton;
     
     UIButton *signOutButton;
+    UIButton *archiveButton;
+    UIButton *settingsButton;
     UILabel *signedInAs;
     UILabel *emailLabel;
     
@@ -28,16 +31,23 @@
     
     UILabel *copyrightLabel;
     UILabel *hintLabel;
+    UILabel *hintLabel2;
+    
+    UIView *viewsicle;
 }
 
 @property (nonatomic, retain) IBOutlet UIButton *timerButton;
 @property (nonatomic, retain) IBOutlet UIButton *signInButton;
+@property (nonatomic, retain) IBOutlet UIButton *offlineButton;
 @property (nonatomic, retain) IBOutlet UIButton *checkerButton;
 @property (nonatomic, retain) IBOutlet UIButton *chuteButton;
 @property (nonatomic, retain) IBOutlet UILabel *copyrightLabel;
 @property (nonatomic, retain) IBOutlet UILabel *hintLabel;
+@property (nonatomic, retain) IBOutlet UILabel *hintLabel2;
 
 @property (nonatomic, retain) IBOutlet UIButton *signOutButton;
+@property (nonatomic, retain) IBOutlet UIButton *archiveButton;
+@property (nonatomic, retain) IBOutlet UIButton *settingsButton;
 @property (nonatomic, retain) IBOutlet UILabel *signedInAs;
 @property (nonatomic, retain) IBOutlet UILabel *emailLabel;
 
@@ -49,8 +59,11 @@
 @property (nonatomic, retain) NSString *raceDirectorRaceName;
 @property (nonatomic, retain) NSString *raceDirectorRaceID;
 
+@property (nonatomic, retain) IBOutlet UIView *viewsicle;
+
 - (IBAction)timer:(id)sender;
 - (IBAction)signIn:(id)sender;
+- (IBAction)offline:(id)sender;
 - (IBAction)checker:(id)sender;
 - (IBAction)selectRace:(id)sender;
 - (IBAction)chute:(id)sender;
@@ -60,6 +73,7 @@
 
 - (IBAction)didSignOut;
 - (void)didSignInEmail:(NSString *)email password:(NSString *)password response:(void (^)(int))responseBlock;
+- (void)didCreateOfflineRace:(NSString *)name;
 - (void)didSelectRace:(NSString *)raceName withID:(NSString *)raceID;
 
 @end
