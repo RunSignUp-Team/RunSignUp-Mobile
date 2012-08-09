@@ -213,7 +213,7 @@
 					<object class="IBUIButton" id="544728625">
 						<reference key="NSNextResponder" ref="774585933"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{6, 417}, {74, 35}}</string>
+						<string key="NSFrame">{{6, 417}, {74, 36}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="677428329"/>
@@ -297,7 +297,7 @@
 						<int key="IBUIContentMode">7</int>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-						<string key="IBUIText">No connection? Record a race offline.</string>
+						<string key="IBUIText">No connection? Record an event offline.</string>
 						<reference key="IBUITextColor" ref="991708654"/>
 						<nil key="IBUIHighlightedColor"/>
 						<int key="IBUIBaselineAdjustment">0</int>
@@ -863,11 +863,13 @@
 						<string key="offlineButton">UIButton</string>
 						<string key="raceLabel">UILabel</string>
 						<string key="selectRaceButton">UIButton</string>
+						<string key="settingsButton">UIButton</string>
 						<string key="signInButton">UIButton</string>
 						<string key="signOutButton">UIButton</string>
 						<string key="signedInAs">UILabel</string>
 						<string key="timerButton">UIButton</string>
 						<string key="timingFor">UILabel</string>
+						<string key="viewsicle">UIView</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
 						<object class="IBToOneOutletInfo" key="archiveButton">
@@ -910,6 +912,10 @@
 							<string key="name">selectRaceButton</string>
 							<string key="candidateClassName">UIButton</string>
 						</object>
+						<object class="IBToOneOutletInfo" key="settingsButton">
+							<string key="name">settingsButton</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
 						<object class="IBToOneOutletInfo" key="signInButton">
 							<string key="name">signInButton</string>
 							<string key="candidateClassName">UIButton</string>
@@ -929,6 +935,10 @@
 						<object class="IBToOneOutletInfo" key="timingFor">
 							<string key="name">timingFor</string>
 							<string key="candidateClassName">UILabel</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="viewsicle">
+							<string key="name">viewsicle</string>
+							<string key="candidateClassName">UIView</string>
 						</object>
 					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">

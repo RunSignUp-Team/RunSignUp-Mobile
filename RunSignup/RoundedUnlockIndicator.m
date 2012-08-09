@@ -13,11 +13,14 @@
 @synthesize activity;
 @synthesize label;
 
-- (id)initWithXLocation:(int)locX YLocation:(int)locY{
-    self = [super initWithFrame:CGRectMake(locX, locY, 160, 100)];
+- (id)initWithYLocation:(int)loc{
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+        self = [super initWithFrame:CGRectMake(80, loc, 160, 100)];
+    else
+        self = [super initWithFrame:CGRectMake(402, loc + 40, 160, 100)];
     if(self){
         self.activity = [[UIActivityIndicatorView alloc] initWithFrame: CGRectMake(62, 20, 36, 36)];
-        self.label = [[UILabel alloc] initWithFrame: CGRectMake(5, 70, 150, 20)];
+        self.label = [[UILabel alloc] initWithFrame: CGRectMake(10, 70, 140, 20)];
         [label setFont: [UIFont systemFontOfSize: 18.0f]];
         
         [activity setActivityIndicatorViewStyle: UIActivityIndicatorViewStyleWhiteLarge];

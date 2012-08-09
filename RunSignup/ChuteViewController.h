@@ -21,6 +21,8 @@
     
     NSString *raceID;
     NSString *raceName;
+    NSString *eventID;
+    NSString *eventName;
     NSString *fileToSave;
     
     ZBarReaderViewController *zbarReaderViewController;
@@ -34,6 +36,8 @@
 @property (nonatomic, retain) IBOutlet UITextField *bibField;
 @property (nonatomic, retain) NSString *raceID;
 @property (nonatomic, retain) NSString *raceName;
+@property (nonatomic, retain) NSString *eventID;
+@property (nonatomic, retain) NSString *eventName;
 @property (nonatomic, retain) NSString *fileToSave;
 @property (nonatomic, retain) NSMutableArray *records;
 @property (nonatomic, retain) ZBarReaderViewController *zbarReaderViewController;

@@ -13,7 +13,7 @@
     UILabel *label;
 }
 
-- (id)initWithXLocation:(int)locX YLocation:(int)locY;
+- (id)initWithYLocation:(int)loc;
 
 @property (nonatomic, retain) UIActivityIndicatorView *activity;
 @property (nonatomic, retain) UILabel *label;

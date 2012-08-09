@@ -42,8 +42,8 @@
 @synthesize raceDirectorEmail;
 @synthesize raceDirectorRaceName;
 @synthesize raceDirectorRaceID;
-
-@synthesize viewsicle;
+@synthesize raceDirectorEventName;
+@synthesize raceDirectorEventID;
 
 - (void)viewDidLoad{
     self.title = @"Menu";
@@ -88,6 +88,8 @@
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
         viewsicle.layer.cornerRadius = 5.0f;
     
+    self.contentSizeForViewInPopover = CGSizeMake(320, 400);
+    
     [super viewDidLoad];
 }
 
@@ -100,6 +102,8 @@
     TimerViewController *timerViewController = [[TimerViewController alloc] initWithNibName:@"TimerViewController" bundle:nil];
     [timerViewController setRaceID:raceDirectorRaceID];
     [timerViewController setRaceName:raceDirectorRaceName];
+    [timerViewController setEventID:raceDirectorEventID];
+    [timerViewController setEventName:raceDirectorEventName];
     AppDelegate *del = [[UIApplication sharedApplication] delegate];
     [[del navController] pushViewController:timerViewController animated:YES];
     [timerViewController release];
@@ -125,6 +129,8 @@
     CheckerViewController *checkerViewController = [[CheckerViewController alloc] initWithNibName:@"CheckerViewController" bundle:nil];
     [checkerViewController setRaceID:raceDirectorRaceID];
     [checkerViewController setRaceName:raceDirectorRaceName];
+    [checkerViewController setEventID:raceDirectorEventID];
+    [checkerViewController setEventName:raceDirectorEventName];
     AppDelegate *del = [[UIApplication sharedApplication] delegate];
     [[del navController] pushViewController:checkerViewController animated:YES];
     [checkerViewController release];
@@ -135,7 +141,13 @@
     if(raceDirectorEmail != nil){
         SelectRaceViewController *selectRaceViewController = [[SelectRaceViewController alloc] initWithNibName:@"SelectRaceViewController" bundle:nil];
         [selectRaceViewController setDelegate: self];
-        [self presentModalViewController:selectRaceViewController animated:YES];
+        if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+            [self presentModalViewController:selectRaceViewController animated:YES];
+        else{
+            UIPopoverController *popoverController = [[UIPopoverController alloc] initWithContentViewController:selectRaceViewController];
+            [selectRaceViewController setPopoverController: popoverController];
+            [popoverController presentPopoverFromRect:[selectRaceButton frame] inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
+        }
         [selectRaceViewController release];
     }
 }
@@ -145,6 +157,8 @@
     ChuteViewController *chuteViewController = [[ChuteViewController alloc] initWithNibName:@"ChuteViewController" bundle:nil];
     [chuteViewController setRaceID:raceDirectorRaceID];
     [chuteViewController setRaceName:raceDirectorRaceName];
+    [chuteViewController setEventID:raceDirectorEventID];
+    [chuteViewController setEventName:raceDirectorEventName];
     AppDelegate *del = [[UIApplication sharedApplication] delegate];
     [[del navController] pushViewController:chuteViewController animated:YES];
     [chuteViewController release];
@@ -153,7 +167,7 @@
 // Push settings view into modal view of MainMenuViewController
 - (IBAction)showSettings:(id)sender{
     SettingsViewController *settingsViewController = [[SettingsViewController alloc] initWithNibName:@"SettingsViewController" bundle:nil];
-
+    
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
         [self presentModalViewController:settingsViewController animated:YES];
     }else{
@@ -161,13 +175,13 @@
         [popoverController presentPopoverFromRect:[settingsButton frame] inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
     }
     [settingsViewController release];
-
+    
 }
 
 - (IBAction)showArchive:(id)sender{
     ArchiveViewController *archiveViewController = [[ArchiveViewController alloc] initWithNibName:@"ArchiveViewController" bundle:nil];
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:archiveViewController];
-
+    
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
         [self presentModalViewController:navigationController animated:YES];
     }else{
@@ -198,7 +212,7 @@
                 [selectRaceButton setFrame: CGRectMake(402, 230, 220, 46)];
             }
             [raceLabel setHidden: NO];
-            [raceLabel setText:@"No Race Selected"];
+            [raceLabel setText:@"No Event Selected"];
             [timingFor setHidden: NO];
             [hintLabel setText:@"To proceed, choose today's event."];
             [hintLabel2 setHidden:YES];
@@ -219,6 +233,9 @@
     self.raceDirectorEmail = @"Offline Race";
     self.raceDirectorRaceName = name;
     self.raceDirectorRaceID = @"0000";
+    self.raceDirectorEventName = @"No Event";
+    self.raceDirectorEventID = @"0000";
+    
     [emailLabel setHidden: NO];
     [emailLabel setText:raceDirectorEmail];
     [signedInAs setHidden: NO];
@@ -240,11 +257,14 @@
 }
 
 // Delegate style method for telling MainMenuViewController which race to time for and return if successful
-- (void)didSelectRace:(NSString *)raceName withID:(NSString *)raceID{
+- (void)didSelectRace:(NSString *)raceName withID:(NSString *)raceID withEventName:(NSString *)eventName withEventID:(NSString *)eventID{
     self.raceDirectorRaceName = raceName;
     self.raceDirectorRaceID = raceID;
+    self.raceDirectorEventName = eventName;
+    self.raceDirectorEventID = eventID;
+    
     [timingFor setHidden: NO];
-    [raceLabel setText: raceDirectorRaceName];
+    [raceLabel setText: [NSString stringWithFormat:@"%@ - %@", raceDirectorRaceName, raceDirectorEventName]];
     [timerButton setHidden: NO];
     [chuteButton setHidden: NO];
     [checkerButton setHidden: NO];
@@ -295,6 +315,8 @@
         [selectRaceButton setFrame:CGRectMake(402, 230, 220, 46)];
     raceDirectorEmail = @"";
     raceDirectorRaceID = @"";
+    raceDirectorEventName = @"";
+    raceDirectorEventID = @"";
     [hintLabel setText:@"Race Director? Sign in here."];
     [hintLabel setHidden: NO];
     [hintLabel2 setHidden: NO];

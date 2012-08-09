@@ -16,6 +16,11 @@ static RSUModel *model = nil;
 @synthesize secret;
 @synthesize email;
 @synthesize password;
+@synthesize currentResultSetID;
+@synthesize currentRaceID;
+@synthesize currentEventID;
+@synthesize lastFinishingTimeID;
+@synthesize lastBibNumber;
 @synthesize renewTimer;
 
 - (id)init{
@@ -28,7 +33,7 @@ static RSUModel *model = nil;
 
 - (void)attemptRetreiveRaceList:(void (^)(NSArray *))responseBlock{
     if([self renewCredentials] == Success){
-        NSString *url = [NSString stringWithFormat:@"https://runsignup.com/rest/races?tmp_key=%@&tmp_secret=%@", key, secret];
+        NSString *url = [NSString stringWithFormat:@"https://test.runsignup.com/rest/races?tmp_key=%@&tmp_secret=%@&events=T", key, secret];
         
         NSMutableURLRequest *request = [[[NSMutableURLRequest alloc] init] autorelease];
         [request setURL:[NSURL URLWithString:url]];
@@ -37,8 +42,8 @@ static RSUModel *model = nil;
         void (^completion)(NSURLResponse *,NSData *,NSError *) = ^(NSURLResponse *response,NSData *urlData,NSError *error){
             NSMutableArray *raceList = [[NSMutableArray alloc] init];
             
-            NSString *string = [[NSString alloc] initWithData:urlData encoding:NSUTF8StringEncoding];
-            NSLog(string);
+            //NSString *string = [[NSString alloc] initWithData:urlData encoding:NSUTF8StringEncoding];
+            //NSLog(string);
             
             if(urlData != nil){
                 RXMLElement *rootXML = [[RXMLElement alloc] initFromXMLData:urlData];
@@ -50,12 +55,32 @@ static RSUModel *model = nil;
                             RXMLElement *raceID = [race child:@"race_id"];
                             RXMLElement *raceNextDate = [race child:@"next_date"];
                             RXMLElement *raceLastDate = [race child:@"last_date"];
-                            if(raceName != nil && raceID != nil){
+                            RXMLElement *raceEvents = [race child:@"events"];
+                            
+                            NSMutableArray *eventsArray = [[NSMutableArray alloc] init];
+                            NSDictionary *raceDict = nil;
+                            if(raceEvents != nil){
+                                NSArray *events = [raceEvents children:@"event"];
+                                for(RXMLElement *event in events){
+                                    RXMLElement *eventName = [event child:@"name"];
+                                    RXMLElement *eventID = [event child:@"event_id"];
+                                    RXMLElement *eventStartTime = [event child:@"start_time"];
+                                    
+                                    if(eventName != nil && eventID != nil){
+                                        NSString *curtailedName = [eventName text];
+                                        if([curtailedName length] > 34)
+                                            curtailedName = [curtailedName substringToIndex: 33];
+                                        [eventsArray addObject: [[NSDictionary alloc] initWithObjectsAndKeys:curtailedName,@"Name",[eventID text],@"EventID",[eventStartTime text],@"StartTime", nil]];
+                                    }
+                                }
+                            }
+                            
+                            if(raceName != nil && raceID != nil && [eventsArray count] != 0){
                                 NSString *curtailedName = [raceName text];
                                 if([curtailedName length] > 34)
                                     curtailedName = [curtailedName substringToIndex: 33];
-                                NSDictionary *dict = [[NSDictionary alloc] initWithObjectsAndKeys:curtailedName,@"Name",[raceID text],@"RaceID",[raceNextDate text],@"NDate",[raceLastDate text],@"LDate",nil];
-                                [raceList addObject: dict];
+                                raceDict = [[NSDictionary alloc] initWithObjectsAndKeys:curtailedName,@"Name",[raceID text],@"RaceID",[raceNextDate text],@"NDate",[raceLastDate text],@"LDate",eventsArray,@"Events",nil];
+                                [raceList addObject: raceDict];
                             }
                         }
                     }
@@ -77,6 +102,64 @@ static RSUModel *model = nil;
     }
 }
 
+- (void)beginTimingNewRace:(NSString *)raceID event:(NSString *)eventID response:(void (^)(int))responseBlock{
+    NSString *url = [NSString stringWithFormat:@"https://test.runsignup.com/Rest/Race/1326/Results?event_id=2491&request_type=get-result-sets&tmp_key=%@&tmp_secret=%@&format=xml", key, secret];
+    
+    NSMutableURLRequest *request = [[[NSMutableURLRequest alloc] init] autorelease];
+    [request setURL:[NSURL URLWithString:url]];
+    [request setHTTPMethod:@"GET"];
+    
+    void (^completion)(NSURLResponse *,NSData *,NSError *) = ^(NSURLResponse *response,NSData *urlData,NSError *error){        
+        NSString *string = [[NSString alloc] initWithData:urlData encoding:NSUTF8StringEncoding];
+        NSLog(string);
+        
+        if(urlData != nil){
+            RXMLElement *rootXML = [[RXMLElement alloc] initFromXMLData:urlData];
+            if([[rootXML tag] isEqualToString:@"event_individual_results"]){
+                if([[rootXML children:@"individual_results_set"] count] > 0){
+                    // Individual result set exists
+                    if([[rootXML children:@"individual_results_set"] count] == 1){
+                        RXMLElement *individualResult = [[rootXML children:@"individual_results_set"] objectAtIndex: 0];
+                        RXMLElement *individualResultId = [individualResult child: @"individual_result_set_id"];
+                        if(individualResultId != nil){
+                            self.currentResultSetID = [individualResultId text];
+                            self.currentRaceID = raceID;
+                            self.currentEventID = eventID;
+                            self.lastFinishingTimeID = @"0";
+                            self.lastBibNumber = @"0";
+                            // All future calls to addFinishingTime and its related methods will use this info
+                            dispatch_async(dispatch_get_main_queue(),^(){responseBlock(Success);});
+                            return;
+                        }
+                    }else{
+                        // More than one individual result set exists (pick one?) fake no connection for now
+                        dispatch_async(dispatch_get_main_queue(),^(){responseBlock(NoConnection);});
+                        return;
+                    }
+                }
+            }else{
+                // Create new individual result set
+                void (^response)(int) = ^(int didSucceed){
+                    self.currentResultSetID = @"0";
+                    self.currentRaceID = raceID;
+                    self.currentEventID = eventID;
+                    self.lastFinishingTimeID = @"0";
+                    self.lastBibNumber = @"0";
+                    dispatch_async(dispatch_get_main_queue(),^(){responseBlock(Success);});
+                };
+                [self createNewResultSet:response];
+            }
+            
+            dispatch_async(dispatch_get_main_queue(),^(){responseBlock(NoConnection);});
+        }else{
+            dispatch_async(dispatch_get_main_queue(),^(){responseBlock(NoConnection);});
+        }
+        
+    };
+    
+    [NSURLConnection sendAsynchronousRequest:request queue:[[NSOperationQueue alloc] init] completionHandler:completion];
+}
+
 - (void)attemptLoginWithEmail:(NSString *)em pass:(NSString *)pa response:(void (^)(int))responseBlock{
     self.email = em;
     self.password = pa;
@@ -86,7 +169,7 @@ static RSUModel *model = nil;
     NSString *postLength = [NSString stringWithFormat:@"%d", [postData length]];
     
     NSMutableURLRequest *request = [[[NSMutableURLRequest alloc] init] autorelease];
-    [request setURL:[NSURL URLWithString:@"https://runsignup.com/rest/login"]];
+    [request setURL:[NSURL URLWithString:@"https://test.runsignup.com/rest/login"]];
     [request setHTTPMethod:@"POST"];
     [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
     [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
@@ -138,8 +221,42 @@ static RSUModel *model = nil;
     [NSURLConnection sendAsynchronousRequest:request queue:[[NSOperationQueue alloc] init] completionHandler:completion];
 }
 
+- (void)addFinishingTime:(NSString *)finishingTime response:(void (^)(int))responseBlock{
+    NSString *url = [NSString stringWithFormat:@"https://test.runsignup.com/Rest/Race/1326/Results?event_id=2491&request_type=finishing-times&tmp_key=%@&tmp_secret=%@&format=xml", key, secret];
+    
+    NSString *jsonRequest = [NSString stringWithFormat: @"{\"last_finishing_time_id\": %@,\"finishing_times\": [\"%@\"]}", lastFinishingTimeID, finishingTime];
+    
+    NSString *post = [NSString stringWithFormat:@"request_format=json&request=%@", jsonRequest];
+    NSData *postData = [post dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
+    NSString *postLength = [NSString stringWithFormat:@"%d", [postData length]];
+    
+    NSMutableURLRequest *request = [[[NSMutableURLRequest alloc] init] autorelease];
+    [request setURL:[NSURL URLWithString:url]];
+    [request setHTTPMethod:@"POST"];
+    [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
+    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+    [request setHTTPBody:postData];
+    
+    void (^completion)(NSURLResponse *,NSData *,NSError *) = ^(NSURLResponse *response,NSData *urlData,NSError *error){
+        if(!urlData){
+            NSLog(@"URLData is nil");
+            dispatch_async(dispatch_get_main_queue(),^(){responseBlock(NoConnection);});
+            return;
+        }
+                
+        NSString *string = [[NSString alloc] initWithData:urlData encoding:NSUTF8StringEncoding];
+        NSLog(string);
+        RXMLElement *rootXML = [[RXMLElement alloc] initFromXMLData:urlData];
+        
+        dispatch_async(dispatch_get_main_queue(),^(){responseBlock(Success);});
+    };
+    
+    [NSURLConnection sendAsynchronousRequest:request queue:[[NSOperationQueue alloc] init] completionHandler:completion];
+}
+
+
 - (int)renewCredentials{
-    NSString *url = [NSString stringWithFormat:@"https://runsignup.com/rest/user?tmp_key=%@&tmp_secret=%@", key, secret];
+    NSString *url = [NSString stringWithFormat:@"https://test.runsignup.com/rest/user?tmp_key=%@&tmp_secret=%@", key, secret];
     
     NSMutableURLRequest *request = [[[NSMutableURLRequest alloc] init] autorelease];
     [request setURL:[NSURL URLWithString:url]];
@@ -169,8 +286,12 @@ static RSUModel *model = nil;
     return Success;
 }
 
+- (void)createNewResultSet:(void (^)(int))responseBlock{
+    
+}
+
 - (void)logout{
-    NSString *url = [NSString stringWithFormat:@"https://runsignup.com/rest/logout?tmp_key=%@&tmp_secret=%@", key, secret];
+    NSString *url = [NSString stringWithFormat:@"https://test.runsignup.com/rest/logout?tmp_key=%@&tmp_secret=%@", key, secret];
     
     NSMutableURLRequest *request = [[[NSMutableURLRequest alloc] init] autorelease];
     [request setURL:[NSURL URLWithString:url]];

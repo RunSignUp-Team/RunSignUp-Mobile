@@ -21,6 +21,8 @@
     BOOL started;
     NSString *raceID;
     NSString *raceName;
+    NSString *eventID;
+    NSString *eventName;
     NSString *fileToSave;
 }
 
@@ -31,6 +33,8 @@
 @property (nonatomic, retain) TimerLabel *timerLabel;
 @property (nonatomic, retain) NSString *raceID;
 @property (nonatomic, retain) NSString *raceName;
+@property (nonatomic, retain) NSString *eventID;
+@property (nonatomic, retain) NSString *eventName;
 @property (nonatomic, retain) NSString *fileToSave;
 
 - (IBAction)record:(id)sender;

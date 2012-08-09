@@ -17,18 +17,29 @@
     if(self){     
         self.shouldIndentWhileEditing = YES;
         
-        // Depending on mode, layout view
-        self.dataLabel = [[UILabel alloc] initWithFrame:CGRectMake(75, 8, 200, 28)];
-        [dataLabel setFont: [UIFont systemFontOfSize: 26.0f]];
-        [dataLabel setTextColor: [UIColor blackColor]];
-        [self.contentView addSubview: dataLabel];
+        if(mode == 1){
+            self.dataLabel = [[UILabel alloc] initWithFrame:CGRectMake(115, 8, 160, 28)];
+            [dataLabel setFont: [UIFont systemFontOfSize: 26.0f]];
+            [dataLabel setTextColor: [UIColor blackColor]];
+            [self.contentView addSubview: dataLabel];
+        }else{
+            self.dataLabel = [[UILabel alloc] initWithFrame:CGRectMake(75, 8, 200, 28)];
+            [dataLabel setFont: [UIFont systemFontOfSize: 26.0f]];
+            [dataLabel setTextColor: [UIColor blackColor]];
+            [self.contentView addSubview: dataLabel];
+        }
         
         [self.textLabel setBackgroundColor: [UIColor clearColor]];
         
-        // Make a vertical divider, depends on mode
-        UIView *divider = [[UIView alloc] initWithFrame:CGRectMake(70, 0, 1, 44)];
-        [divider setBackgroundColor: [UIColor colorWithWhite:0.878f alpha:1.0f]]; // 0.878 grabbed from screenshot to match UITableView
-        [self.contentView addSubview: divider];
+        if(mode == 1){
+            UIView *divider = [[UIView alloc] initWithFrame:CGRectMake(110, 0, 1, 44)];
+            [divider setBackgroundColor: [UIColor colorWithWhite:0.878f alpha:1.0f]]; // 0.878 grabbed from screenshot to match UITableView
+            [self.contentView addSubview: divider];
+        }else{
+            UIView *divider = [[UIView alloc] initWithFrame:CGRectMake(70, 0, 1, 44)];
+            [divider setBackgroundColor: [UIColor colorWithWhite:0.878f alpha:1.0f]]; // 0.878 grabbed from screenshot to match UITableView
+            [self.contentView addSubview: divider];
+        }
     }
     return self;
 }

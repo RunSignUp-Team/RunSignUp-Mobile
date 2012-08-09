@@ -8,8 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import "TimerLabel.h"
+#import "NumpadView.h"
+#import "EditBibViewController.h"
 
-@interface CheckerViewController : UIViewController <UIAlertViewDelegate, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate>{
+@interface CheckerViewController : UIViewController <EditBibDelegate, UIAlertViewDelegate, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate>{
     UIButton *startButton;
     UIButton *recordButton;
     UIButton *closeNumpadButton;
@@ -20,11 +22,16 @@
     
     UITextField *bibField;
     
+    NSString *raceName;
     NSString *raceID;
+    NSString *eventName;
+    NSString *eventID;
     NSString *fileToSave;
     
     BOOL started;
     BOOL editingBib;
+    
+    NumpadView *numpadView;
 }
 
 @property (nonatomic, retain) IBOutlet UIButton *startButton;
@@ -34,9 +41,12 @@
 @property (nonatomic, retain) IBOutlet UITextField *bibField;
 @property (nonatomic, retain) NSString *raceID;
 @property (nonatomic, retain) NSString *raceName;
+@property (nonatomic, retain) NSString *eventID;
+@property (nonatomic, retain) NSString *eventName;
 @property (nonatomic, retain) NSString *fileToSave;
 @property (nonatomic, retain) NSMutableArray *records;
 @property (nonatomic, retain) TimerLabel *timerLabel;
+@property (nonatomic, retain) NumpadView *numpadView;
 
 - (IBAction)record:(id)sender;
 - (IBAction)start:(id)sender;

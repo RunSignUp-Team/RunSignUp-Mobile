@@ -8,6 +8,7 @@
 
 #import "TimerViewController.h"
 #import "RecordTableViewCell.h"
+#import "RSUModel.h"
 #import "JSON.h"
 
 @implementation TimerViewController
@@ -18,6 +19,8 @@
 @synthesize timerLabel;
 @synthesize raceID;
 @synthesize raceName;
+@synthesize eventID;
+@synthesize eventName;
 @synthesize fileToSave;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil{
@@ -107,6 +110,8 @@
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
     [dict setObject:raceID forKey:@"RaceID"];
     [dict setObject:raceName forKey:@"RaceName"];
+    [dict setObject:eventID forKey:@"EventID"];
+    [dict setObject:eventName forKey:@"EventName"];
     [dict setObject:[formatter stringFromDate:[NSDate date]] forKey:@"Date"];
     [dict setObject:records forKey:@"Data"];
     [dict setObject:[NSNumber numberWithInt:0] forKey:@"Type"];
@@ -118,9 +123,21 @@
 // Record current time to next place in list
 - (IBAction)record:(id)sender{
     if([records count] < 10000){
+        
         NSTimeInterval elapsedTime = [timerLabel elapsedTime];
         NSString *formattedTime = [timerLabel formattedTime];
         NSString *place = [NSString stringWithFormat:@"%.4i", [records count]+1];
+        
+        void (^response)(int) = ^(int didSucceed){
+            if(didSucceed == NoConnection){
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+                [alert show];
+                [alert release];
+            }
+        };
+        
+        [[RSUModel sharedModel] addFinishingTime:formattedTime response:response];
+         
         NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithDouble:elapsedTime],@"Time",formattedTime,@"FTime",place,@"Place",nil];
         [records insertObject:dict atIndex:0];
         [dict release];

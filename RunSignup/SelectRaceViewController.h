@@ -18,6 +18,7 @@
     NSArray *raceList;
     
     MainMenuViewController *delegate;
+    UIPopoverController *popoverController;
     
     RoundedLoadingIndicator *rli;
 }
@@ -26,6 +27,7 @@
 @property (nonatomic, retain) NSArray *raceList;
 @property (nonatomic, retain) NSIndexPath *raceIndex;
 @property (nonatomic, retain) MainMenuViewController *delegate;
+@property (nonatomic, retain) UIPopoverController *popoverController;
 @property (nonatomic, retain) RoundedLoadingIndicator *rli;
 
 - (IBAction)cancel:(id)sender;

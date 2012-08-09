@@ -28,6 +28,8 @@
     NSString *raceDirectorEmail;
     NSString *raceDirectorRaceName;
     NSString *raceDirectorRaceID;
+    NSString *raceDirectorEventName;
+    NSString *raceDirectorEventID;
     
     UILabel *copyrightLabel;
     UILabel *hintLabel;
@@ -58,8 +60,8 @@
 @property (nonatomic, retain) NSString *raceDirectorEmail;
 @property (nonatomic, retain) NSString *raceDirectorRaceName;
 @property (nonatomic, retain) NSString *raceDirectorRaceID;
-
-@property (nonatomic, retain) IBOutlet UIView *viewsicle;
+@property (nonatomic, retain) NSString *raceDirectorEventName;
+@property (nonatomic, retain) NSString *raceDirectorEventID;
 
 - (IBAction)timer:(id)sender;
 - (IBAction)signIn:(id)sender;
@@ -74,6 +76,6 @@
 - (IBAction)didSignOut;
 - (void)didSignInEmail:(NSString *)email password:(NSString *)password response:(void (^)(int))responseBlock;
 - (void)didCreateOfflineRace:(NSString *)name;
-- (void)didSelectRace:(NSString *)raceName withID:(NSString *)raceID;
+- (void)didSelectRace:(NSString *)raceName withID:(NSString *)raceID withEventName:(NSString *)eventName withEventID:(NSString *)eventID;
 
 @end

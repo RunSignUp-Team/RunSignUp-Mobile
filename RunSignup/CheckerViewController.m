@@ -19,8 +19,11 @@
 @synthesize timerLabel;
 @synthesize raceID;
 @synthesize raceName;
+@synthesize eventID;
+@synthesize eventName;
 @synthesize fileToSave;
 @synthesize bibField;
+@synthesize numpadView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil{
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -80,12 +83,20 @@
     [recordButton setBackgroundImage:stretchedRedButtonTap forState:UIControlStateHighlighted];
     [recordButton setBackgroundImage:stretchedGrayButton forState:UIControlStateDisabled];
     
-    [bibField becomeFirstResponder];
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+        [bibField becomeFirstResponder];
     
     // Set up right bar button (upper right corner) of UINavigationBar to edit button
     UIBarButtonItem *editButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(toggleEditing)];
     [self.navigationItem setRightBarButtonItem:editButton animated:YES];
     [editButton release];
+    
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
+        self.numpadView = [[NumpadView alloc] initWithFrame: CGRectMake(576, 54, 448, 538)];
+        [numpadView setTextField: bibField];
+        [numpadView setRecordButton: recordButton];
+        [self.view addSubview: numpadView];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -107,6 +118,8 @@
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
     [dict setObject:raceID forKey:@"RaceID"];
     [dict setObject:raceName forKey:@"RaceName"];
+    [dict setObject:eventID forKey:@"EventID"];
+    [dict setObject:eventName forKey:@"EventName"];
     [dict setObject:[formatter stringFromDate:[NSDate date]] forKey:@"Date"];
     [dict setObject:records forKey:@"Data"];
     [dict setObject:[NSNumber numberWithInt:1] forKey:@"Type"];
@@ -118,18 +131,36 @@
 // Record current time and bib number to list
 - (IBAction)record:(id)sender{
     if([records count] < 10000){
-        if([[bibField text] length] > 0 && started){
-            NSTimeInterval elapsedTime = [timerLabel elapsedTime];
-            NSString *formattedTime = [timerLabel formattedTime];
-            NSMutableDictionary *record = [[NSMutableDictionary alloc] initWithObjectsAndKeys:[bibField text], @"Bib", formattedTime, @"FTime", [NSNumber numberWithDouble:elapsedTime], @"Time", nil];
-            [records insertObject:record atIndex:0];
-            [record release];
+        if(started){
+            if([[bibField text] length] > 0){
+                NSTimeInterval elapsedTime = [timerLabel elapsedTime];
+                NSString *formattedTime = [timerLabel formattedTime];
+                NSMutableDictionary *record = [[NSMutableDictionary alloc] initWithObjectsAndKeys:[bibField text], @"Bib", formattedTime, @"FTime", [NSNumber numberWithDouble:elapsedTime], @"Time", nil];
+                [records insertObject:record atIndex:0];
+                [record release];
+                [self hideCloseNumpadButton:nil];
+            }else{
+                NSTimeInterval elapsedTime = [timerLabel elapsedTime];
+                NSString *formattedTime = [timerLabel formattedTime];
+                NSMutableDictionary *record = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@"", @"Bib", formattedTime, @"FTime", [NSNumber numberWithDouble:elapsedTime], @"Time", nil];
+                [records insertObject:record atIndex:0];
+                [record release];
+                
+                EditBibViewController *editBibViewController = [[EditBibViewController alloc] initWithNibName:@"EditBibViewController" bundle:nil];
+                [editBibViewController setBibNumber: @""];
+                [editBibViewController setDelegate: self];
+                [editBibViewController setIndexPath: [NSIndexPath indexPathForRow:0 inSection:0]];
+                [self presentModalViewController:editBibViewController animated:YES];
+                [editBibViewController release];
+            }
+                
             NSIndexPath *index = [NSIndexPath indexPathForRow:0 inSection:0];
             [table beginUpdates];
             [table insertRowsAtIndexPaths:[NSArray arrayWithObject:index] withRowAnimation:UITableViewRowAnimationTop];
             [table endUpdates];
             
-            [self hideCloseNumpadButton:nil];
+            [bibField setText:@""];
+            //[recordButton setEnabled: NO];
             [self saveToFile];
         }
     }
@@ -141,8 +172,7 @@
         [startButton setTitle:@"End Race" forState:UIControlStateNormal];
         started = YES;
         [timerLabel startTiming];
-        if([[bibField text] length] > 0)
-            [recordButton setEnabled:YES];
+        [recordButton setEnabled:YES];
     }else{
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Stop Timer" message:@"Are you sure you wish to stop the timer? This will end the race and will not allow you to continue timing at the place you stopped." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Stop", nil];
         [alert show];
@@ -156,7 +186,7 @@
         [UIView beginAnimations:nil context:nil];
         [UIView setAnimationDuration: 0.25f];
         [closeNumpadButton setFrame: CGRectMake(165, 149, 150, 46)];
-        [recordButton setFrame: CGRectMake(8, 149, 150, 46)];
+        [recordButton setFrame: CGRectMake(6, 149, 150, 46)];
         [UIView commitAnimations];
     }
 }
@@ -164,13 +194,11 @@
 - (IBAction)hideCloseNumpadButton:(id)sender{
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
         [bibField resignFirstResponder];
-        [bibField setText:@""];
-        [recordButton setEnabled: NO];
         [closeNumpadButton setFrame: CGRectMake(165, 149, 150, 46)];
         [UIView beginAnimations:nil context:nil];
         [UIView setAnimationDuration: 0.25f];
         [closeNumpadButton setFrame: CGRectMake(320, 149, 150, 46)];
-        [recordButton setFrame: CGRectMake(8, 149, 307, 46)];
+        [recordButton setFrame: CGRectMake(6, 149, 308, 46)];
         [UIView commitAnimations];
     }
 }
@@ -192,9 +220,14 @@
     if(cell == nil)
         cell = [[RecordTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier withMode:1];
     
-    [[cell textLabel] setText: [[records objectAtIndex: indexPath.row] objectForKey:@"Bib"]];
-    [[cell dataLabel] setText: [[records objectAtIndex: indexPath.row] objectForKey:@"FTime"]];
+    if([[[records objectAtIndex: indexPath.row] objectForKey: @"Bib"] isEqualToString: @""]){
+        [[cell textLabel] setText: @"No Bib"];
+    }else{
+        [[cell textLabel] setText: [[records objectAtIndex: indexPath.row] objectForKey:@"Bib"]];
+    }
     
+    [[cell dataLabel] setText: [[records objectAtIndex: indexPath.row] objectForKey:@"FTime"]];
+    [cell setAccessoryType: UITableViewCellAccessoryDetailDisclosureButton];
     return cell;
 }
 
@@ -206,36 +239,38 @@
     }
 }
 
+- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath{
+    EditBibViewController *editBibViewController = [[EditBibViewController alloc] initWithNibName:@"EditBibViewController" bundle:nil];
+    [editBibViewController setBibNumber: [[records objectAtIndex: indexPath.row] objectForKey: @"Bib"]];
+    [editBibViewController setDelegate: self];
+    [editBibViewController setIndexPath: indexPath];
+    [self presentModalViewController:editBibViewController animated:YES];
+    [editBibViewController release];
+}
+
+- (void)didSaveBib:(NSString *)bib withIndex:(NSIndexPath *)indexPath{
+    [[records objectAtIndex: indexPath.row] setObject:bib forKey:@"Bib"];
+    NSArray *indexArray = [NSArray arrayWithObject: indexPath];
+    [table reloadRowsAtIndexPaths:indexArray withRowAnimation:UITableViewRowAnimationFade];
+    [self saveToFile];
+    
+    [self performSelector:@selector(hideCloseNumpadButton:) withObject:nil afterDelay:0.05f];
+}
 
 // Limit what the user can enter to the string "1234567890-", dash was added just in case a bib is 12-34 or something
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
     if([string length] != 0){
         if(textField.text.length < 5 && strchr("1234567890-", [string characterAtIndex: 0])){
-            if(started)
-                [recordButton setEnabled: YES];
+            /*if(started)
+                [recordButton setEnabled: YES];*/
             return YES;
         }else{
             return NO;
         }
     }else{
-        if([[textField text] length] == 1)
-            [recordButton setEnabled: NO];
+        /*if([[textField text] length] == 1)
+            [recordButton setEnabled: NO];*/
         return YES;
-    }
-}
-
-- (void)textFieldDidEndEditing:(UITextField *)textField{
-    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
-        [table setFrame: CGRectMake(0, 92, 1024, 612)];
-    }
-}
-
-- (void)textFieldDidBeginEditing:(UITextField *)textField{
-    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
-        [UIView beginAnimations:nil context:nil];
-        [UIView setAnimationDuration: 0.25f];
-        [table setFrame: CGRectMake(0, 92, 1024, 260)];
-        [UIView commitAnimations];
     }
 }
 

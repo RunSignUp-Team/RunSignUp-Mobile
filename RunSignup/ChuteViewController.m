@@ -20,6 +20,8 @@
 @synthesize fileToSave;
 @synthesize raceID;
 @synthesize raceName;
+@synthesize eventID;
+@synthesize eventName;
 @synthesize bibField;
 @synthesize zbarReaderViewController;
 @synthesize numpadView;
@@ -115,6 +117,8 @@
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
     [dict setObject:raceID forKey:@"RaceID"];
     [dict setObject:raceName forKey:@"RaceName"];
+    [dict setObject:eventID forKey:@"EventID"];
+    [dict setObject:eventName forKey:@"EventName"];
     [dict setObject:[formatter stringFromDate:[NSDate date]] forKey:@"Date"];
     [dict setObject:records forKey:@"Data"];
     [dict setObject:[NSNumber numberWithInt:2] forKey:@"Type"];

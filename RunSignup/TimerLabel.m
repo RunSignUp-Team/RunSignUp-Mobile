@@ -13,7 +13,10 @@
 
 // Timer Label is a class made to display (in a green/black style) time and hold a timer to update this
 - (id)initWithFrame:(CGRect)frame{
-    self = [super initWithFrame:CGRectMake(frame.origin.x, frame.origin.y, 320, 92)];
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+        self = [super initWithFrame:CGRectMake(frame.origin.x, frame.origin.y, 320, 92)];
+    else
+        self = [super initWithFrame:CGRectMake(frame.origin.x, frame.origin.y, 576, 92)];
     if (self) {
         formatter = [[NSDateFormatter alloc] init];
         [formatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0.0]];
@@ -72,7 +75,7 @@
 // Start timing (called by Start Race button in timer and checker)
 - (void)startTiming{    
     self.startDate = [NSDate date];
-    timer = [NSTimer scheduledTimerWithTimeInterval:1.0/100.0 target:self selector:@selector(updateTimer) userInfo:nil repeats:YES];
+    timer = [NSTimer scheduledTimerWithTimeInterval:1.0/50.0 target:self selector:@selector(updateTimer) userInfo:nil repeats:YES];
 }
 
 - (void)stopTiming{
