@@ -104,6 +104,9 @@
 		77F7EA15159811A400D092F8 /* RoundedBarcodeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 77F7EA14159811A400D092F8 /* RoundedBarcodeView.m */; };
 		77F7EA18159814DA00D092F8 /* Check.png in Resources */ = {isa = PBXBuildFile; fileRef = 77F7EA16159814DA00D092F8 /* Check.png */; };
 		77F7EA19159814DA00D092F8 /* Check@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 77F7EA17159814DA00D092F8 /* Check@2x.png */; };
+		77FB0E1215D5CB86003FB7AC /* SelectResultSetViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77FB0E1015D5CB86003FB7AC /* SelectResultSetViewController.m */; };
+		77FB0E1315D5CB86003FB7AC /* SelectResultSetViewController~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 77FB0E1115D5CB86003FB7AC /* SelectResultSetViewController~iphone.xib */; };
+		77FB0E1515D5CBC8003FB7AC /* SelectResultSetViewController~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 77FB0E1415D5CBC8003FB7AC /* SelectResultSetViewController~ipad.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -254,6 +257,10 @@
 		77F7EA14159811A400D092F8 /* RoundedBarcodeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RoundedBarcodeView.m; sourceTree = "<group>"; };
 		77F7EA16159814DA00D092F8 /* Check.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Check.png; sourceTree = "<group>"; };
 		77F7EA17159814DA00D092F8 /* Check@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Check@2x.png"; sourceTree = "<group>"; };
+		77FB0E0F15D5CB86003FB7AC /* SelectResultSetViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectResultSetViewController.h; sourceTree = "<group>"; };
+		77FB0E1015D5CB86003FB7AC /* SelectResultSetViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectResultSetViewController.m; sourceTree = "<group>"; };
+		77FB0E1115D5CB86003FB7AC /* SelectResultSetViewController~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "SelectResultSetViewController~iphone.xib"; sourceTree = "<group>"; };
+		77FB0E1415D5CBC8003FB7AC /* SelectResultSetViewController~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "SelectResultSetViewController~ipad.xib"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -317,10 +324,7 @@
 				77CD553715979A49007A21DD /* OfflineRaceViewController.m */,
 				77B1EDEB1598FFA70058C57F /* OfflineRaceViewController~iphone.xib */,
 				77B1EDEA1598FFA70058C57F /* OfflineRaceViewController~ipad.xib */,
-				7702C58D154A07400004EDB5 /* SelectRaceViewController.h */,
-				7702C58E154A07400004EDB5 /* SelectRaceViewController.m */,
-				77B1EDED1598FFA70058C57F /* SelectRaceViewController~iphone.xib */,
-				77B1EE00159902C30058C57F /* SelectRaceViewController~ipad.xib */,
+				77FB0E0D15D5CB53003FB7AC /* Select View Controllers */,
 				770AC9C015C7001200021020 /* EditBibViewController.h */,
 				770AC9C115C7001200021020 /* EditBibViewController.m */,
 				770AC9C215C7001200021020 /* EditBibViewController~iphone.xib */,
@@ -551,6 +555,21 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		77FB0E0D15D5CB53003FB7AC /* Select View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				7702C58D154A07400004EDB5 /* SelectRaceViewController.h */,
+				7702C58E154A07400004EDB5 /* SelectRaceViewController.m */,
+				77B1EDED1598FFA70058C57F /* SelectRaceViewController~iphone.xib */,
+				77B1EE00159902C30058C57F /* SelectRaceViewController~ipad.xib */,
+				77FB0E0F15D5CB86003FB7AC /* SelectResultSetViewController.h */,
+				77FB0E1015D5CB86003FB7AC /* SelectResultSetViewController.m */,
+				77FB0E1115D5CB86003FB7AC /* SelectResultSetViewController~iphone.xib */,
+				77FB0E1415D5CBC8003FB7AC /* SelectResultSetViewController~ipad.xib */,
+			);
+			name = "Select View Controllers";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -660,6 +679,8 @@
 				77CB2E37159E907300EC83E8 /* Icon@2x.png in Resources */,
 				770AC9C415C7001200021020 /* EditBibViewController~iphone.xib in Resources */,
 				77B3E84815C8BF330047BA07 /* EditBibViewController~ipad.xib in Resources */,
+				77FB0E1315D5CB86003FB7AC /* SelectResultSetViewController~iphone.xib in Resources */,
+				77FB0E1515D5CBC8003FB7AC /* SelectResultSetViewController~ipad.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -697,6 +718,7 @@
 				77F7EA15159811A400D092F8 /* RoundedBarcodeView.m in Sources */,
 				775FDB2D159A46C30052B460 /* NumpadView.m in Sources */,
 				770AC9C315C7001200021020 /* EditBibViewController.m in Sources */,
+				77FB0E1215D5CB86003FB7AC /* SelectResultSetViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -732,6 +754,7 @@
 					"$(inherited)",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
@@ -752,6 +775,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
@@ -768,6 +792,7 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "RunSignup/RunSignup-Prefix.pch";
+				GCC_THUMB_SUPPORT = NO;
 				HEADER_SEARCH_PATHS = "\"$(SDK_DIR)\"/usr/include/libxml2/**";
 				INFOPLIST_FILE = "RunSignup/RunSignup-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.2;
@@ -776,6 +801,7 @@
 					"\"$(SRCROOT)/RunSignup/ZBarSDK\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				REZ_SEARCH_PATHS = "\"$(SDK_DIR)\"/usr/include/libxml2/**";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
@@ -786,6 +812,7 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "RunSignup/RunSignup-Prefix.pch";
+				GCC_THUMB_SUPPORT = NO;
 				HEADER_SEARCH_PATHS = "\"$(SDK_DIR)\"/usr/include/libxml2/**";
 				INFOPLIST_FILE = "RunSignup/RunSignup-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.2;
@@ -794,6 +821,7 @@
 					"\"$(SRCROOT)/RunSignup/ZBarSDK\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				REZ_SEARCH_PATHS = "\"$(SDK_DIR)\"/usr/include/libxml2/**";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};

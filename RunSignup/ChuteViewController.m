@@ -11,6 +11,7 @@
 #import "JSON.h"
 #import "ZBarSDK.h"
 #import "RoundedBarcodeView.h"
+#import "RSUModel.h"
 
 @implementation ChuteViewController
 @synthesize recordButton;
@@ -63,6 +64,17 @@
 
 - (void)viewDidLoad{
     [super viewDidLoad];
+    
+    void (^response)(int) = ^(int didSucceed){
+        if(didSucceed == NoConnection){
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+            [alert show];
+            [alert release];
+        }
+    };
+    
+    // Clear existing (if any) chute data currently in the individual_result_set
+    [[RSUModel sharedModel] deleteResults:ClearChute response:response];
     
     // Images created for stretching to variably sized UIButtons (see buttons in resources)
     UIImage *blueButtonImage = [UIImage imageNamed:@"BlueButton.png"];
@@ -131,6 +143,16 @@
     if([records count] < 10000){
         NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:[bibField text], @"Bib", [NSString stringWithFormat:@"%.4i", [records count]+1], @"Place", nil];
         [records insertObject:dict atIndex:0];
+        
+        void (^response)(int) = ^(int didSucceed){
+            if(didSucceed == NoConnection){
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+                [alert show];
+                [alert release];
+            }
+        };
+        
+        [[RSUModel sharedModel] addFinishingBib:[bibField text] response:response];
         
         NSIndexPath *index = [NSIndexPath indexPathForRow:0 inSection:0];
         [table beginUpdates];

@@ -8,6 +8,7 @@
 
 #import "SelectRaceViewController.h"
 #import "MainMenuViewController.h"
+#import "SelectResultSetViewController.h"
 #import "RSUModel.h"
 
 @implementation SelectRaceViewController
@@ -18,11 +19,22 @@
 @synthesize popoverController;
 @synthesize rli;
 
-- (void)viewDidLoad{
-    [super viewDidLoad];
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        self.title = @"My Race List";
+    }
+    return self;
 }
 
-- (void)viewDidAppear:(BOOL)animated{
+- (void)viewDidLoad{
+    [super viewDidLoad];
+    
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
+        UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(goBack)];
+        [self.navigationItem setLeftBarButtonItem: cancelButton];
+    }
+    
     RSUModel *model = [RSUModel sharedModel];
     
     self.rli = [[RoundedLoadingIndicator alloc] initWithXLocation:80 YLocation:100];
@@ -116,36 +128,23 @@
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex{
     if(raceList != nil){
         if(buttonIndex == 1){
-            if([delegate respondsToSelector:@selector(didSelectRace:withID:withEventName:withEventID:)]){
-                NSString *raceID = [[raceList objectAtIndex:raceIndex.section] objectForKey:@"RaceID"];
-                NSString *eventID = [[[[raceList objectAtIndex:raceIndex.section] objectForKey:@"Events"] objectAtIndex:raceIndex.row] objectForKey:@"EventID"];
-                
-                void (^response)(int) = ^(int didSucceed){
-                    if(didSucceed == Success){
-                        NSString *raceName = [[raceList objectAtIndex:raceIndex.section] objectForKey:@"Name"];
-                        NSString *raceID = [[raceList objectAtIndex:raceIndex.section] objectForKey:@"RaceID"];
-                        
-                        NSString *eventName = [[[[raceList objectAtIndex:raceIndex.section] objectForKey:@"Events"] objectAtIndex:raceIndex.row] objectForKey:@"Name"];
-                        NSString *eventID = [[[[raceList objectAtIndex:raceIndex.section] objectForKey:@"Events"] objectAtIndex:raceIndex.row] objectForKey:@"EventID"];
-                        
-                        [rli fadeOut];
-                        [delegate didSelectRace:raceName withID:raceID withEventName:eventName withEventID:eventID]; 
-                        if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
-                            [self dismissModalViewControllerAnimated:YES];
-                        else
-                            [popoverController dismissPopoverAnimated:YES];
-                    }else{
-                        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
-                        [alert show];
-                        [alert release];
-                        [rli fadeOut];
-                    }
-                };
-                
-                [[rli label] setText: @"Starting session..."];
-                [rli fadeIn];
-                [[RSUModel sharedModel] beginTimingNewRace:raceID event:eventID response:response];
-            }
+            NSString *raceName = [[raceList objectAtIndex:raceIndex.section] objectForKey:@"Name"];
+            NSString *raceID = [[raceList objectAtIndex:raceIndex.section] objectForKey:@"RaceID"];
+            
+            NSString *eventName = [[[[raceList objectAtIndex:raceIndex.section] objectForKey:@"Events"] objectAtIndex:raceIndex.row] objectForKey:@"Name"];
+            NSString *eventID = [[[[raceList objectAtIndex:raceIndex.section] objectForKey:@"Events"] objectAtIndex:raceIndex.row] objectForKey:@"EventID"];
+            
+            SelectResultSetViewController *selectResultSetViewController = [[SelectResultSetViewController alloc] initWithNibName:@"SelectResultSetViewController" bundle:nil];
+            [selectResultSetViewController setDelegate: delegate];
+            [selectResultSetViewController setPopoverController: popoverController];
+            [selectResultSetViewController setRaceName: raceName];
+            [selectResultSetViewController setRaceID: @"1326"];
+            [selectResultSetViewController setEventName: eventName];
+            [selectResultSetViewController setEventID: @"2491"];
+            
+            [self.navigationController pushViewController:selectResultSetViewController animated:YES];
+            
+            [rli fadeOut];
         }else{
             if(raceIndex != nil){
                 [table deselectRowAtIndexPath:raceIndex animated:YES];
@@ -165,8 +164,8 @@
     return [[[raceList objectAtIndex: section] objectForKey:@"Events"] count];
 }
 
-- (IBAction)cancel:(id)sender{
-    [self dismissModalViewControllerAnimated:YES];
+- (void)goBack{
+    [self dismissModalViewControllerAnimated: YES];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation{

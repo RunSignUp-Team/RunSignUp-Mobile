@@ -15,6 +15,13 @@ enum{
     Success
 };
 
+enum{
+    ClearAll = 4,
+    ClearTimer,
+    ClearChecker,
+    ClearChute
+};
+
 @interface RSUModel : NSObject{
     NSString *key;
     NSString *secret;
@@ -51,11 +58,15 @@ enum{
 - (int)renewCredentials;
 - (void)attemptLoginWithEmail:(NSString *)em pass:(NSString *)pa response:(void (^)(int))responseBlock;
 - (void)logout;
+
 - (void)attemptRetreiveRaceList:(void (^)(NSArray *))responseBlock;
+- (void)attemptRetreiveResultSetList:(NSString *)raceID event:(NSString *)eventID response:(void (^)(NSArray *))responseBlock;
 
 - (void)beginTimingNewRace:(NSString *)raceID event:(NSString *)eventID response:(void (^)(int))responseBlock;
 - (void)createNewResultSet:(void (^)(int))responseBlock;
+- (void)deleteResults:(int)which response:(void (^)(int))responseBlock;
 
 - (void)addFinishingTime:(NSString *)finishingTime response:(void (^)(int))responseBlock;
+- (void)addFinishingBib:(NSString *)finishingBib response:(void (^)(int))responseBlock;
 
 @end

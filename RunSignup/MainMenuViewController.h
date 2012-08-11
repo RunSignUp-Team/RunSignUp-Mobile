@@ -34,8 +34,6 @@
     UILabel *copyrightLabel;
     UILabel *hintLabel;
     UILabel *hintLabel2;
-    
-    UIView *viewsicle;
 }
 
 @property (nonatomic, retain) IBOutlet UIButton *timerButton;

@@ -85,9 +85,6 @@
     emailLabel.layer.borderColor = [UIColor blackColor].CGColor;
     emailLabel.layer.borderWidth = 1.0f;
     
-    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-        viewsicle.layer.cornerRadius = 5.0f;
-    
     self.contentSizeForViewInPopover = CGSizeMake(320, 400);
     
     [super viewDidLoad];
@@ -99,14 +96,21 @@
 
 // Push timer view onto UINavigationController's view stack
 - (IBAction)timer:(id)sender{
-    TimerViewController *timerViewController = [[TimerViewController alloc] initWithNibName:@"TimerViewController" bundle:nil];
+    
+    void (^response)(int) = ^(int didSucceed){
+        
+    };
+    
+    [[RSUModel sharedModel] deleteResults:ClearAll response:response];
+    
+    /*TimerViewController *timerViewController = [[TimerViewController alloc] initWithNibName:@"TimerViewController" bundle:nil];
     [timerViewController setRaceID:raceDirectorRaceID];
     [timerViewController setRaceName:raceDirectorRaceName];
     [timerViewController setEventID:raceDirectorEventID];
     [timerViewController setEventName:raceDirectorEventName];
     AppDelegate *del = [[UIApplication sharedApplication] delegate];
     [[del navController] pushViewController:timerViewController animated:YES];
-    [timerViewController release];
+    [timerViewController release];*/
 }
 
 // Push sign in view into modal view of MainMenuViewController
@@ -141,8 +145,11 @@
     if(raceDirectorEmail != nil){
         SelectRaceViewController *selectRaceViewController = [[SelectRaceViewController alloc] initWithNibName:@"SelectRaceViewController" bundle:nil];
         [selectRaceViewController setDelegate: self];
+        
+        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController: selectRaceViewController];
+        
         if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
-            [self presentModalViewController:selectRaceViewController animated:YES];
+            [self presentModalViewController:navController animated:YES];
         else{
             UIPopoverController *popoverController = [[UIPopoverController alloc] initWithContentViewController:selectRaceViewController];
             [selectRaceViewController setPopoverController: popoverController];

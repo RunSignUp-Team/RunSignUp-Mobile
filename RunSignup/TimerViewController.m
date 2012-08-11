@@ -56,6 +56,17 @@
 - (void)viewDidLoad{
     [super viewDidLoad];
     
+    void (^response)(int) = ^(int didSucceed){
+        if(didSucceed == NoConnection){
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+            [alert show];
+            [alert release];
+        }
+    };
+    
+    // Clear existing (if any) timing data currently in the individual_result_set
+    [[RSUModel sharedModel] deleteResults:ClearTimer response:response];
+    
     self.timerLabel = [[TimerLabel alloc] initWithFrame:CGRectMake(0, 0, 320, 92)];
     [self.view addSubview: timerLabel];
     
@@ -157,6 +168,7 @@
         }else{
             [startButton setTitle:@"End Race" forState:UIControlStateNormal];
         }
+                
         started = YES;
         [timerLabel startTiming];
         [recordButton setEnabled:YES];
