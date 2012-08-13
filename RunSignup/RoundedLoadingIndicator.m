@@ -16,14 +16,24 @@
 - (id)initWithXLocation:(int)locX YLocation:(int)locY{
     self = [super initWithFrame:CGRectMake(locX, locY, 160, 100)];
     if(self){
-        self.activity = [[UIActivityIndicatorView alloc] initWithFrame: CGRectMake(62, 20, 36, 36)];
+        //self.activity = [[UIActivityIndicatorView alloc] initWithFrame: CGRectMake(62, 20, 36, 36)];
         self.label = [[UILabel alloc] initWithFrame: CGRectMake(5, 70, 150, 20)];
         [label setFont: [UIFont systemFontOfSize: 18.0f]];
         
-        [activity setActivityIndicatorViewStyle: UIActivityIndicatorViewStyleWhiteLarge];
+        /*[activity setActivityIndicatorViewStyle: UIActivityIndicatorViewStyleWhiteLarge];
         [activity setBackgroundColor: [UIColor clearColor]];
         [activity startAnimating];
-        [self addSubview: activity];
+        [self addSubview: activity];*/
+        
+        UIImageView *loadingView = [[UIImageView alloc] initWithFrame: CGRectMake(44, 2, 72, 72)];
+        NSMutableArray *animationImages = [[NSMutableArray alloc] init];
+        for(int x = 1; x < 26; x++){
+            [animationImages addObject: [UIImage imageNamed: [NSString stringWithFormat:@"loading%i", x]]];
+        }
+        [loadingView setAnimationImages: animationImages];
+        [loadingView setAnimationDuration:1.0f];
+        [loadingView startAnimating];
+        [self addSubview: loadingView];
         
         [label setBackgroundColor: [UIColor clearColor]];
         [label setTextColor: [UIColor whiteColor]];

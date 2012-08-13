@@ -10,7 +10,6 @@
 
 @implementation NumpadView
 @synthesize button0;
-@synthesize buttonDash;
 @synthesize buttonBack;
 @synthesize button1;
 @synthesize button2;
@@ -37,7 +36,6 @@
         
         self.button0 = [UIButton buttonWithType: UIButtonTypeCustom];
         self.buttonBack = [UIButton buttonWithType: UIButtonTypeCustom];
-        self.buttonDash = [UIButton buttonWithType: UIButtonTypeCustom];
         self.button1 = [UIButton buttonWithType: UIButtonTypeCustom];
         self.button2 = [UIButton buttonWithType: UIButtonTypeCustom];
         self.button3 = [UIButton buttonWithType: UIButtonTypeCustom];
@@ -51,11 +49,10 @@
         [button1 setFrame: CGRectMake(8, 8, buttonWidth, buttonHeight)];
         [button4 setFrame: CGRectMake(8, 16 + buttonHeight, buttonWidth, buttonHeight)];
         [button7 setFrame: CGRectMake(8, 24 + (2*buttonHeight), buttonWidth, buttonHeight)];
-        [buttonDash setFrame: CGRectMake(8, 32 + (3*buttonHeight), buttonWidth, buttonHeight)];
+        [button0 setFrame: CGRectMake(8, 32 + (3*buttonHeight), buttonWidth * 2 + 8, buttonHeight)];
         [button2 setFrame: CGRectMake(16 + buttonWidth, 8, buttonWidth, buttonHeight)];
         [button5 setFrame: CGRectMake(16 + buttonWidth, 16 + buttonHeight, buttonWidth, buttonHeight)];
         [button8 setFrame: CGRectMake(16 + buttonWidth, 24 + (2*buttonHeight), buttonWidth, buttonHeight)];
-        [button0 setFrame: CGRectMake(16 + buttonWidth, 32 + (3*buttonHeight), buttonWidth, buttonHeight)];
         [button3 setFrame: CGRectMake(24 + (2*buttonWidth), 8, buttonWidth, buttonHeight)];
         [button6 setFrame: CGRectMake(24 + (2*buttonWidth), 16 + buttonHeight, buttonWidth, buttonHeight)];
         [button9 setFrame: CGRectMake(24 + (2*buttonWidth), 24 + (2*buttonHeight), buttonWidth, buttonHeight)];
@@ -63,7 +60,6 @@
         
         [button0 setTag: 0];
         [buttonBack setTag: 11];
-        [buttonDash setTag: 10];
         [button1 setTag: 1];
         [button2 setTag: 2];
         [button3 setTag: 3];
@@ -75,7 +71,6 @@
         [button9 setTag: 9];
         
         [button0 setTitle:@"0" forState:UIControlStateNormal];
-        [buttonDash setTitle:@"-" forState:UIControlStateNormal];
         [button1 setTitle:@"1" forState:UIControlStateNormal];
         [button2 setTitle:@"2" forState:UIControlStateNormal];
         [button3 setTitle:@"3" forState:UIControlStateNormal];
@@ -87,7 +82,6 @@
         [button9 setTitle:@"9" forState:UIControlStateNormal];
         
         [button0 setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [buttonDash setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [button1 setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [button2 setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [button3 setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -99,7 +93,6 @@
         [button9 setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         
         [[button0 titleLabel] setFont: [UIFont systemFontOfSize: 48.0f]];
-        [[buttonDash titleLabel] setFont: [UIFont systemFontOfSize: 48.0f]];
         [[button1 titleLabel] setFont: [UIFont systemFontOfSize: 48.0f]];
         [[button2 titleLabel] setFont: [UIFont systemFontOfSize: 48.0f]];
         [[button3 titleLabel] setFont: [UIFont systemFontOfSize: 48.0f]];
@@ -114,8 +107,6 @@
         [button0 setBackgroundImage:stretchedBlueButtonTap forState:UIControlStateHighlighted];
         [buttonBack setBackgroundImage:stretchedBlueButton forState:UIControlStateNormal];
         [buttonBack setBackgroundImage:stretchedBlueButtonTap forState:UIControlStateHighlighted];
-        [buttonDash setBackgroundImage:stretchedBlueButton forState:UIControlStateNormal];
-        [buttonDash setBackgroundImage:stretchedBlueButtonTap forState:UIControlStateHighlighted];
         [button1 setBackgroundImage:stretchedBlueButton forState:UIControlStateNormal];
         [button1 setBackgroundImage:stretchedBlueButtonTap forState:UIControlStateHighlighted];
         [button2 setBackgroundImage:stretchedBlueButton forState:UIControlStateNormal];
@@ -140,7 +131,6 @@
         
         [button0 addTarget:self action:@selector(buttonDown:) forControlEvents:UIControlEventTouchUpInside];
         [buttonBack addTarget:self action:@selector(buttonDown:) forControlEvents:UIControlEventTouchUpInside];
-        [buttonDash addTarget:self action:@selector(buttonDown:) forControlEvents:UIControlEventTouchUpInside];
         [button1 addTarget:self action:@selector(buttonDown:) forControlEvents:UIControlEventTouchUpInside];
         [button2 addTarget:self action:@selector(buttonDown:) forControlEvents:UIControlEventTouchUpInside];
         [button3 addTarget:self action:@selector(buttonDown:) forControlEvents:UIControlEventTouchUpInside];
@@ -153,7 +143,6 @@
         
         [self addSubview: button0];
         [self addSubview: buttonBack];
-        [self addSubview: buttonDash];
         [self addSubview: button1];
         [self addSubview: button2];
         [self addSubview: button3];
@@ -170,6 +159,7 @@
 - (IBAction)buttonDown:(id)sender{
     int buttonTag = [sender tag];
     if(textField != nil){
+        [[UIDevice currentDevice] playInputClick];
         if(buttonTag >= 0 && buttonTag <= 9 && [[textField text] length]  < 5){
             //[textField setText: [NSString stringWithFormat:@"%@%i", [textField text], buttonTag]];
             [textField setText: [[textField text] stringByAppendingFormat:@"%i", buttonTag]];
@@ -185,6 +175,10 @@
             }
         }
     }
+}
+
+- (BOOL) enableInputClicksWhenVisible{
+    return YES;
 }
 
 /*

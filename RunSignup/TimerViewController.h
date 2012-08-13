@@ -44,5 +44,6 @@
 - (void)updateRecordNumbersAfterDeletion;
 
 - (void)saveToFile;
+- (void)reuploadResults;
 
 @end

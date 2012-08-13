@@ -65,16 +65,18 @@
 - (void)viewDidLoad{
     [super viewDidLoad];
     
-    void (^response)(int) = ^(int didSucceed){
-        if(didSucceed == NoConnection){
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
-            [alert show];
-            [alert release];
-        }
-    };
-    
-    // Clear existing (if any) chute data currently in the individual_result_set
-    [[RSUModel sharedModel] deleteResults:ClearChute response:response];
+    if(![[RSUModel sharedModel] isOffline]){
+        void (^response)(int) = ^(int didSucceed){
+            if(didSucceed == NoConnection){
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+                [alert show];
+                [alert release];
+            }
+        };
+        
+        // Clear existing (if any) chute data currently in the individual_result_set
+        [[RSUModel sharedModel] deleteResults:ClearChute response:response];
+    }
     
     // Images created for stretching to variably sized UIButtons (see buttons in resources)
     UIImage *blueButtonImage = [UIImage imageNamed:@"BlueButton.png"];
@@ -144,15 +146,17 @@
         NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:[bibField text], @"Bib", [NSString stringWithFormat:@"%.4i", [records count]+1], @"Place", nil];
         [records insertObject:dict atIndex:0];
         
-        void (^response)(int) = ^(int didSucceed){
-            if(didSucceed == NoConnection){
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
-                [alert show];
-                [alert release];
-            }
-        };
-        
-        [[RSUModel sharedModel] addFinishingBib:[bibField text] response:response];
+        if(![[RSUModel sharedModel] isOffline]){
+            void (^response)(int) = ^(int didSucceed){
+                if(didSucceed == NoConnection){
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+                    [alert show];
+                    [alert release];
+                }
+            };
+            
+            [[RSUModel sharedModel] addFinishingBibs:[NSArray arrayWithObject: [bibField text]] response:response];
+        }
         
         NSIndexPath *index = [NSIndexPath indexPathForRow:0 inSection:0];
         [table beginUpdates];
@@ -189,7 +193,7 @@
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
     if([string length] != 0){
-        if(textField.text.length < 5 && strchr("1234567890-", [string characterAtIndex: 0])){
+        if(textField.text.length < 5 && strchr("1234567890", [string characterAtIndex: 0])){
             [recordButton setEnabled:YES];
             return YES;
         }else{
@@ -246,6 +250,51 @@
     [indexPaths release];
     
     [self saveToFile];
+    
+    if(![[RSUModel sharedModel] isOffline]){
+        [self reuploadResults];
+    }
+}
+
+- (void)reuploadResults{
+    void (^response)(int) = ^(int didSucceed){
+        if(didSucceed == NoConnection){
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+            [alert show];
+            [alert release];
+            [[self recordButton] setEnabled: YES];
+        }else{
+            void (^response2)(int) = ^(int didSucceed2){
+                if(didSucceed2 == NoConnection){
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+                    [alert show];
+                    [alert release];
+                    [[self recordButton] setEnabled: YES];
+                }else{
+                    void (^response3)(int) = ^(int didSucceed3){
+                        [[self recordButton] setEnabled: YES];
+                        
+                        if(didSucceed3 == NoConnection){
+                            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+                            [alert show];
+                            [alert release];
+                        }
+                    };
+                    
+                    NSMutableArray *bibs = [[NSMutableArray alloc] init];
+                    for(int x = [records count] - 1; x >= 0; x--){
+                        [bibs addObject: [[records objectAtIndex: x] objectForKey:@"Bib"]];
+                    }
+                    
+                    [[RSUModel sharedModel] addFinishingBibs:bibs response:response3];
+                }
+            };
+            [[RSUModel sharedModel] deleteResults:ClearResults response:response2];
+        }
+    };
+    
+    [[self recordButton] setEnabled: NO];
+    [[RSUModel sharedModel] deleteResults:ClearChute response:response];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{

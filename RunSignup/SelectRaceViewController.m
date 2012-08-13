@@ -129,10 +129,10 @@
     if(raceList != nil){
         if(buttonIndex == 1){
             NSString *raceName = [[raceList objectAtIndex:raceIndex.section] objectForKey:@"Name"];
-            NSString *raceID = [[raceList objectAtIndex:raceIndex.section] objectForKey:@"RaceID"];
+            //NSString *raceID = [[raceList objectAtIndex:raceIndex.section] objectForKey:@"RaceID"];
             
             NSString *eventName = [[[[raceList objectAtIndex:raceIndex.section] objectForKey:@"Events"] objectAtIndex:raceIndex.row] objectForKey:@"Name"];
-            NSString *eventID = [[[[raceList objectAtIndex:raceIndex.section] objectForKey:@"Events"] objectAtIndex:raceIndex.row] objectForKey:@"EventID"];
+            //NSString *eventID = [[[[raceList objectAtIndex:raceIndex.section] objectForKey:@"Events"] objectAtIndex:raceIndex.row] objectForKey:@"EventID"];
             
             SelectResultSetViewController *selectResultSetViewController = [[SelectResultSetViewController alloc] initWithNibName:@"SelectResultSetViewController" bundle:nil];
             [selectResultSetViewController setDelegate: delegate];
@@ -142,9 +142,9 @@
             [selectResultSetViewController setEventName: eventName];
             [selectResultSetViewController setEventID: @"2491"];
             
-            [self.navigationController pushViewController:selectResultSetViewController animated:YES];
+            [table deselectRowAtIndexPath:raceIndex animated:YES];
             
-            [rli fadeOut];
+            [self.navigationController pushViewController:selectResultSetViewController animated:YES];
         }else{
             if(raceIndex != nil){
                 [table deselectRowAtIndexPath:raceIndex animated:YES];

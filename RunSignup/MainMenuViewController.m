@@ -96,21 +96,14 @@
 
 // Push timer view onto UINavigationController's view stack
 - (IBAction)timer:(id)sender{
-    
-    void (^response)(int) = ^(int didSucceed){
-        
-    };
-    
-    [[RSUModel sharedModel] deleteResults:ClearAll response:response];
-    
-    /*TimerViewController *timerViewController = [[TimerViewController alloc] initWithNibName:@"TimerViewController" bundle:nil];
+    TimerViewController *timerViewController = [[TimerViewController alloc] initWithNibName:@"TimerViewController" bundle:nil];
     [timerViewController setRaceID:raceDirectorRaceID];
     [timerViewController setRaceName:raceDirectorRaceName];
     [timerViewController setEventID:raceDirectorEventID];
     [timerViewController setEventName:raceDirectorEventName];
     AppDelegate *del = [[UIApplication sharedApplication] delegate];
     [[del navController] pushViewController:timerViewController animated:YES];
-    [timerViewController release];*/
+    [timerViewController release];
 }
 
 // Push sign in view into modal view of MainMenuViewController
@@ -151,7 +144,7 @@
         if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
             [self presentModalViewController:navController animated:YES];
         else{
-            UIPopoverController *popoverController = [[UIPopoverController alloc] initWithContentViewController:selectRaceViewController];
+            UIPopoverController *popoverController = [[UIPopoverController alloc] initWithContentViewController:navController];
             [selectRaceViewController setPopoverController: popoverController];
             [popoverController presentPopoverFromRect:[selectRaceButton frame] inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
         }
@@ -202,6 +195,7 @@
 // Delegate style method for telling MainMenuViewController who to sign in and return BOOL if it was successful
 - (void)didSignInEmail:(NSString *)email password:(NSString *)password response:(void (^)(int))responseBlock{
     RSUModel *model = [RSUModel sharedModel];
+    [model setIsOffline: NO];
     
     void (^success)(int) = ^(int didSucceed){
         if(didSucceed == Success){
@@ -242,6 +236,8 @@
     self.raceDirectorRaceID = @"0000";
     self.raceDirectorEventName = @"No Event";
     self.raceDirectorEventID = @"0000";
+    
+    [[RSUModel sharedModel] setIsOffline: YES];
     
     [emailLabel setHidden: NO];
     [emailLabel setText:raceDirectorEmail];

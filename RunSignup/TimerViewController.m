@@ -56,16 +56,18 @@
 - (void)viewDidLoad{
     [super viewDidLoad];
     
-    void (^response)(int) = ^(int didSucceed){
-        if(didSucceed == NoConnection){
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
-            [alert show];
-            [alert release];
-        }
-    };
-    
-    // Clear existing (if any) timing data currently in the individual_result_set
-    [[RSUModel sharedModel] deleteResults:ClearTimer response:response];
+    if(![[RSUModel sharedModel] isOffline]){
+        void (^response)(int) = ^(int didSucceed){
+            if(didSucceed == NoConnection){
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+                [alert show];
+                [alert release];
+            }
+        };
+        
+        // Clear existing (if any) timing data currently in the individual_result_set
+        [[RSUModel sharedModel] deleteResults:ClearTimer response:response];
+    }
     
     self.timerLabel = [[TimerLabel alloc] initWithFrame:CGRectMake(0, 0, 320, 92)];
     [self.view addSubview: timerLabel];
@@ -139,16 +141,18 @@
         NSString *formattedTime = [timerLabel formattedTime];
         NSString *place = [NSString stringWithFormat:@"%.4i", [records count]+1];
         
-        void (^response)(int) = ^(int didSucceed){
-            if(didSucceed == NoConnection){
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
-                [alert show];
-                [alert release];
-            }
-        };
+        if(![[RSUModel sharedModel] isOffline]){
+            void (^response)(int) = ^(int didSucceed){
+                if(didSucceed == NoConnection){
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+                    [alert show];
+                    [alert release];
+                }
+            };
+            
+            [[RSUModel sharedModel] addFinishingTimes:[NSArray arrayWithObject: formattedTime] response:response];
+        }
         
-        [[RSUModel sharedModel] addFinishingTime:formattedTime response:response];
-         
         NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithDouble:elapsedTime],@"Time",formattedTime,@"FTime",place,@"Place",nil];
         [records insertObject:dict atIndex:0];
         [dict release];
@@ -226,6 +230,49 @@
     [indexPaths release];
     
     [self saveToFile];
+    if(![[RSUModel sharedModel] isOffline]){
+        [self reuploadResults];
+    }
+}
+
+- (void)reuploadResults{
+    void (^response)(int) = ^(int didSucceed){
+        if(didSucceed == NoConnection){
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+            [alert show];
+            [alert release];
+            [[self recordButton] setEnabled: YES];
+        }else{
+            void (^response2)(int) = ^(int didSucceed2){
+                if(didSucceed2 == NoConnection){
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+                    [alert show];
+                    [alert release];
+                    [[self recordButton] setEnabled: YES];
+                }else{
+                    void (^response3)(int) = ^(int didSucceed3){
+                        [[self recordButton] setEnabled: YES];
+                        if(didSucceed3 == NoConnection){
+                            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+                            [alert show];
+                            [alert release];
+                        }
+                    };
+                    
+                    NSMutableArray *formattedTimes = [[NSMutableArray alloc] init];
+                    for(int x = [records count] - 1; x >= 0; x--){
+                        [formattedTimes addObject: [[records objectAtIndex: x] objectForKey:@"FTime"]];
+                    }
+                    
+                    [[RSUModel sharedModel] addFinishingTimes:formattedTimes response:response3];
+                }
+            };
+            [[RSUModel sharedModel] deleteResults:ClearResults response:response2];
+        }
+    };
+    
+    [[self recordButton] setEnabled: NO];
+    [[RSUModel sharedModel] deleteResults:ClearTimer response:response];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{

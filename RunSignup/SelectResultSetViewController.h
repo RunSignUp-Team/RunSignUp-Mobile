@@ -13,8 +13,9 @@
 
 @interface SelectResultSetViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UIAlertViewDelegate>{
     UITableView *table;    
+    NSIndexPath *resultSetIndex;
     
-    NSArray *resultSetList;
+    NSMutableArray *resultSetList;
     
     MainMenuViewController *delegate;
     UIPopoverController *popoverController;
@@ -28,7 +29,8 @@
 }
 
 @property (nonatomic, retain) IBOutlet UITableView *table;
-@property (nonatomic, retain) NSArray *resultSetList;
+@property (nonatomic, retain) NSIndexPath *resultSetIndex;
+@property (nonatomic, retain) NSMutableArray *resultSetList;
 @property (nonatomic, retain) MainMenuViewController *delegate;
 @property (nonatomic, retain) UIPopoverController *popoverController;
 @property (nonatomic, retain) RoundedLoadingIndicator *rli;
@@ -38,7 +40,9 @@
 @property (nonatomic, retain) NSString *eventName;
 @property (nonatomic, retain) NSString *eventID;
 
+- (void)retrieveResultSets;
 - (void)goBack;
 - (void)addResultSet;
+- (void)toggleEdit;
 
 @end

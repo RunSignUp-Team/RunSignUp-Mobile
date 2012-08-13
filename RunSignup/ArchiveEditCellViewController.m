@@ -162,7 +162,7 @@
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
     if([string length] != 0){
-        if(textField.text.length < 5 && strchr("1234567890-", [string characterAtIndex: 0])){
+        if(textField.text.length < 5 && strchr("1234567890", [string characterAtIndex: 0])){
             [saveButton setEnabled: YES];
             return YES;
         }else{

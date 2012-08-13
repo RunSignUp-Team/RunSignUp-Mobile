@@ -16,7 +16,7 @@ enum{
 };
 
 enum{
-    ClearAll = 4,
+    ClearResults = 4,
     ClearTimer,
     ClearChecker,
     ClearChute
@@ -37,6 +37,8 @@ enum{
     NSString *lastBibNumber;
     
     NSTimer *renewTimer;
+    
+    BOOL isOffline;
 }
 
 @property (nonatomic, retain) NSString *key;
@@ -52,6 +54,8 @@ enum{
 
 @property (nonatomic, retain) NSTimer *renewTimer;
 
+@property BOOL isOffline;
+
 + (id)sharedModel;
 
 - (id)init;
@@ -60,13 +64,13 @@ enum{
 - (void)logout;
 
 - (void)attemptRetreiveRaceList:(void (^)(NSArray *))responseBlock;
-- (void)attemptRetreiveResultSetList:(NSString *)raceID event:(NSString *)eventID response:(void (^)(NSArray *))responseBlock;
+- (void)attemptRetreiveResultSetList:(NSString *)raceID event:(NSString *)eventID response:(void (^)(NSMutableArray *))responseBlock;
 
-- (void)beginTimingNewRace:(NSString *)raceID event:(NSString *)eventID response:(void (^)(int))responseBlock;
-- (void)createNewResultSet:(void (^)(int))responseBlock;
+- (void)createNewResultSet:(NSString *)name response:(void (^)(int))responseBlock;
+- (void)deleteResultSet:(NSString *)resultSetID response:(void (^)(int))responseBlock;
 - (void)deleteResults:(int)which response:(void (^)(int))responseBlock;
 
-- (void)addFinishingTime:(NSString *)finishingTime response:(void (^)(int))responseBlock;
-- (void)addFinishingBib:(NSString *)finishingBib response:(void (^)(int))responseBlock;
+- (void)addFinishingTimes:(NSArray *)finishingTimes response:(void (^)(int))responseBlock;
+- (void)addFinishingBibs:(NSArray *)finishingBibs response:(void (^)(int))responseBlock;
 
 @end

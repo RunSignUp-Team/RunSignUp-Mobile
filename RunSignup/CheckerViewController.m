@@ -257,10 +257,10 @@
     [self performSelector:@selector(hideCloseNumpadButton:) withObject:nil afterDelay:0.05f];
 }
 
-// Limit what the user can enter to the string "1234567890-", dash was added just in case a bib is 12-34 or something
+// Limit what the user can enter to the string "1234567890"
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
     if([string length] != 0){
-        if(textField.text.length < 5 && strchr("1234567890-", [string characterAtIndex: 0])){
+        if(textField.text.length < 5 && strchr("1234567890", [string characterAtIndex: 0])){
             /*if(started)
                 [recordButton setEnabled: YES];*/
             return YES;

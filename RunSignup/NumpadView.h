@@ -8,10 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface NumpadView : UIView{
+@interface NumpadView : UIView <UIInputViewAudioFeedback>{
     UIButton *button0;
     UIButton *buttonCamera;
-    UIButton *buttonDash;
     UIButton *button1;
     UIButton *button2;
     UIButton *button3;
@@ -29,7 +28,6 @@
 - (IBAction)buttonDown:(id)sender;
 
 @property (nonatomic, retain) UIButton *button0;
-@property (nonatomic, retain) UIButton *buttonDash;
 @property (nonatomic, retain) UIButton *buttonBack;
 @property (nonatomic, retain) UIButton *button1;
 @property (nonatomic, retain) UIButton *button2;

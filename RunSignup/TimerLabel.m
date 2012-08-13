@@ -57,7 +57,7 @@
     return interval;
 }
 
-// Called every 1/100.0 seconds
+// Called every 1/25.3 seconds
 - (void)updateTimer{
     NSDate *currentDate = [NSDate date];
     
@@ -75,7 +75,7 @@
 // Start timing (called by Start Race button in timer and checker)
 - (void)startTiming{    
     self.startDate = [NSDate date];
-    timer = [NSTimer scheduledTimerWithTimeInterval:1.0/50.0 target:self selector:@selector(updateTimer) userInfo:nil repeats:YES];
+    timer = [NSTimer scheduledTimerWithTimeInterval:1.0/25.3 target:self selector:@selector(updateTimer) userInfo:nil repeats:YES];
 }
 
 - (void)stopTiming{

@@ -12,6 +12,7 @@
 
 @implementation SelectResultSetViewController
 @synthesize table;
+@synthesize resultSetIndex;
 @synthesize resultSetList;
 @synthesize delegate;
 @synthesize popoverController;
@@ -33,18 +34,25 @@
 - (void)viewDidLoad{
     [super viewDidLoad];
     
-    RSUModel *model = [RSUModel sharedModel];
-    
-    UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(goBack)];
+    UIBarButtonItem *editButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(toggleEdit)];
     UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addResultSet)];
-    [self.navigationItem setLeftBarButtonItem: cancelButton];
-    [self.navigationItem setRightBarButtonItem: addButton];
+    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:editButton, addButton, nil]];
     
     self.rli = [[RoundedLoadingIndicator alloc] initWithXLocation:80 YLocation:100];
     [[rli label] setText:@"Retrieving list..."];
     [self.view addSubview: rli];
     
-    void (^response)(NSArray *) = ^(NSArray *list){
+    [[RSUModel sharedModel] setCurrentRaceID: raceID];
+    [[RSUModel sharedModel] setCurrentEventID: eventID];
+    [[RSUModel sharedModel] setLastFinishingTimeID: @"0"];
+    [[RSUModel sharedModel] setLastBibNumber: @"0"];
+    
+    [self retrieveResultSets];
+}
+
+- (void)retrieveResultSets{
+    RSUModel *model = [RSUModel sharedModel];
+    void (^response)(NSMutableArray *) = ^(NSMutableArray *list){
         self.resultSetList = list;
         [table reloadData];
         [rli fadeOut];
@@ -67,14 +75,14 @@
         [nameLabel setFont: [UIFont boldSystemFontOfSize:18.0f]];
         [nameLabel setBackgroundColor:[UIColor clearColor]];
         [nameLabel setTag: 12];
-        [cell addSubview: nameLabel];
+        [cell.contentView addSubview: nameLabel];
         
         UILabel *entriesLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 26, 200, 16)];
         [entriesLabel setFont: [UIFont systemFontOfSize:14.0f]];
         [entriesLabel setBackgroundColor:[UIColor clearColor]];
         [entriesLabel setTextColor: [UIColor lightGrayColor]];
         [entriesLabel setTag: 13];
-        [cell addSubview: entriesLabel];
+        [cell.contentView addSubview: entriesLabel];
     }
     if(resultSetList == nil){
         [[cell textLabel] setText: @"No result sets found. Create one."];
@@ -95,23 +103,82 @@
 // Select a race to time for (of many that a given director could be directing in the future)
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     if(resultSetList != nil){
-        if([delegate respondsToSelector:@selector(didSelectRace:withID:withEventName:withEventID:)]){
-            [[RSUModel sharedModel] setCurrentResultSetID: [[resultSetList objectAtIndex: indexPath.row] objectForKey:@"ResultSetID"]];
-            [[RSUModel sharedModel] setCurrentRaceID: raceID];
-            [[RSUModel sharedModel] setCurrentEventID: eventID];
-            [[RSUModel sharedModel] setLastFinishingTimeID: @"0"];
-            [[RSUModel sharedModel] setLastBibNumber: @"0"];
+        self.resultSetIndex = indexPath;
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Are You Sure?" message:@"Choosing this result set will clear the data that currently exists there. Are you sure you wish to continue?" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
+        [alert show];
+        [alert release];
+        
+    }
+}
+
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex{
+    if([alertView alertViewStyle] == UIAlertViewStylePlainTextInput){
+        NSString *name = [[alertView textFieldAtIndex: 0] text];
+        if([name length] > 0 && [name length] < 30){
+            void (^response)(int) = ^(int didSucceed){
+                if(didSucceed == NoConnection){
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+                    [alert show];
+                    [alert release];
+                }else{
+                    [delegate didSelectRace:raceName withID:raceID withEventName:eventName withEventID:eventID];
+                    [table deselectRowAtIndexPath:resultSetIndex animated:NO];
+
+                    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+                        [self.navigationController dismissModalViewControllerAnimated: YES];
+                    else
+                        [popoverController dismissPopoverAnimated: YES];
+                }
+            };
             
-            [delegate didSelectRace:raceName withID:raceID withEventName:eventName withEventID:eventID];
-            [tableView deselectRowAtIndexPath:indexPath animated:NO];
-            
-            if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
-                [self.navigationController dismissModalViewControllerAnimated: YES];
-            else
-                [popoverController dismissPopoverAnimated: YES];
+            [[RSUModel sharedModel] createNewResultSet:name response:response];
         }
     }else{
-        [tableView deselectRowAtIndexPath:indexPath animated:NO];
+        if(resultSetList != nil){
+            if(buttonIndex == 1){
+                if([delegate respondsToSelector:@selector(didSelectRace:withID:withEventName:withEventID:)]){
+                    [[RSUModel sharedModel] setCurrentResultSetID: [[resultSetList objectAtIndex: resultSetIndex.row] objectForKey:@"ResultSetID"]];
+                    
+                    void (^response)(int) = ^(int didSucceed){
+                        if(didSucceed == NoConnection){
+                            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+                            [alert show];
+                            [alert release];
+                        }
+                    };
+                    
+                    [[RSUModel sharedModel] deleteResults:ClearResults response:response];
+                    
+                    [delegate didSelectRace:raceName withID:raceID withEventName:eventName withEventID:eventID];
+                    [table deselectRowAtIndexPath:resultSetIndex animated:NO];
+                    
+                    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+                        [self.navigationController dismissModalViewControllerAnimated: YES];
+                    else
+                        [popoverController dismissPopoverAnimated: YES];
+                }
+            }else{
+                [table deselectRowAtIndexPath:resultSetIndex animated:NO];
+            }
+        }
+    }
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
+    if(editingStyle == UITableViewCellEditingStyleDelete){
+        void (^response)(int) = ^(int didSucceed){
+            if(didSucceed == NoConnection){
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+                [alert show];
+                [alert release];
+            }else{
+                [resultSetList removeObjectAtIndex: indexPath.row];
+                [table deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationFade];
+            }
+        };
+        
+        NSString *resultSetID = [[resultSetList objectAtIndex: indexPath.row] objectForKey:@"ResultSetID"];
+        [[RSUModel sharedModel] deleteResultSet:resultSetID response:response];
     }
 }
 
@@ -124,7 +191,30 @@
 }
 
 - (void)addResultSet{
-    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Result set name:" message:@"" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Okay", nil];
+    [alert setAlertViewStyle: UIAlertViewStylePlainTextInput];
+    [alert show];
+    [alert release];
+}
+
+- (BOOL)alertViewShouldEnableFirstOtherButton:(UIAlertView *)alertView{
+    if([alertView alertViewStyle] == UIAlertViewStylePlainTextInput){
+        NSUInteger length = [[[alertView textFieldAtIndex: 0] text] length];
+        if(length > 0 && length < 30){
+            return YES;
+        }else{
+            return NO;
+        }
+    }else{
+        return YES;
+    }
+}
+
+- (void)toggleEdit{
+    if([table isEditing])
+        [table setEditing:NO animated:YES];
+    else
+        [table setEditing:YES animated:YES];
 }
 
 - (void)goBack{
