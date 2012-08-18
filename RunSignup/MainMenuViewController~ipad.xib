@@ -109,7 +109,7 @@
 						<string key="NSFrame">{{402, 230}, {220, 46}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
+						<reference key="NSNextKeyView" ref="930416457"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
@@ -128,7 +128,7 @@
 						<string key="NSFrame">{{402, 386}, {220, 46}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView" ref="577148625"/>
+						<reference key="NSNextKeyView" ref="683244528"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
@@ -173,6 +173,25 @@
 						<int key="IBUIContentHorizontalAlignment">0</int>
 						<int key="IBUIContentVerticalAlignment">0</int>
 						<string key="IBUINormalTitle">Chute</string>
+						<reference key="IBUIHighlightedTitleColor" ref="765757776"/>
+						<reference key="IBUINormalTitleColor" ref="765757776"/>
+						<reference key="IBUINormalTitleShadowColor" ref="994063752"/>
+						<reference key="IBUIFontDescription" ref="672841066"/>
+						<reference key="IBUIFont" ref="432419341"/>
+					</object>
+					<object class="IBUIButton" id="683244528">
+						<reference key="NSNextResponder" ref="774585933"/>
+						<int key="NSvFlags">-2147483356</int>
+						<string key="NSFrame">{{402, 416}, {220, 46}}</string>
+						<reference key="NSSuperview" ref="774585933"/>
+						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView" ref="577148625"/>
+						<string key="NSReuseIdentifierKey">_NS:9</string>
+						<bool key="IBUIOpaque">NO</bool>
+						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
+						<int key="IBUIContentHorizontalAlignment">0</int>
+						<int key="IBUIContentVerticalAlignment">0</int>
+						<string key="IBUINormalTitle">Enter Participants</string>
 						<reference key="IBUIHighlightedTitleColor" ref="765757776"/>
 						<reference key="IBUINormalTitleColor" ref="765757776"/>
 						<reference key="IBUINormalTitleShadowColor" ref="994063752"/>
@@ -561,6 +580,14 @@
 					<int key="connectionID">61</int>
 				</object>
 				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">participantsButton</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="683244528"/>
+					</object>
+					<int key="connectionID">75</int>
+				</object>
+				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
 						<string key="label">timer:</string>
 						<reference key="source" ref="574227950"/>
@@ -641,6 +668,15 @@
 					</object>
 					<int key="connectionID">57</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">participants:</string>
+						<reference key="source" ref="683244528"/>
+						<reference key="destination" ref="372490531"/>
+						<int key="IBEventType">7</int>
+					</object>
+					<int key="connectionID">73</int>
+				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<array key="orderedObjects">
@@ -682,6 +718,7 @@
 							<reference ref="930416457"/>
 							<reference ref="716670112"/>
 							<reference ref="137800406"/>
+							<reference ref="683244528"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -770,6 +807,11 @@
 						<reference key="object" ref="655461197"/>
 						<reference key="parent" ref="774585933"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">71</int>
+						<reference key="object" ref="683244528"/>
+						<reference key="parent" ref="774585933"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -802,13 +844,14 @@
 					<integer value="0" key="NS.object.0"/>
 				</object>
 				<string key="6.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="71.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="9.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 			</dictionary>
 			<dictionary class="NSMutableDictionary" key="unlocalizedProperties"/>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">70</int>
+			<int key="maxID">75</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -820,6 +863,7 @@
 						<string key="chute:">id</string>
 						<string key="didSignOut">id</string>
 						<string key="offline:">id</string>
+						<string key="participants:">id</string>
 						<string key="selectRace:">id</string>
 						<string key="showArchive:">id</string>
 						<string key="showSettings:">id</string>
@@ -841,6 +885,10 @@
 						</object>
 						<object class="IBActionInfo" key="offline:">
 							<string key="name">offline:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="participants:">
+							<string key="name">participants:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBActionInfo" key="selectRace:">
@@ -873,6 +921,7 @@
 						<string key="hintLabel">UILabel</string>
 						<string key="hintLabel2">UILabel</string>
 						<string key="offlineButton">UIButton</string>
+						<string key="participantsButton">UIButton</string>
 						<string key="raceLabel">UILabel</string>
 						<string key="selectRaceButton">UIButton</string>
 						<string key="settingsButton">UIButton</string>
@@ -913,6 +962,10 @@
 						</object>
 						<object class="IBToOneOutletInfo" key="offlineButton">
 							<string key="name">offlineButton</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="participantsButton">
+							<string key="name">participantsButton</string>
 							<string key="candidateClassName">UIButton</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="raceLabel">

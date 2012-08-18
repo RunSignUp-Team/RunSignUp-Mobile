@@ -10,7 +10,7 @@
 #import "ZBarSDK.h"
 #import "NumpadView.h"
 
-@interface ChuteViewController : UIViewController <ZBarReaderDelegate, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate>{
+@interface ChuteViewController : UIViewController <ZBarReaderDelegate, UIAlertViewDelegate, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate>{
     UIButton *recordButton;
     UIButton *barcodeButton;
     
@@ -45,6 +45,7 @@
 
 
 - (IBAction)record:(id)sender;
+- (IBAction)stopRace:(id)sender;
 - (IBAction)barcodeScanner:(id)sender;
 
 - (void)toggleEditing;

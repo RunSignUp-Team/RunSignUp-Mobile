@@ -25,6 +25,8 @@
 @synthesize offlineButton;
 @synthesize checkerButton;
 @synthesize chuteButton;
+@synthesize participantsButton;
+
 @synthesize copyrightLabel;
 @synthesize hintLabel;
 @synthesize hintLabel2;
@@ -65,6 +67,8 @@
     [selectRaceButton setBackgroundImage:stretchedBlueButtonTap forState:UIControlStateHighlighted];
     [chuteButton setBackgroundImage:stretchedBlueButton forState:UIControlStateNormal];
     [chuteButton setBackgroundImage:stretchedBlueButtonTap forState:UIControlStateHighlighted];
+    [participantsButton setBackgroundImage:stretchedBlueButton forState:UIControlStateNormal];
+    [participantsButton setBackgroundImage:stretchedBlueButtonTap forState:UIControlStateHighlighted];
     [signOutButton setBackgroundImage:stretchedBlueButton forState:UIControlStateNormal];
     [signOutButton setBackgroundImage:stretchedBlueButtonTap forState:UIControlStateHighlighted];
     [archiveButton setBackgroundImage:stretchedBlueButton forState:UIControlStateNormal];
@@ -164,6 +168,10 @@
     [chuteViewController release];
 }
 
+- (IBAction)participants:(id)sender{
+    
+}
+
 // Push settings view into modal view of MainMenuViewController
 - (IBAction)showSettings:(id)sender{
     SettingsViewController *settingsViewController = [[SettingsViewController alloc] initWithNibName:@"SettingsViewController" bundle:nil];
@@ -219,6 +227,7 @@
             [hintLabel2 setHidden:YES];
             [timerButton setHidden: YES];
             [chuteButton setHidden: YES];
+            [participantsButton setHidden: YES];
             [checkerButton setHidden: YES];
             [selectRaceButton setHidden: NO];
             [signInButton setHidden: YES];
@@ -249,6 +258,8 @@
     [hintLabel2 setHidden: YES];
     [timerButton setHidden: NO];
     [chuteButton setHidden: NO];
+    [participantsButton setHidden: YES];
+    [chuteButton setFrame: CGRectMake([chuteButton frame].origin.x, [chuteButton frame].origin.y, 284, [chuteButton frame].size.height)];
     [checkerButton setHidden: NO];
     [selectRaceButton setHidden: YES];
     [signOutButton setTitle:@"Back to Start Menu" forState:UIControlStateNormal];
@@ -270,6 +281,8 @@
     [raceLabel setText: [NSString stringWithFormat:@"%@ - %@", raceDirectorRaceName, raceDirectorEventName]];
     [timerButton setHidden: NO];
     [chuteButton setHidden: NO];
+    [chuteButton setFrame: CGRectMake([chuteButton frame].origin.x, [chuteButton frame].origin.y, 134, [chuteButton frame].size.height)];
+    [participantsButton setHidden: NO];
     [checkerButton setHidden: NO];
     [selectRaceButton setHidden: NO];
     [signOutButton setTitle:@"Sign Out" forState:UIControlStateNormal];
@@ -301,6 +314,7 @@
     [[RSUModel sharedModel] logout];
     [timerButton setHidden: YES];
     [chuteButton setHidden: YES];
+    [participantsButton setHidden: YES];
     [checkerButton setHidden: YES];
     [signInButton setHidden: NO];
     [offlineButton setHidden: NO];

@@ -37,9 +37,31 @@
                 NSString *data = [NSString stringWithContentsOfFile:[NSString stringWithFormat:@"%@/%@",[paths objectAtIndex:0],string] encoding:NSUTF8StringEncoding error:nil];
                 NSMutableDictionary *fileDict = [data JSONValue];
                 [fileDict setObject:[NSString stringWithFormat:@"%@/%@", [paths objectAtIndex:0],string] forKey:@"File"];
+                
+                NSDictionary *fileProperties = [[NSFileManager defaultManager] attributesOfItemAtPath:[NSString stringWithFormat:@"%@/%@",[paths objectAtIndex:0],string] error:nil];
+                NSDate *lastModifiedDate = [fileProperties objectForKey: NSFileModificationDate];
+                [fileDict setObject:lastModifiedDate forKey:@"LastModifiedDate"];
+                
                 [fileArray addObject: fileDict];
             }
         }
+        
+        NSArray *sortedArray = [fileArray sortedArrayUsingComparator:^(id obj1, id obj2){                               
+            NSComparisonResult comparison = [[obj1 objectForKey:@"LastModifiedDate"] compare:[obj2 objectForKey:@"LastModifiedDate"]];
+            // Invert ordering so it goes last modified first
+            if(comparison == NSOrderedDescending){
+                comparison = NSOrderedAscending;
+            }else if(comparison == NSOrderedAscending){
+                comparison = NSOrderedDescending;
+            }
+            return comparison;                                
+        }];
+        
+        for(NSMutableDictionary *fileDict in sortedArray){
+            [fileDict removeObjectForKey:@"LastModifiedDate"];
+        }
+        
+        self.fileArray = [NSMutableArray arrayWithArray: sortedArray];
         
     }
     return self;
@@ -66,6 +88,7 @@
         NSString *fileToDelete = [[fileArray objectAtIndex: indexPath.row] objectForKey:@"File"];
         NSFileManager *manager = [NSFileManager defaultManager];
         [manager removeItemAtPath:fileToDelete error:nil];
+        NSLog(@"%i", indexPath.row);
         [fileArray removeObjectAtIndex: indexPath.row];
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
     }

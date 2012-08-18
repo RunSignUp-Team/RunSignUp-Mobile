@@ -25,7 +25,7 @@
         [raceNameLabel setFont: [UIFont boldSystemFontOfSize:18.0f]];
         [self.contentView addSubview: raceNameLabel];
         
-        self.dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 24, 276, 16)];
+        self.dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 24, 276, 18.0f)];
         [dateLabel setFont: [UIFont systemFontOfSize: 16.0f]];
         [dateLabel setTextColor: [UIColor lightGrayColor]];
         [self.contentView addSubview:dateLabel];

@@ -15,6 +15,7 @@
     UIButton *checkerButton;
     UIButton *selectRaceButton;
     UIButton *chuteButton;
+    UIButton *participantsButton;
     
     UIButton *signOutButton;
     UIButton *archiveButton;
@@ -41,6 +42,7 @@
 @property (nonatomic, retain) IBOutlet UIButton *offlineButton;
 @property (nonatomic, retain) IBOutlet UIButton *checkerButton;
 @property (nonatomic, retain) IBOutlet UIButton *chuteButton;
+@property (nonatomic, retain) IBOutlet UIButton *participantsButton;
 @property (nonatomic, retain) IBOutlet UILabel *copyrightLabel;
 @property (nonatomic, retain) IBOutlet UILabel *hintLabel;
 @property (nonatomic, retain) IBOutlet UILabel *hintLabel2;
@@ -67,6 +69,7 @@
 - (IBAction)checker:(id)sender;
 - (IBAction)selectRace:(id)sender;
 - (IBAction)chute:(id)sender;
+- (IBAction)participants:(id)sender;
 
 - (IBAction)showArchive:(id)sender;
 - (IBAction)showSettings:(id)sender;

@@ -415,8 +415,6 @@ static RSUModel *model = nil;
                 return;
             }
             
-            NSString *string = [[NSString alloc] initWithData:urlData encoding:NSUTF8StringEncoding];
-            NSLog(string);
             RXMLElement *rootXML = [[RXMLElement alloc] initFromXMLData:urlData];
             if([[rootXML tag] isEqualToString: @"response"]){
                 if([rootXML child:@"success"] != nil){
@@ -473,8 +471,6 @@ static RSUModel *model = nil;
                 return;
             }
             
-            NSString *string = [[NSString alloc] initWithData:urlData encoding:NSUTF8StringEncoding];
-            NSLog(string);
             RXMLElement *rootXML = [[RXMLElement alloc] initFromXMLData:urlData];
             if([[rootXML tag] isEqualToString: @"response"]){
                 if([rootXML child:@"success"] != nil){

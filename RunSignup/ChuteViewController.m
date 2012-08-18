@@ -36,22 +36,28 @@
         NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:(NSString *)[paths objectAtIndex:0] error:nil];
         self.fileToSave = @"";
         
-        int number = 0;
-        while(YES){
-            BOOL numberIsAvailable = YES;
-            for(NSString *string in files){
-                if([string isEqualToString:[NSString stringWithFormat:@"%i.json", number]]){
-                    numberIsAvailable = NO;
+        NSString *currentChuteFile = [[NSUserDefaults standardUserDefaults] stringForKey: @"CurrentChuteFile"];
+        if(currentChuteFile != nil){
+            self.fileToSave = currentChuteFile;
+            NSString *data =  [NSString stringWithContentsOfFile:fileToSave encoding:NSUTF8StringEncoding error:nil];
+            self.records = (NSMutableArray *)[(NSDictionary *)[data JSONValue] objectForKey:@"Data"];
+        }else{
+            int number = 0;
+            while(YES){
+                BOOL numberIsAvailable = YES;
+                for(NSString *string in files){
+                    if([string isEqualToString:[NSString stringWithFormat:@"%i.json", number]]){
+                        numberIsAvailable = NO;
+                    }
                 }
+                if(numberIsAvailable){
+                    self.fileToSave = [NSString stringWithFormat:@"%@/%i.json", [paths objectAtIndex:0], number];
+                    break;
+                }
+                number++;
             }
-            if(numberIsAvailable){
-                self.fileToSave = [NSString stringWithFormat:@"%@/%i.json", [paths objectAtIndex:0], number];
-                break;
-            }
-            number++;
+            self.records = [[NSMutableArray alloc] init];
         }
-        
-        self.records = [[NSMutableArray alloc] init];
         
         self.zbarReaderViewController = [[ZBarReaderViewController alloc] init];
         zbarReaderViewController.readerDelegate = self;
@@ -95,14 +101,17 @@
     [recordButton setBackgroundImage:stretchedGrayButton forState:UIControlStateDisabled];
     [barcodeButton setBackgroundImage:stretchedBlueButton forState:UIControlStateNormal];
     [barcodeButton setBackgroundImage:stretchedBlueButtonTap forState:UIControlStateHighlighted];
+    [barcodeButton setBackgroundImage:stretchedGrayButton forState:UIControlStateDisabled];
 
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
         [self.bibField becomeFirstResponder];
         
     // Set up right bar button (upper right corner) of UINavigationBar to edit button
     UIBarButtonItem *editButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(toggleEditing)];
-    [self.navigationItem setRightBarButtonItem:editButton animated:YES];
+    UIBarButtonItem *stopButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemStop target:self action:@selector(stopRace:)];
+    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:editButton, stopButton, nil] animated:YES];
     [editButton release];
+    [stopButton release];
     
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
         self.numpadView = [[NumpadView alloc] initWithFrame: CGRectMake(576, 54, 448, 538)];
@@ -158,6 +167,11 @@
             [[RSUModel sharedModel] addFinishingBibs:[NSArray arrayWithObject: [bibField text]] response:response];
         }
         
+        if([[NSUserDefaults standardUserDefaults] objectForKey:@"CurrentChuteFile"] == nil){
+            [[NSUserDefaults standardUserDefaults] setObject:self.fileToSave forKey:@"CurrentChuteFile"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        }
+        
         NSIndexPath *index = [NSIndexPath indexPathForRow:0 inSection:0];
         [table beginUpdates];
         [table insertRowsAtIndexPaths:[NSArray arrayWithObject:index] withRowAnimation:UITableViewRowAnimationBottom];
@@ -166,6 +180,29 @@
         [bibField setText:@""];
         [recordButton setEnabled:NO];
         [self saveToFile];
+    }
+}
+
+- (IBAction)stopRace:(id)sender{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Are you sure?" message:@"Are you sure you wish to stop adding bib numbers? This will end the race and will not allow you to continue adding at the place you stopped." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Stop", nil];
+    [alert show];
+    [alert release];
+}
+
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex{
+    if(buttonIndex == 1){
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"CurrentChuteFile"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        [recordButton setEnabled: NO];
+        [barcodeButton setEnabled: NO];
+        [bibField setEnabled: NO];
+        [UIView beginAnimations:@"Slide" context:nil];
+        [recordButton setFrame: CGRectMake(recordButton.frame.origin.x, 365, recordButton.frame.size.width, recordButton.frame.size.height)];
+        [barcodeButton setFrame: CGRectMake(barcodeButton.frame.origin.x, 365, barcodeButton.frame.size.width, barcodeButton.frame.size.height)];
+        [bibField setFrame: CGRectMake(bibField.frame.origin.x, 365, bibField.frame.size.width, bibField.frame.size.height)];
+        [table setFrame: CGRectMake(table.frame.origin.x, table.frame.origin.y, table.frame.size.width, 362)];
+        [UIView setAnimationDuration: 0.5f];
+        [UIView commitAnimations];
     }
 }
 

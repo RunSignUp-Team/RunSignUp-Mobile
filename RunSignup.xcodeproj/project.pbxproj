@@ -13,6 +13,14 @@
 		770AC9C415C7001200021020 /* EditBibViewController~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 770AC9C215C7001200021020 /* EditBibViewController~iphone.xib */; };
 		771F21051596705500B34BF5 /* RoundedLoadingIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 771F21041596705500B34BF5 /* RoundedLoadingIndicator.m */; };
 		7728EB32158026B800280EA7 /* RSUModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7728EB31158026B800280EA7 /* RSUModel.m */; };
+		7728FE7515D9C68600F41E0A /* MMCheckerIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7728FE6F15D9C68600F41E0A /* MMCheckerIcon.png */; };
+		7728FE7615D9C68600F41E0A /* MMCheckerIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7728FE7015D9C68600F41E0A /* MMCheckerIcon@2x.png */; };
+		7728FE7715D9C68600F41E0A /* MMChuteIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7728FE7115D9C68600F41E0A /* MMChuteIcon.png */; };
+		7728FE7815D9C68600F41E0A /* MMChuteIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7728FE7215D9C68600F41E0A /* MMChuteIcon@2x.png */; };
+		7728FE7915D9C68600F41E0A /* MMTimerIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7728FE7315D9C68600F41E0A /* MMTimerIcon.png */; };
+		7728FE7A15D9C68600F41E0A /* MMTimerIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7728FE7415D9C68600F41E0A /* MMTimerIcon@2x.png */; };
+		7728FE7E15D9CB9B00F41E0A /* MMParticipantIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7728FE7C15D9CB9B00F41E0A /* MMParticipantIcon.png */; };
+		7728FE7F15D9CB9B00F41E0A /* MMParticipantIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7728FE7D15D9CB9B00F41E0A /* MMParticipantIcon@2x.png */; };
 		775A8A281557221000FAC1F3 /* ArchiveDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 775A8A261557221000FAC1F3 /* ArchiveDetailViewController.m */; };
 		775FB0A11597B170001E9075 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 775FB0A01597B170001E9075 /* QuartzCore.framework */; };
 		775FB0A31597B180001E9075 /* libiconv.2.4.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 775FB0A21597B180001E9075 /* libiconv.2.4.0.dylib */; };
@@ -172,6 +180,14 @@
 		771F21041596705500B34BF5 /* RoundedLoadingIndicator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RoundedLoadingIndicator.m; sourceTree = "<group>"; };
 		7728EB30158026B800280EA7 /* RSUModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSUModel.h; sourceTree = "<group>"; };
 		7728EB31158026B800280EA7 /* RSUModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSUModel.m; sourceTree = "<group>"; };
+		7728FE6F15D9C68600F41E0A /* MMCheckerIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MMCheckerIcon.png; sourceTree = "<group>"; };
+		7728FE7015D9C68600F41E0A /* MMCheckerIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MMCheckerIcon@2x.png"; sourceTree = "<group>"; };
+		7728FE7115D9C68600F41E0A /* MMChuteIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MMChuteIcon.png; sourceTree = "<group>"; };
+		7728FE7215D9C68600F41E0A /* MMChuteIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MMChuteIcon@2x.png"; sourceTree = "<group>"; };
+		7728FE7315D9C68600F41E0A /* MMTimerIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MMTimerIcon.png; sourceTree = "<group>"; };
+		7728FE7415D9C68600F41E0A /* MMTimerIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MMTimerIcon@2x.png"; sourceTree = "<group>"; };
+		7728FE7C15D9CB9B00F41E0A /* MMParticipantIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MMParticipantIcon.png; sourceTree = "<group>"; };
+		7728FE7D15D9CB9B00F41E0A /* MMParticipantIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MMParticipantIcon@2x.png"; sourceTree = "<group>"; };
 		775A8A251557221000FAC1F3 /* ArchiveDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArchiveDetailViewController.h; sourceTree = "<group>"; };
 		775A8A261557221000FAC1F3 /* ArchiveDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArchiveDetailViewController.m; sourceTree = "<group>"; };
 		775FB09E1597B15D001E9075 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
@@ -479,6 +495,14 @@
 		777C2C771555BEA400AEC90B /* Icons */ = {
 			isa = PBXGroup;
 			children = (
+				7728FE7C15D9CB9B00F41E0A /* MMParticipantIcon.png */,
+				7728FE7D15D9CB9B00F41E0A /* MMParticipantIcon@2x.png */,
+				7728FE6F15D9C68600F41E0A /* MMCheckerIcon.png */,
+				7728FE7015D9C68600F41E0A /* MMCheckerIcon@2x.png */,
+				7728FE7115D9C68600F41E0A /* MMChuteIcon.png */,
+				7728FE7215D9C68600F41E0A /* MMChuteIcon@2x.png */,
+				7728FE7315D9C68600F41E0A /* MMTimerIcon.png */,
+				7728FE7415D9C68600F41E0A /* MMTimerIcon@2x.png */,
 				77CB2E34159E907300EC83E8 /* Icon.png */,
 				77CB2E35159E907300EC83E8 /* Icon@2x.png */,
 				777C1FE2155B2EB3000EEBB4 /* EditIcon.png */,
@@ -897,6 +921,14 @@
 				77E0C11C15D98B8E00F6A37D /* loading8@2x.png in Resources */,
 				77E0C11D15D98B8E00F6A37D /* loading9.png in Resources */,
 				77E0C11E15D98B8E00F6A37D /* loading9@2x.png in Resources */,
+				7728FE7515D9C68600F41E0A /* MMCheckerIcon.png in Resources */,
+				7728FE7615D9C68600F41E0A /* MMCheckerIcon@2x.png in Resources */,
+				7728FE7715D9C68600F41E0A /* MMChuteIcon.png in Resources */,
+				7728FE7815D9C68600F41E0A /* MMChuteIcon@2x.png in Resources */,
+				7728FE7915D9C68600F41E0A /* MMTimerIcon.png in Resources */,
+				7728FE7A15D9C68600F41E0A /* MMTimerIcon@2x.png in Resources */,
+				7728FE7E15D9CB9B00F41E0A /* MMParticipantIcon.png in Resources */,
+				7728FE7F15D9CB9B00F41E0A /* MMParticipantIcon@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -33,22 +33,36 @@
         NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:(NSString *)[paths objectAtIndex:0] error:nil];
         self.fileToSave = @"";
         
-        int number = 0;
-        while(YES){
-            BOOL numberIsAvailable = YES;
-            for(NSString *string in files){
-                if([string isEqualToString:[NSString stringWithFormat:@"%i.json", number]]){
-                    numberIsAvailable = NO;
+        NSString *currentTimerFile = [[NSUserDefaults standardUserDefaults] stringForKey: @"CurrentTimerFile"];
+        if(currentTimerFile != nil){
+            self.fileToSave = currentTimerFile;
+            NSString *data =  [NSString stringWithContentsOfFile:fileToSave encoding:NSUTF8StringEncoding error:nil];
+            started = YES;
+            if(data != nil){
+                self.records = (NSMutableArray *)[(NSDictionary *)[data JSONValue] objectForKey:@"Data"];
+                if([records count] == 0){
+                    self.records = [[NSMutableArray alloc] init];
                 }
+            }else{
+                self.records = [[NSMutableArray alloc] init];
             }
-            if(numberIsAvailable){
-                self.fileToSave = [NSString stringWithFormat:@"%@/%i.json", [paths objectAtIndex:0], number];
-                break;
+        }else{
+            int number = 0;
+            while(YES){
+                BOOL numberIsAvailable = YES;
+                for(NSString *string in files){
+                    if([string isEqualToString:[NSString stringWithFormat:@"%i.json", number]]){
+                        numberIsAvailable = NO;
+                    }
+                }
+                if(numberIsAvailable){
+                    self.fileToSave = [NSString stringWithFormat:@"%@/%i.json", [paths objectAtIndex:0], number];
+                    break;
+                }
+                number++;
             }
-            number++;
+            self.records = [[NSMutableArray alloc] init];
         }
-        
-        self.records = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -102,6 +116,20 @@
         [startButton setFrame:CGRectMake(9, 100, 80, 133)];
         [recordButton setFrame:CGRectMake(97, 100, 216, 133)];
     }
+    
+    // If started has already been set, then we know theres a timer in progress
+    if(started){
+        if([[NSUserDefaults standardUserDefaults] boolForKey:@"BigRecordButton"]){
+            [startButton setTitle:@"End\nRace" forState:UIControlStateNormal];
+        }else{
+            [startButton setTitle:@"End Race" forState:UIControlStateNormal];
+        }
+        
+        [timerLabel startTiming];
+        [timerLabel setStartDate: [[NSUserDefaults standardUserDefaults] objectForKey: @"TimerStartDate"]];
+        [recordButton setEnabled:YES];
+    }
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -175,6 +203,9 @@
                 
         started = YES;
         [timerLabel startTiming];
+        [[NSUserDefaults standardUserDefaults] setObject:[timerLabel startDate] forKey:@"TimerStartDate"];
+        [[NSUserDefaults standardUserDefaults] setObject:self.fileToSave forKey:@"CurrentTimerFile"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
         [recordButton setEnabled:YES];
     }else{
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Stop Timer" message:@"Are you sure you wish to stop the timer? This will end the race and will not allow you to continue timing at the place you stopped." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Stop", nil];
@@ -190,6 +221,10 @@
         [recordButton setEnabled:NO];
         started = NO;
         [startButton setTitle:@"Restart" forState:UIControlStateNormal];
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey: @"TimerStartDate"];
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey: @"CurrentTimerFile"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        // Call synchronize because if these aren't save, if the user starts a new timer it may still continue
     }
 }
 
