@@ -7,12 +7,17 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MessageUI/MessageUI.h>
 
-@interface ArchiveDetailViewController : UIViewController <UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource>{
+@interface ArchiveDetailViewController : UIViewController <UIActionSheetDelegate, MFMailComposeViewControllerDelegate, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource>{
     UILabel *nameLabel;
-    UILabel *idLabel;
+    UILabel *raceIDLabel;
+    UILabel *eventIDLabel;
+    UILabel *eventIDHintLabel;
     UILabel *dateLabel;
     UILabel *typeLabel;
+        
+    UIButton *shareButton;
     
     NSMutableArray *records;
     UITableView *table;
@@ -24,9 +29,12 @@
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil;
 
 @property (nonatomic, retain) IBOutlet UILabel *nameLabel;
-@property (nonatomic, retain) IBOutlet UILabel *idLabel;
+@property (nonatomic, retain) IBOutlet UILabel *raceIDLabel;
+@property (nonatomic, retain) IBOutlet UILabel *eventIDLabel;
+@property (nonatomic, retain) IBOutlet UILabel *eventIDHintLabel;
 @property (nonatomic, retain) IBOutlet UILabel *dateLabel;
 @property (nonatomic, retain) IBOutlet UILabel *typeLabel;
+@property (nonatomic, retain) IBOutlet UIButton *shareButton;
 @property (nonatomic, retain) IBOutlet UITableView *table;
 @property (nonatomic, retain) NSMutableArray *records;
 
@@ -36,6 +44,7 @@
 - (void)toggleEdit;
 - (void)saveToFile;
 - (void)updateRecordNumbersAfterDeletion;
+- (IBAction)share:(id)sender;
 
 - (void)updateRow:(NSIndexPath *)indexPath withDict:(NSMutableDictionary *)updateDict;
 

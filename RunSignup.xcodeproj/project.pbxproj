@@ -12,6 +12,8 @@
 		770AC9C315C7001200021020 /* EditBibViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 770AC9C115C7001200021020 /* EditBibViewController.m */; };
 		770AC9C415C7001200021020 /* EditBibViewController~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 770AC9C215C7001200021020 /* EditBibViewController~iphone.xib */; };
 		771F21051596705500B34BF5 /* RoundedLoadingIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 771F21041596705500B34BF5 /* RoundedLoadingIndicator.m */; };
+		771FE9E815E4227D005A9DCB /* MMOtherIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 771FE9E615E4227D005A9DCB /* MMOtherIcon.png */; };
+		771FE9E915E4227D005A9DCB /* MMOtherIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 771FE9E715E4227D005A9DCB /* MMOtherIcon@2x.png */; };
 		7728EB32158026B800280EA7 /* RSUModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7728EB31158026B800280EA7 /* RSUModel.m */; };
 		7728FE7515D9C68600F41E0A /* MMCheckerIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7728FE6F15D9C68600F41E0A /* MMCheckerIcon.png */; };
 		7728FE7615D9C68600F41E0A /* MMCheckerIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7728FE7015D9C68600F41E0A /* MMCheckerIcon@2x.png */; };
@@ -19,8 +21,10 @@
 		7728FE7815D9C68600F41E0A /* MMChuteIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7728FE7215D9C68600F41E0A /* MMChuteIcon@2x.png */; };
 		7728FE7915D9C68600F41E0A /* MMTimerIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7728FE7315D9C68600F41E0A /* MMTimerIcon.png */; };
 		7728FE7A15D9C68600F41E0A /* MMTimerIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7728FE7415D9C68600F41E0A /* MMTimerIcon@2x.png */; };
-		7728FE7E15D9CB9B00F41E0A /* MMParticipantIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7728FE7C15D9CB9B00F41E0A /* MMParticipantIcon.png */; };
-		7728FE7F15D9CB9B00F41E0A /* MMParticipantIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7728FE7D15D9CB9B00F41E0A /* MMParticipantIcon@2x.png */; };
+		7740444A15E68E8C00ABFE28 /* ParticipantViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7740444815E68E8C00ABFE28 /* ParticipantViewController.m */; };
+		7740444B15E68E8C00ABFE28 /* ParticipantViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7740444915E68E8C00ABFE28 /* ParticipantViewController.xib */; };
+		7740444F15E698FF00ABFE28 /* ParticipantTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7740444E15E698FF00ABFE28 /* ParticipantTableViewCell.m */; };
+		7758098715E1E60500B8EF35 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7758098615E1E60500B8EF35 /* MessageUI.framework */; };
 		775A8A281557221000FAC1F3 /* ArchiveDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 775A8A261557221000FAC1F3 /* ArchiveDetailViewController.m */; };
 		775FB0A11597B170001E9075 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 775FB0A01597B170001E9075 /* QuartzCore.framework */; };
 		775FB0A31597B180001E9075 /* libiconv.2.4.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 775FB0A21597B180001E9075 /* libiconv.2.4.0.dylib */; };
@@ -178,16 +182,22 @@
 		770AC9C215C7001200021020 /* EditBibViewController~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "EditBibViewController~iphone.xib"; sourceTree = "<group>"; };
 		771F21031596705500B34BF5 /* RoundedLoadingIndicator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RoundedLoadingIndicator.h; sourceTree = "<group>"; };
 		771F21041596705500B34BF5 /* RoundedLoadingIndicator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RoundedLoadingIndicator.m; sourceTree = "<group>"; };
-		7728EB30158026B800280EA7 /* RSUModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSUModel.h; sourceTree = "<group>"; };
-		7728EB31158026B800280EA7 /* RSUModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSUModel.m; sourceTree = "<group>"; };
+		771FE9E615E4227D005A9DCB /* MMOtherIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MMOtherIcon.png; sourceTree = "<group>"; };
+		771FE9E715E4227D005A9DCB /* MMOtherIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MMOtherIcon@2x.png"; sourceTree = "<group>"; };
+		7728EB30158026B800280EA7 /* RSUModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = RSUModel.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		7728EB31158026B800280EA7 /* RSUModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = RSUModel.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		7728FE6F15D9C68600F41E0A /* MMCheckerIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MMCheckerIcon.png; sourceTree = "<group>"; };
 		7728FE7015D9C68600F41E0A /* MMCheckerIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MMCheckerIcon@2x.png"; sourceTree = "<group>"; };
 		7728FE7115D9C68600F41E0A /* MMChuteIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MMChuteIcon.png; sourceTree = "<group>"; };
 		7728FE7215D9C68600F41E0A /* MMChuteIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MMChuteIcon@2x.png"; sourceTree = "<group>"; };
 		7728FE7315D9C68600F41E0A /* MMTimerIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MMTimerIcon.png; sourceTree = "<group>"; };
 		7728FE7415D9C68600F41E0A /* MMTimerIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MMTimerIcon@2x.png"; sourceTree = "<group>"; };
-		7728FE7C15D9CB9B00F41E0A /* MMParticipantIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MMParticipantIcon.png; sourceTree = "<group>"; };
-		7728FE7D15D9CB9B00F41E0A /* MMParticipantIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MMParticipantIcon@2x.png"; sourceTree = "<group>"; };
+		7740444715E68E8C00ABFE28 /* ParticipantViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParticipantViewController.h; sourceTree = "<group>"; };
+		7740444815E68E8C00ABFE28 /* ParticipantViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParticipantViewController.m; sourceTree = "<group>"; };
+		7740444915E68E8C00ABFE28 /* ParticipantViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ParticipantViewController.xib; sourceTree = "<group>"; };
+		7740444D15E698FF00ABFE28 /* ParticipantTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParticipantTableViewCell.h; sourceTree = "<group>"; };
+		7740444E15E698FF00ABFE28 /* ParticipantTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParticipantTableViewCell.m; sourceTree = "<group>"; };
+		7758098615E1E60500B8EF35 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		775A8A251557221000FAC1F3 /* ArchiveDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArchiveDetailViewController.h; sourceTree = "<group>"; };
 		775A8A261557221000FAC1F3 /* ArchiveDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArchiveDetailViewController.m; sourceTree = "<group>"; };
 		775FB09E1597B15D001E9075 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
@@ -388,6 +398,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7758098715E1E60500B8EF35 /* MessageUI.framework in Frameworks */,
 				77BB505E1598E206003A27F9 /* AVFoundation.framework in Frameworks */,
 				775FB0C91597B47C001E9075 /* CoreMedia.framework in Frameworks */,
 				775FB0C81597B465001E9075 /* CoreVideo.framework in Frameworks */,
@@ -424,6 +435,9 @@
 				77DC8375154268290021D240 /* ChuteViewController.m */,
 				77B1EDE81598FFA70058C57F /* ChuteViewController~iphone.xib */,
 				77B1EE0C1599072B0058C57F /* ChuteViewController~ipad.xib */,
+				7740444715E68E8C00ABFE28 /* ParticipantViewController.h */,
+				7740444815E68E8C00ABFE28 /* ParticipantViewController.m */,
+				7740444915E68E8C00ABFE28 /* ParticipantViewController.xib */,
 			);
 			name = "Main Views";
 			sourceTree = "<group>";
@@ -495,8 +509,8 @@
 		777C2C771555BEA400AEC90B /* Icons */ = {
 			isa = PBXGroup;
 			children = (
-				7728FE7C15D9CB9B00F41E0A /* MMParticipantIcon.png */,
-				7728FE7D15D9CB9B00F41E0A /* MMParticipantIcon@2x.png */,
+				771FE9E615E4227D005A9DCB /* MMOtherIcon.png */,
+				771FE9E715E4227D005A9DCB /* MMOtherIcon@2x.png */,
 				7728FE6F15D9C68600F41E0A /* MMCheckerIcon.png */,
 				7728FE7015D9C68600F41E0A /* MMCheckerIcon@2x.png */,
 				7728FE7115D9C68600F41E0A /* MMChuteIcon.png */,
@@ -546,6 +560,7 @@
 				775FB0A01597B170001E9075 /* QuartzCore.framework */,
 				775FB09E1597B15D001E9075 /* CoreMedia.framework */,
 				775FB0C71597B465001E9075 /* CoreVideo.framework */,
+				7758098615E1E60500B8EF35 /* MessageUI.framework */,
 				77DC830215420B8E0021D240 /* UIKit.framework */,
 				77DC830415420B8E0021D240 /* Foundation.framework */,
 				77DC830615420B8E0021D240 /* CoreGraphics.framework */,
@@ -567,6 +582,8 @@
 				77DC835F15421A990021D240 /* TimerLabel.m */,
 				77DC8369154246860021D240 /* RecordTableViewCell.h */,
 				77DC836A154246860021D240 /* RecordTableViewCell.m */,
+				7740444D15E698FF00ABFE28 /* ParticipantTableViewCell.h */,
+				7740444E15E698FF00ABFE28 /* ParticipantTableViewCell.m */,
 				7728EB30158026B800280EA7 /* RSUModel.h */,
 				7728EB31158026B800280EA7 /* RSUModel.m */,
 				771F21031596705500B34BF5 /* RoundedLoadingIndicator.h */,
@@ -927,8 +944,9 @@
 				7728FE7815D9C68600F41E0A /* MMChuteIcon@2x.png in Resources */,
 				7728FE7915D9C68600F41E0A /* MMTimerIcon.png in Resources */,
 				7728FE7A15D9C68600F41E0A /* MMTimerIcon@2x.png in Resources */,
-				7728FE7E15D9CB9B00F41E0A /* MMParticipantIcon.png in Resources */,
-				7728FE7F15D9CB9B00F41E0A /* MMParticipantIcon@2x.png in Resources */,
+				771FE9E815E4227D005A9DCB /* MMOtherIcon.png in Resources */,
+				771FE9E915E4227D005A9DCB /* MMOtherIcon@2x.png in Resources */,
+				7740444B15E68E8C00ABFE28 /* ParticipantViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -967,6 +985,8 @@
 				77E0C12C15D99B2B00F6A37D /* SBJsonBase.m in Sources */,
 				77E0C12D15D99B2B00F6A37D /* SBJsonParser.m in Sources */,
 				77E0C12E15D99B2B00F6A37D /* SBJsonWriter.m in Sources */,
+				7740444A15E68E8C00ABFE28 /* ParticipantViewController.m in Sources */,
+				7740444F15E698FF00ABFE28 /* ParticipantTableViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -988,10 +1008,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = (
-					"$(ARCHS_STANDARD_32_BIT)",
-					armv6,
-				);
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1009,6 +1026,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				SDKROOT = iphoneos;
+				VALID_ARCHS = armv7;
 			};
 			name = Debug;
 		};
@@ -1016,10 +1034,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = (
-					"$(ARCHS_STANDARD_32_BIT)",
-					armv6,
-				);
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1032,6 +1047,7 @@
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
+				VALID_ARCHS = armv7;
 			};
 			name = Release;
 		};

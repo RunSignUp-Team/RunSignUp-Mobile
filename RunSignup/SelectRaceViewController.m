@@ -129,18 +129,20 @@
     if(raceList != nil){
         if(buttonIndex == 1){
             NSString *raceName = [[raceList objectAtIndex:raceIndex.section] objectForKey:@"Name"];
-            //NSString *raceID = [[raceList objectAtIndex:raceIndex.section] objectForKey:@"RaceID"];
+            NSString *raceID = [[raceList objectAtIndex:raceIndex.section] objectForKey:@"RaceID"];
             
             NSString *eventName = [[[[raceList objectAtIndex:raceIndex.section] objectForKey:@"Events"] objectAtIndex:raceIndex.row] objectForKey:@"Name"];
-            //NSString *eventID = [[[[raceList objectAtIndex:raceIndex.section] objectForKey:@"Events"] objectAtIndex:raceIndex.row] objectForKey:@"EventID"];
+            NSString *eventID = [[[[raceList objectAtIndex:raceIndex.section] objectForKey:@"Events"] objectAtIndex:raceIndex.row] objectForKey:@"EventID"];
             
             SelectResultSetViewController *selectResultSetViewController = [[SelectResultSetViewController alloc] initWithNibName:@"SelectResultSetViewController" bundle:nil];
             [selectResultSetViewController setDelegate: delegate];
             [selectResultSetViewController setPopoverController: popoverController];
             [selectResultSetViewController setRaceName: raceName];
-            [selectResultSetViewController setRaceID: @"1326"];
+            NSLog(@"Race %@", raceID);
+            NSLog(@"Event %@", eventID);
+            [selectResultSetViewController setRaceID: raceID];
             [selectResultSetViewController setEventName: eventName];
-            [selectResultSetViewController setEventID: @"2491"];
+            [selectResultSetViewController setEventID: eventID];
             
             [table deselectRowAtIndexPath:raceIndex animated:YES];
             

@@ -12,6 +12,7 @@
 @synthesize dataTypeImage;
 @synthesize raceNameLabel;
 @synthesize dateLabel;
+@synthesize idsLabel;
 
 // Layout done programatically because of the hackishness of using Nibs for UITableViewCell
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
@@ -22,13 +23,19 @@
         [self.contentView addSubview: dataTypeImage];
         
         self.raceNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 2, 276, 20)];
+        [raceNameLabel setAdjustsFontSizeToFitWidth: YES];
         [raceNameLabel setFont: [UIFont boldSystemFontOfSize:18.0f]];
         [self.contentView addSubview: raceNameLabel];
         
-        self.dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 24, 276, 18.0f)];
+        self.dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 24, 80, 18)];
         [dateLabel setFont: [UIFont systemFontOfSize: 16.0f]];
         [dateLabel setTextColor: [UIColor lightGrayColor]];
         [self.contentView addSubview:dateLabel];
+        
+        self.idsLabel = [[UILabel alloc] initWithFrame: CGRectMake(100, 24, 186, 18)];
+        [idsLabel setFont: [UIFont systemFontOfSize: 16.0f]];
+        [idsLabel setTextColor: [UIColor lightGrayColor]];
+        [self.contentView addSubview: idsLabel];
     }
     return self;
 }
@@ -47,9 +54,11 @@
     if(selected){
         [dateLabel setTextColor:[UIColor whiteColor]];
         [raceNameLabel setTextColor:[UIColor whiteColor]];
+        [idsLabel setTextColor:[UIColor whiteColor]];
     }else{
         [dateLabel setTextColor:[UIColor lightGrayColor]];
         [raceNameLabel setTextColor:[UIColor blackColor]];
+        [idsLabel setTextColor:[UIColor lightGrayColor]];
     }
     [super setSelected:selected animated:animated];
 }
@@ -58,9 +67,11 @@
     if(highlighted){
         [dateLabel setTextColor:[UIColor whiteColor]];
         [raceNameLabel setTextColor:[UIColor whiteColor]];
+        [idsLabel setTextColor:[UIColor whiteColor]];
     }else{
         [dateLabel setTextColor:[UIColor lightGrayColor]];
         [raceNameLabel setTextColor:[UIColor blackColor]];
+        [idsLabel setTextColor:[UIColor lightGrayColor]];
     }
     [super setHighlighted:highlighted animated:animated];
 }

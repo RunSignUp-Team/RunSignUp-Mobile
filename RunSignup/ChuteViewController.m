@@ -40,7 +40,13 @@
         if(currentChuteFile != nil){
             self.fileToSave = currentChuteFile;
             NSString *data =  [NSString stringWithContentsOfFile:fileToSave encoding:NSUTF8StringEncoding error:nil];
-            self.records = (NSMutableArray *)[(NSDictionary *)[data JSONValue] objectForKey:@"Data"];
+            
+            if(data != nil){
+                self.records = (NSMutableArray *)[(NSDictionary *)[data JSONValue] objectForKey:@"Data"];
+                if([records count] == 0){
+                    self.records = [[NSMutableArray alloc] init];
+                }
+            }
         }else{
             int number = 0;
             while(YES){
@@ -56,7 +62,20 @@
                 }
                 number++;
             }
+            
             self.records = [[NSMutableArray alloc] init];
+            if(![[RSUModel sharedModel] isOffline]){
+                void (^response)(RSUConnectionResponse) = ^(RSUConnectionResponse didSucceed){
+                    if(didSucceed == RSUNoConnection){
+                        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+                        [alert show];
+                        [alert release];
+                    }
+                };
+                
+                // Clear existing (if any) chute data
+                [[RSUModel sharedModel] deleteResults:RSUClearChute response:response];
+            }
         }
         
         self.zbarReaderViewController = [[ZBarReaderViewController alloc] init];
@@ -70,19 +89,6 @@
 
 - (void)viewDidLoad{
     [super viewDidLoad];
-    
-    if(![[RSUModel sharedModel] isOffline]){
-        void (^response)(int) = ^(int didSucceed){
-            if(didSucceed == NoConnection){
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
-                [alert show];
-                [alert release];
-            }
-        };
-        
-        // Clear existing (if any) chute data currently in the individual_result_set
-        [[RSUModel sharedModel] deleteResults:ClearChute response:response];
-    }
     
     // Images created for stretching to variably sized UIButtons (see buttons in resources)
     UIImage *blueButtonImage = [UIImage imageNamed:@"BlueButton.png"];
@@ -135,7 +141,7 @@
 
 - (void)saveToFile{
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateStyle:NSDateFormatterFullStyle];
+    [formatter setDateStyle:NSDateFormatterShortStyle];
     [formatter setTimeStyle:NSDateFormatterNoStyle];
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
     [dict setObject:raceID forKey:@"RaceID"];
@@ -156,8 +162,8 @@
         [records insertObject:dict atIndex:0];
         
         if(![[RSUModel sharedModel] isOffline]){
-            void (^response)(int) = ^(int didSucceed){
-                if(didSucceed == NoConnection){
+            void (^response)(RSUConnectionResponse) = ^(RSUConnectionResponse didSucceed){
+                if(didSucceed == RSUNoConnection){
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
                     [alert show];
                     [alert release];
@@ -191,18 +197,20 @@
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex{
     if(buttonIndex == 1){
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"CurrentChuteFile"];
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey: @"CurrentChuteFile"];
         [[NSUserDefaults standardUserDefaults] synchronize];
         [recordButton setEnabled: NO];
         [barcodeButton setEnabled: NO];
         [bibField setEnabled: NO];
+        if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
         [UIView beginAnimations:@"Slide" context:nil];
-        [recordButton setFrame: CGRectMake(recordButton.frame.origin.x, 365, recordButton.frame.size.width, recordButton.frame.size.height)];
-        [barcodeButton setFrame: CGRectMake(barcodeButton.frame.origin.x, 365, barcodeButton.frame.size.width, barcodeButton.frame.size.height)];
-        [bibField setFrame: CGRectMake(bibField.frame.origin.x, 365, bibField.frame.size.width, bibField.frame.size.height)];
-        [table setFrame: CGRectMake(table.frame.origin.x, table.frame.origin.y, table.frame.size.width, 362)];
-        [UIView setAnimationDuration: 0.5f];
-        [UIView commitAnimations];
+            [recordButton setFrame: CGRectMake(recordButton.frame.origin.x, 365, recordButton.frame.size.width, recordButton.frame.size.height)];
+            [barcodeButton setFrame: CGRectMake(barcodeButton.frame.origin.x, 365, barcodeButton.frame.size.width, barcodeButton.frame.size.height)];
+            [bibField setFrame: CGRectMake(bibField.frame.origin.x, 365, bibField.frame.size.width, bibField.frame.size.height)];
+            [table setFrame: CGRectMake(table.frame.origin.x, table.frame.origin.y, table.frame.size.width, 362)];
+            [UIView setAnimationDuration: 0.5f];
+            [UIView commitAnimations];
+        }
     }
 }
 
@@ -294,24 +302,24 @@
 }
 
 - (void)reuploadResults{
-    void (^response)(int) = ^(int didSucceed){
-        if(didSucceed == NoConnection){
+    void (^response)(RSUConnectionResponse) = ^(RSUConnectionResponse didSucceed){
+        if(didSucceed == RSUNoConnection){
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
             [alert show];
             [alert release];
             [[self recordButton] setEnabled: YES];
         }else{
-            void (^response2)(int) = ^(int didSucceed2){
-                if(didSucceed2 == NoConnection){
+            void (^response2)(RSUConnectionResponse) = ^(RSUConnectionResponse didSucceed2){
+                if(didSucceed2 == RSUNoConnection){
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
                     [alert show];
                     [alert release];
                     [[self recordButton] setEnabled: YES];
                 }else{
-                    void (^response3)(int) = ^(int didSucceed3){
+                    void (^response3)(RSUConnectionResponse) = ^(RSUConnectionResponse didSucceed3){
                         [[self recordButton] setEnabled: YES];
                         
-                        if(didSucceed3 == NoConnection){
+                        if(didSucceed3 == RSUNoConnection){
                             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
                             [alert show];
                             [alert release];
@@ -326,12 +334,12 @@
                     [[RSUModel sharedModel] addFinishingBibs:bibs response:response3];
                 }
             };
-            [[RSUModel sharedModel] deleteResults:ClearResults response:response2];
+            [[RSUModel sharedModel] deleteResults:RSUClearResults response:response2];
         }
     };
     
     [[self recordButton] setEnabled: NO];
-    [[RSUModel sharedModel] deleteResults:ClearChute response:response];
+    [[RSUModel sharedModel] deleteResults:RSUClearChute response:response];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{

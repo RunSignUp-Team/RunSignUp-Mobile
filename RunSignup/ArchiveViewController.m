@@ -71,6 +71,13 @@
     [super viewDidLoad];
 }
 
+- (void)viewDidAppear:(BOOL)animated{
+    NSIndexPath *selection = [table indexPathForSelectedRow];
+    if(selection){
+        [table deselectRowAtIndexPath:selection animated:YES];
+    }
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     static NSString *CellIdentifier = @"CellIdentifier";
     ArchiveTableViewCell *cell = (ArchiveTableViewCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -80,6 +87,15 @@
     [cell setType: [[[fileArray objectAtIndex: indexPath.row] objectForKey: @"Type"] intValue]];
     [[cell raceNameLabel] setText:[[fileArray objectAtIndex: indexPath.row] objectForKey: @"RaceName"]];
     [[cell dateLabel] setText:[[fileArray objectAtIndex: indexPath.row] objectForKey: @"Date"]];
+    
+    NSString *raceID = [[fileArray objectAtIndex: indexPath.row] objectForKey: @"RaceID"];
+    NSString *eventID = [[fileArray objectAtIndex: indexPath.row] objectForKey: @"EventID"];
+    
+    if([raceID isEqualToString: @"0000"]){
+        [[cell idsLabel] setText: @"Offline Race"];
+    }else{
+        [[cell idsLabel] setText: [NSString stringWithFormat:@"Race: %@ | Event: %@", raceID, eventID]];
+    }
     return cell;
 }
 
@@ -88,7 +104,6 @@
         NSString *fileToDelete = [[fileArray objectAtIndex: indexPath.row] objectForKey:@"File"];
         NSFileManager *manager = [NSFileManager defaultManager];
         [manager removeItemAtPath:fileToDelete error:nil];
-        NSLog(@"%i", indexPath.row);
         [fileArray removeObjectAtIndex: indexPath.row];
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
     }
@@ -99,7 +114,6 @@
     [archiveDetailViewController setFile:[[fileArray objectAtIndex: indexPath.row] objectForKey: @"File"]];
     [self.navigationController pushViewController:archiveDetailViewController animated:YES];
     [archiveDetailViewController release];
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{

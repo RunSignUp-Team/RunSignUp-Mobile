@@ -44,6 +44,10 @@
                     self.records = [[NSMutableArray alloc] init];
                 }
             }else{
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"We detected a timing in progress, but were unable to load the data. The timer will not be reset." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+                [alert show];
+                [alert release];
+                
                 self.records = [[NSMutableArray alloc] init];
             }
         }else{
@@ -69,19 +73,6 @@
 
 - (void)viewDidLoad{
     [super viewDidLoad];
-    
-    if(![[RSUModel sharedModel] isOffline]){
-        void (^response)(int) = ^(int didSucceed){
-            if(didSucceed == NoConnection){
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
-                [alert show];
-                [alert release];
-            }
-        };
-        
-        // Clear existing (if any) timing data currently in the individual_result_set
-        [[RSUModel sharedModel] deleteResults:ClearTimer response:response];
-    }
     
     self.timerLabel = [[TimerLabel alloc] initWithFrame:CGRectMake(0, 0, 320, 92)];
     [self.view addSubview: timerLabel];
@@ -128,8 +119,34 @@
         [timerLabel startTiming];
         [timerLabel setStartDate: [[NSUserDefaults standardUserDefaults] objectForKey: @"TimerStartDate"]];
         [recordButton setEnabled:YES];
+        
+        /*void (^response)(RSUDifferences) = ^(RSUDifferences differences){
+            if(differences == RSUNoDifferencesExist){
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+                [alert show];
+                [alert release];
+            }else if(differences == RSUDifferencesExist){
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Data sync problem" message:@"There is more timing data on the server than the copy you have saved to the device. Would you like to download the timing data and replace your copy?" delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:@"Yes", nil];
+                [alert show];
+                [alert release];
+            }
+        };
+        
+        [[RSUModel sharedModel] detectDifferencesBetweenLocalAndOnline:(NSArray *)self.records type:0 response:response];*/
+    }else{
+        if(![[RSUModel sharedModel] isOffline]){
+            void (^response)(RSUConnectionResponse) = ^(RSUConnectionResponse didSucceed){
+                if(didSucceed == RSUNoConnection){
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+                    [alert show];
+                    [alert release];
+                }
+            };
+            
+            // Clear existing (if any) timing data currently in the individual_result_set
+            [[RSUModel sharedModel] deleteResults:RSUClearTimer response:response];
+        }
     }
-    
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -146,7 +163,7 @@
 
 - (void)saveToFile{
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateStyle:NSDateFormatterFullStyle];
+    [formatter setDateStyle:NSDateFormatterShortStyle];
     [formatter setTimeStyle:NSDateFormatterNoStyle];
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
     [dict setObject:raceID forKey:@"RaceID"];
@@ -164,14 +181,13 @@
 // Record current time to next place in list
 - (IBAction)record:(id)sender{
     if([records count] < 10000){
-        
         NSTimeInterval elapsedTime = [timerLabel elapsedTime];
         NSString *formattedTime = [timerLabel formattedTime];
         NSString *place = [NSString stringWithFormat:@"%.4i", [records count]+1];
         
         if(![[RSUModel sharedModel] isOffline]){
-            void (^response)(int) = ^(int didSucceed){
-                if(didSucceed == NoConnection){
+            void (^response)(RSUConnectionResponse) = ^(RSUConnectionResponse didSucceed){
+                if(didSucceed == RSUNoConnection){
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
                     [alert show];
                     [alert release];
@@ -216,15 +232,19 @@
 
 // Delegate method for making sure the user actually wants to end the race
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex{
-    if(buttonIndex == 1){
-        [timerLabel stopTiming];
-        [recordButton setEnabled:NO];
-        started = NO;
-        [startButton setTitle:@"Restart" forState:UIControlStateNormal];
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey: @"TimerStartDate"];
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey: @"CurrentTimerFile"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        // Call synchronize because if these aren't save, if the user starts a new timer it may still continue
+    if(alertView == downloadResultsAlert){
+        
+    }else{
+        if(buttonIndex == 1){
+            [timerLabel stopTiming];
+            [recordButton setEnabled: NO];
+            [startButton setEnabled: NO];
+            started = NO;
+            
+            [[NSUserDefaults standardUserDefaults] removeObjectForKey: @"TimerStartDate"];
+            [[NSUserDefaults standardUserDefaults] removeObjectForKey: @"CurrentTimerFile"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        }
     }
 }
 
@@ -271,23 +291,23 @@
 }
 
 - (void)reuploadResults{
-    void (^response)(int) = ^(int didSucceed){
-        if(didSucceed == NoConnection){
+    void (^response)(RSUConnectionResponse) = ^(RSUConnectionResponse didSucceed){
+        if(didSucceed == RSUNoConnection){
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
             [alert show];
             [alert release];
             [[self recordButton] setEnabled: YES];
         }else{
-            void (^response2)(int) = ^(int didSucceed2){
-                if(didSucceed2 == NoConnection){
+            void (^response2)(RSUConnectionResponse) = ^(RSUConnectionResponse didSucceed2){
+                if(didSucceed2 == RSUNoConnection){
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
                     [alert show];
                     [alert release];
                     [[self recordButton] setEnabled: YES];
                 }else{
-                    void (^response3)(int) = ^(int didSucceed3){
+                    void (^response3)(RSUConnectionResponse) = ^(RSUConnectionResponse didSucceed3){
                         [[self recordButton] setEnabled: YES];
-                        if(didSucceed3 == NoConnection){
+                        if(didSucceed3 == RSUNoConnection){
                             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
                             [alert show];
                             [alert release];
@@ -302,12 +322,12 @@
                     [[RSUModel sharedModel] addFinishingTimes:formattedTimes response:response3];
                 }
             };
-            [[RSUModel sharedModel] deleteResults:ClearResults response:response2];
+            [[RSUModel sharedModel] deleteResults:RSUClearResults response:response2];
         }
     };
     
     [[self recordButton] setEnabled: NO];
-    [[RSUModel sharedModel] deleteResults:ClearTimer response:response];
+    [[RSUModel sharedModel] deleteResults:RSUClearTimer response:response];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{

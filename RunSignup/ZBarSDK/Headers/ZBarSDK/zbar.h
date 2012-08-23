@@ -254,7 +254,7 @@ extern const char *zbar_get_orientation_name(zbar_orientation_t orientation);
  * the symbology, if present, must match one of the recognized names.
  * if symbology is unspecified, it will be set to 0.
  * if value is unspecified it will be set to 1.
- * @returns 0 if the config is parsed successfully, 1 otherwise
+ * @returns 0 if the config is parsed RSUSuccessfully, 1 otherwise
  * @since 0.4
  */
 extern int zbar_parse_config(const char *config_string,
@@ -721,7 +721,7 @@ extern void *zbar_image_get_userdata(const zbar_image_t *image);
  * @param image the image object to dump
  * @param filebase base filename, appended with ".XXXX.zimg" where
  * XXXX is the format fourcc
- * @returns 0 on success or a system error code on failure
+ * @returns 0 on RSUSuccess or a system error code on failure
  */
 extern int zbar_image_write(const zbar_image_t *image,
                             const char *filebase);
@@ -828,7 +828,7 @@ extern void zbar_processor_set_userdata(zbar_processor_t *processor,
 extern void *zbar_processor_get_userdata(const zbar_processor_t *processor);
 
 /** set config for indicated symbology (0 for all) to specified value.
- * @returns 0 for success, non-0 for failure (config does not apply to
+ * @returns 0 for RSUSuccess, non-0 for failure (config does not apply to
  * specified symbology, or value out of range)
  * @see zbar_decoder_set_config()
  * @since 0.4
@@ -840,7 +840,7 @@ extern int zbar_processor_set_config(zbar_processor_t *processor,
 
 /** parse configuration string using zbar_parse_config()
  * and apply to processor using zbar_processor_set_config().
- * @returns 0 for success, non-0 for failure
+ * @returns 0 for RSUSuccess, non-0 for failure
  * @see zbar_parse_config()
  * @see zbar_processor_set_config()
  * @since 0.4
@@ -902,7 +902,7 @@ extern int zbar_processor_user_wait(zbar_processor_t *processor,
  * if the library window is visible, video display will be enabled.
  * @note that multiple results may still be returned (despite the
  * name).
- * @returns >0 if symbols were successfully decoded,
+ * @returns >0 if symbols were RSUSuccessfully decoded,
  * 0 if no symbols were found (ie, the timeout expired)
  * or -1 if an error occurs
  */
@@ -911,7 +911,7 @@ extern int zbar_process_one(zbar_processor_t *processor,
 
 /** process the provided image for barcodes.
  * if the library window is visible, the image will be displayed.
- * @returns >0 if symbols were successfully decoded,
+ * @returns >0 if symbols were RSUSuccessfully decoded,
  * 0 if no symbols were found or -1 if an error occurs
  */
 extern int zbar_process_image(zbar_processor_t *processor,
@@ -966,7 +966,7 @@ extern void zbar_video_destroy(zbar_video_t *video);
  * the device specified by platform specific unique name
  * (v4l device node path in *nix eg "/dev/video",
  *  DirectShow DevicePath property in windows).
- * @returns 0 if successful or -1 if an error occurs
+ * @returns 0 if RSUSuccessful or -1 if an error occurs
  */
 extern int zbar_video_open(zbar_video_t *video,
                            const char *device);
@@ -981,7 +981,7 @@ extern int zbar_video_get_fd(const zbar_video_t *video);
 
 /** request a preferred size for the video image from the device.
  * the request may be adjusted or completely ignored by the driver.
- * @returns 0 if successful or -1 if the video device is already
+ * @returns 0 if RSUSuccessful or -1 if the video device is already
  * initialized
  * @since 0.6
  */
@@ -1029,7 +1029,7 @@ extern int zbar_video_init(zbar_video_t *video,
 
 /** start/stop video capture.
  * all buffered images are retired when capture is disabled.
- * @returns 0 if successful or -1 if an error occurs
+ * @returns 0 if RSUSuccessful or -1 if an error occurs
  */
 extern int zbar_video_enable(zbar_video_t *video,
                              int enable);
@@ -1192,7 +1192,7 @@ zbar_image_scanner_set_data_handler(zbar_image_scanner_t *scanner,
 
 
 /** set config for indicated symbology (0 for all) to specified value.
- * @returns 0 for success, non-0 for failure (config does not apply to
+ * @returns 0 for RSUSuccess, non-0 for failure (config does not apply to
  * specified symbology, or value out of range)
  * @see zbar_decoder_set_config()
  * @since 0.4
@@ -1204,7 +1204,7 @@ extern int zbar_image_scanner_set_config(zbar_image_scanner_t *scanner,
 
 /** parse configuration string using zbar_parse_config()
  * and apply to image scanner using zbar_image_scanner_set_config().
- * @returns 0 for success, non-0 for failure
+ * @returns 0 for RSUSuccess, non-0 for failure
  * @see zbar_parse_config()
  * @see zbar_image_scanner_set_config()
  * @since 0.4
@@ -1251,7 +1251,7 @@ zbar_image_scanner_get_results(const zbar_image_scanner_t *scanner);
 
 /** scan for symbols in provided image.  The image format must be
  * "Y800" or "GRAY".
- * @returns >0 if symbols were successfully decoded from the image,
+ * @returns >0 if symbols were RSUSuccessfully decoded from the image,
  * 0 if no symbols were found or -1 if an error occurs
  * @see zbar_image_convert()
  * @since 0.9 - changed to only accept grayscale images
@@ -1285,7 +1285,7 @@ extern zbar_decoder_t *zbar_decoder_create(void);
 extern void zbar_decoder_destroy(zbar_decoder_t *decoder);
 
 /** set config for indicated symbology (0 for all) to specified value.
- * @returns 0 for success, non-0 for failure (config does not apply to
+ * @returns 0 for RSUSuccess, non-0 for failure (config does not apply to
  * specified symbology, or value out of range)
  * @since 0.4
  */
@@ -1296,7 +1296,7 @@ extern int zbar_decoder_set_config(zbar_decoder_t *decoder,
 
 /** parse configuration string using zbar_parse_config()
  * and apply to decoder using zbar_decoder_set_config().
- * @returns 0 for success, non-0 for failure
+ * @returns 0 for RSUSuccess, non-0 for failure
  * @see zbar_parse_config()
  * @see zbar_decoder_set_config()
  * @since 0.4

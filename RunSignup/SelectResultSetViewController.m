@@ -115,8 +115,8 @@
     if([alertView alertViewStyle] == UIAlertViewStylePlainTextInput){
         NSString *name = [[alertView textFieldAtIndex: 0] text];
         if([name length] > 0 && [name length] < 30){
-            void (^response)(int) = ^(int didSucceed){
-                if(didSucceed == NoConnection){
+            void (^response)(RSUConnectionResponse) = ^(RSUConnectionResponse didSucceed){
+                if(didSucceed == RSUNoConnection){
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
                     [alert show];
                     [alert release];
@@ -139,15 +139,15 @@
                 if([delegate respondsToSelector:@selector(didSelectRace:withID:withEventName:withEventID:)]){
                     [[RSUModel sharedModel] setCurrentResultSetID: [[resultSetList objectAtIndex: resultSetIndex.row] objectForKey:@"ResultSetID"]];
                     
-                    void (^response)(int) = ^(int didSucceed){
-                        if(didSucceed == NoConnection){
+                    void (^response)(RSUConnectionResponse) = ^(RSUConnectionResponse didSucceed){
+                        if(didSucceed == RSUNoConnection){
                             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
                             [alert show];
                             [alert release];
                         }
                     };
                     
-                    [[RSUModel sharedModel] deleteResults:ClearResults response:response];
+                    [[RSUModel sharedModel] deleteResults:RSUClearResults response:response];
                     
                     [delegate didSelectRace:raceName withID:raceID withEventName:eventName withEventID:eventID];
                     [table deselectRowAtIndexPath:resultSetIndex animated:NO];
@@ -166,8 +166,8 @@
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
     if(editingStyle == UITableViewCellEditingStyleDelete){
-        void (^response)(int) = ^(int didSucceed){
-            if(didSucceed == NoConnection){
+        void (^response)(RSUConnectionResponse) = ^(RSUConnectionResponse didSucceed){
+            if(didSucceed == RSUNoConnection){
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
                 [alert show];
                 [alert release];

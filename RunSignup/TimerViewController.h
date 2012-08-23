@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "TimerLabel.h"
 #import "NumpadView.h"
+#import "RSUModel.h"
 
 @interface TimerViewController : UIViewController <UIAlertViewDelegate, UITableViewDelegate, UITableViewDataSource>{
     UIButton *startButton;
@@ -17,6 +18,8 @@
     
     UITableView *table;
     NSMutableArray *records;
+    
+    UIAlertView *downloadResultsAlert;
     
     BOOL started;
     NSString *raceID;

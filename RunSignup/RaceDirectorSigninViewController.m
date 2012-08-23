@@ -74,8 +74,8 @@
     if([delegate respondsToSelector:@selector(didSignInEmail:password:response:)]){
         if([[emailField text] length] > 0 && [[passField text] length] > 0){
             [rli fadeIn];
-            void (^success)(int) = ^(int response){
-                if(response == Success){
+            void (^response)(RSUConnectionResponse) = ^(RSUConnectionResponse didSucceed){
+                if(didSucceed == RSUSuccess){
                     [rli fadeOut];
                     
                     if([[NSUserDefaults standardUserDefaults] objectForKey:@"RememberEmail"] == nil){
@@ -91,12 +91,12 @@
                     }
                     
                     [self dismissModalViewControllerAnimated:YES];
-                }else if(response == InvalidEmail){
+                }else if(didSucceed == RSUInvalidEmail){
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"No user exists with that email address. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
                     [alert show];
                     [alert release];
                     [rli fadeOut];
-                }else if(response == InvalidPassword){
+                }else if(didSucceed == RSUInvalidPassword){
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"The password is invalid. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
                     [alert show];
                     [alert release];
@@ -109,7 +109,7 @@
                 }
             };
             
-            [delegate didSignInEmail:[emailField text] password:[passField text] response:success];
+            [delegate didSignInEmail:[emailField text] password:[passField text] response:response];
         }
     }
     

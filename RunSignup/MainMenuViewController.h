@@ -7,15 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "RSUModel.h"
 
-@interface MainMenuViewController : UIViewController{
+@interface MainMenuViewController : UIViewController <UIActionSheetDelegate>{
     UIButton *timerButton;
     UIButton *signInButton;
     UIButton *offlineButton;
     UIButton *checkerButton;
     UIButton *selectRaceButton;
     UIButton *chuteButton;
-    UIButton *participantsButton;
+    UIButton *otherButton;
     
     UIButton *signOutButton;
     UIButton *archiveButton;
@@ -42,7 +43,7 @@
 @property (nonatomic, retain) IBOutlet UIButton *offlineButton;
 @property (nonatomic, retain) IBOutlet UIButton *checkerButton;
 @property (nonatomic, retain) IBOutlet UIButton *chuteButton;
-@property (nonatomic, retain) IBOutlet UIButton *participantsButton;
+@property (nonatomic, retain) IBOutlet UIButton *otherButton;
 @property (nonatomic, retain) IBOutlet UILabel *copyrightLabel;
 @property (nonatomic, retain) IBOutlet UILabel *hintLabel;
 @property (nonatomic, retain) IBOutlet UILabel *hintLabel2;
@@ -69,13 +70,13 @@
 - (IBAction)checker:(id)sender;
 - (IBAction)selectRace:(id)sender;
 - (IBAction)chute:(id)sender;
-- (IBAction)participants:(id)sender;
+- (IBAction)other:(id)sender;
 
 - (IBAction)showArchive:(id)sender;
 - (IBAction)showSettings:(id)sender;
 
 - (IBAction)didSignOut;
-- (void)didSignInEmail:(NSString *)email password:(NSString *)password response:(void (^)(int))responseBlock;
+- (void)didSignInEmail:(NSString *)email password:(NSString *)password response:(void (^)(RSUConnectionResponse))responseBlock;
 - (void)didCreateOfflineRace:(NSString *)name;
 - (void)didSelectRace:(NSString *)raceName withID:(NSString *)raceID withEventName:(NSString *)eventName withEventID:(NSString *)eventID;
 

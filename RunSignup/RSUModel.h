@@ -8,24 +8,29 @@
 
 #import <Foundation/Foundation.h>
 
-enum{
-    NoConnection = 0,
-    InvalidEmail,
-    InvalidPassword,
-    Success
-};
+typedef enum{
+    RSUNoConnection = 0,
+    RSUInvalidEmail,
+    RSUInvalidPassword,
+    RSUSuccess
+} RSUConnectionResponse;
 
-enum{
-    ClearResults = 4,
-    ClearTimer,
-    ClearChecker,
-    ClearChute
-};
+typedef enum{
+    RSUClearResults = 4,
+    RSUClearTimer,
+    RSUClearChecker,
+    RSUClearChute
+} RSUClearCategory;
+
+typedef enum{
+    RSUNoDifferencesExist = 8,
+    RSUDifferencesExist
+} RSUDifferences;
 
 @interface RSUModel : NSObject{
     NSString *key;
     NSString *secret;
-    
+        
     NSString *email;
     NSString *password;
     
@@ -60,17 +65,19 @@ enum{
 
 - (id)init;
 - (int)renewCredentials;
-- (void)attemptLoginWithEmail:(NSString *)em pass:(NSString *)pa response:(void (^)(int))responseBlock;
+- (void)attemptLoginWithEmail:(NSString *)em pass:(NSString *)pa response:(void (^)(RSUConnectionResponse))responseBlock;
 - (void)logout;
 
 - (void)attemptRetreiveRaceList:(void (^)(NSArray *))responseBlock;
 - (void)attemptRetreiveResultSetList:(NSString *)raceID event:(NSString *)eventID response:(void (^)(NSMutableArray *))responseBlock;
 
-- (void)createNewResultSet:(NSString *)name response:(void (^)(int))responseBlock;
-- (void)deleteResultSet:(NSString *)resultSetID response:(void (^)(int))responseBlock;
-- (void)deleteResults:(int)which response:(void (^)(int))responseBlock;
+- (void)createNewResultSet:(NSString *)name response:(void (^)(RSUConnectionResponse))responseBlock;
+- (void)deleteResultSet:(NSString *)resultSetID response:(void (^)(RSUConnectionResponse))responseBlock;
+- (void)deleteResults:(RSUClearCategory)category response:(void (^)(RSUConnectionResponse))responseBlock;
 
-- (void)addFinishingTimes:(NSArray *)finishingTimes response:(void (^)(int))responseBlock;
-- (void)addFinishingBibs:(NSArray *)finishingBibs response:(void (^)(int))responseBlock;
+- (void)detectDifferencesBetweenLocalAndOnline:(NSArray *)records type:(int)type response:(void (^)(RSUDifferences))responseBlock;
+
+- (void)addFinishingTimes:(NSArray *)finishingTimes response:(void (^)(RSUConnectionResponse))responseBlock;
+- (void)addFinishingBibs:(NSArray *)finishingBibs response:(void (^)(RSUConnectionResponse))responseBlock;
 
 @end

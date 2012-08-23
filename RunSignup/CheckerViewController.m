@@ -113,7 +113,7 @@
 
 - (void)saveToFile{
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateStyle:NSDateFormatterFullStyle];
+    [formatter setDateStyle:NSDateFormatterShortStyle];
     [formatter setTimeStyle:NSDateFormatterNoStyle];
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
     [dict setObject:raceID forKey:@"RaceID"];

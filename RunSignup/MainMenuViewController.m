@@ -15,6 +15,7 @@
 #import "SelectRaceViewController.h"
 #import "ArchiveViewController.h"
 #import "OfflineRaceViewController.h"
+#import "ParticipantViewController.h"
 #import "AppDelegate.h"
 #import "RSUModel.h"
 #import <QuartzCore/QuartzCore.h>
@@ -25,7 +26,7 @@
 @synthesize offlineButton;
 @synthesize checkerButton;
 @synthesize chuteButton;
-@synthesize participantsButton;
+@synthesize otherButton;
 
 @synthesize copyrightLabel;
 @synthesize hintLabel;
@@ -67,8 +68,8 @@
     [selectRaceButton setBackgroundImage:stretchedBlueButtonTap forState:UIControlStateHighlighted];
     [chuteButton setBackgroundImage:stretchedBlueButton forState:UIControlStateNormal];
     [chuteButton setBackgroundImage:stretchedBlueButtonTap forState:UIControlStateHighlighted];
-    [participantsButton setBackgroundImage:stretchedBlueButton forState:UIControlStateNormal];
-    [participantsButton setBackgroundImage:stretchedBlueButtonTap forState:UIControlStateHighlighted];
+    [otherButton setBackgroundImage:stretchedBlueButton forState:UIControlStateNormal];
+    [otherButton setBackgroundImage:stretchedBlueButtonTap forState:UIControlStateHighlighted];
     [signOutButton setBackgroundImage:stretchedBlueButton forState:UIControlStateNormal];
     [signOutButton setBackgroundImage:stretchedBlueButtonTap forState:UIControlStateHighlighted];
     [archiveButton setBackgroundImage:stretchedBlueButton forState:UIControlStateNormal];
@@ -168,8 +169,43 @@
     [chuteViewController release];
 }
 
-- (IBAction)participants:(id)sender{
-    
+- (IBAction)other:(id)sender{
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Other" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"View Results Online", @"Add/Edit Participant Data", @"Delete All Data and Results", nil];
+    [actionSheet showInView: self.view];
+    [actionSheet release];
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex{
+    if(buttonIndex == 0){
+        [[UIApplication sharedApplication] openURL: [NSURL URLWithString: @"https://runsignup.com/beta/nofrills"]];
+    }else if(buttonIndex == 1){
+        ParticipantViewController *participantViewController = [[ParticipantViewController alloc] initWithNibName:@"ParticipantViewController" bundle:nil];
+        [participantViewController setRaceName: @"Cooper River Annual Race"];
+        [participantViewController setEventName: @"10K Run"];
+        
+        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController: participantViewController];
+        [self presentModalViewController:navController animated:YES];
+        
+        [participantViewController release];
+    }else if(buttonIndex == 2){
+        void (^response)(RSUConnectionResponse) = ^(RSUConnectionResponse didSucceed){
+            if(didSucceed == RSUNoConnection){
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+                [alert show];
+                [alert release];
+            }
+        };
+        
+        [[RSUModel sharedModel] deleteResults:RSUClearTimer response:response];
+        //[[RSUModel sharedModel] deleteResults:RSUClearChecker response:response];
+        [[RSUModel sharedModel] deleteResults:RSUClearChute response:response];
+        [[RSUModel sharedModel] deleteResults:RSUClearResults response:response];
+        
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey: @"TimerStartDate"];
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey: @"CurrentTimerFile"];
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey: @"CurrentChuteFile"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
 }
 
 // Push settings view into modal view of MainMenuViewController
@@ -200,13 +236,13 @@
     [archiveViewController release];
 }
 
-// Delegate style method for telling MainMenuViewController who to sign in and return BOOL if it was successful
-- (void)didSignInEmail:(NSString *)email password:(NSString *)password response:(void (^)(int))responseBlock{
+// Delegate style method for telling MainMenuViewController who to sign in and return BOOL if it was RSUSuccessful
+- (void)didSignInEmail:(NSString *)email password:(NSString *)password response:(void (^)(RSUConnectionResponse))responseBlock{
     RSUModel *model = [RSUModel sharedModel];
     [model setIsOffline: NO];
     
-    void (^success)(int) = ^(int didSucceed){
-        if(didSucceed == Success){
+    void (^response)(RSUConnectionResponse) = ^(RSUConnectionResponse didSucceed){
+        if(didSucceed == RSUSuccess){
             self.raceDirectorEmail = email;
             [emailLabel setHidden: NO];
             [emailLabel setText:raceDirectorEmail];
@@ -227,7 +263,7 @@
             [hintLabel2 setHidden:YES];
             [timerButton setHidden: YES];
             [chuteButton setHidden: YES];
-            [participantsButton setHidden: YES];
+            [otherButton setHidden: YES];
             [checkerButton setHidden: YES];
             [selectRaceButton setHidden: NO];
             [signInButton setHidden: YES];
@@ -236,7 +272,7 @@
         dispatch_async(dispatch_get_main_queue(),^(){responseBlock(didSucceed);}); 
     };
 
-    [model attemptLoginWithEmail:email pass:password response:success];
+    [model attemptLoginWithEmail:email pass:password response:response];
 }
 
 - (void)didCreateOfflineRace:(NSString *)name{
@@ -258,8 +294,8 @@
     [hintLabel2 setHidden: YES];
     [timerButton setHidden: NO];
     [chuteButton setHidden: NO];
-    [participantsButton setHidden: YES];
-    [chuteButton setFrame: CGRectMake([chuteButton frame].origin.x, [chuteButton frame].origin.y, 284, [chuteButton frame].size.height)];
+    [otherButton setHidden: NO];
+    //[chuteButton setFrame: CGRectMake([chuteButton frame].origin.x, [chuteButton frame].origin.y, 284, [chuteButton frame].size.height)];
     [checkerButton setHidden: NO];
     [selectRaceButton setHidden: YES];
     [signOutButton setTitle:@"Back to Start Menu" forState:UIControlStateNormal];
@@ -270,7 +306,7 @@
     [offlineButton setHidden: YES];
 }
 
-// Delegate style method for telling MainMenuViewController which race to time for and return if successful
+// Delegate style method for telling MainMenuViewController which race to time for and return if RSUSuccessful
 - (void)didSelectRace:(NSString *)raceName withID:(NSString *)raceID withEventName:(NSString *)eventName withEventID:(NSString *)eventID{
     self.raceDirectorRaceName = raceName;
     self.raceDirectorRaceID = raceID;
@@ -282,7 +318,7 @@
     [timerButton setHidden: NO];
     [chuteButton setHidden: NO];
     [chuteButton setFrame: CGRectMake([chuteButton frame].origin.x, [chuteButton frame].origin.y, 134, [chuteButton frame].size.height)];
-    [participantsButton setHidden: NO];
+    [otherButton setHidden: NO];
     [checkerButton setHidden: NO];
     [selectRaceButton setHidden: NO];
     [signOutButton setTitle:@"Sign Out" forState:UIControlStateNormal];
@@ -314,7 +350,7 @@
     [[RSUModel sharedModel] logout];
     [timerButton setHidden: YES];
     [chuteButton setHidden: YES];
-    [participantsButton setHidden: YES];
+    [otherButton setHidden: YES];
     [checkerButton setHidden: YES];
     [signInButton setHidden: NO];
     [offlineButton setHidden: NO];

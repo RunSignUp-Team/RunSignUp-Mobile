@@ -10,12 +10,16 @@
 #import "RecordTableViewCell.h"
 #import "ArchiveEditCellViewController.h"
 #import "JSON.h"
+#import <MessageUI/MessageUI.h>
 
 @implementation ArchiveDetailViewController
 @synthesize nameLabel;
-@synthesize idLabel;
+@synthesize raceIDLabel;
+@synthesize eventIDLabel;
+@synthesize eventIDHintLabel;
 @synthesize dateLabel;
 @synthesize typeLabel;
+@synthesize shareButton;
 @synthesize table;
 @synthesize records;
 @synthesize file;
@@ -37,15 +41,32 @@
 }
 
 - (void)viewDidLoad{
+    UIImage *blueButtonImage = [UIImage imageNamed:@"BlueButton.png"];
+    UIImage *stretchedBlueButton = [blueButtonImage stretchableImageWithLeftCapWidth:12 topCapHeight:12];
+    UIImage *blueButtonTapImage = [UIImage imageNamed:@"BlueButtonTap.png"];
+    UIImage *stretchedBlueButtonTap = [blueButtonTapImage stretchableImageWithLeftCapWidth:12 topCapHeight:12];
+    
+    [shareButton setBackgroundImage:stretchedBlueButton forState:UIControlStateNormal];
+    [shareButton setBackgroundImage:stretchedBlueButtonTap forState:UIControlStateHighlighted];
+    
     NSString *data = [NSString stringWithContentsOfFile:file encoding:NSUTF8StringEncoding error:nil];
     self.fileDict = [data JSONValue];
     self.records = [fileDict objectForKey:@"Data"];
     
     [nameLabel setText: [fileDict objectForKey:@"RaceName"]];
-    [idLabel setText: [fileDict objectForKey:@"RaceID"]];
-    if([[idLabel text] isEqualToString:@"0000"]){
-        [idLabel setText:@"Offline Race"];
+    NSString *raceID = [fileDict objectForKey:@"RaceID"];
+    NSString *eventID = [fileDict objectForKey:@"EventID"];
+    
+    if([raceID isEqualToString: @"0000"]){
+        [raceIDLabel setText:@"Offline Race"];
+        [eventIDHintLabel setHidden: YES];
+        [eventIDLabel setHidden: YES];
+        [raceIDLabel setFrame: CGRectMake(raceIDLabel.frame.origin.x, raceIDLabel.frame.origin.y, 190, raceIDLabel.frame.size.height)];
+    }else{
+        [raceIDLabel setText:raceID];
+        [eventIDLabel setText:eventID];
     }
+    
     [dateLabel setText: [fileDict objectForKey:@"Date"]];
     if([[fileDict objectForKey:@"Type"] intValue] == 0){
         [typeLabel setText:@"Timer (Place # and Time)"];
@@ -188,6 +209,64 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     return [records count];
+}
+
+- (IBAction)share:(id)sender{
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Share" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"E-mail", @"Upload to RunSignUp", nil];
+    [actionSheet showInView: self.view];
+    [actionSheet release];
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex{
+    if(buttonIndex == 0){
+        if([MFMailComposeViewController canSendMail]){
+            MFMailComposeViewController *mailComposeViewController = [[MFMailComposeViewController alloc] init];
+            
+            int type = [[fileDict objectForKey: @"Type"] intValue];
+            NSString *typeString;
+            if(type == 0){
+                typeString = @"Timer";
+            }else if(type == 1){
+                typeString = @"Checker";
+            }else{
+                typeString = @"Chute";
+            }
+            [mailComposeViewController setSubject: [NSString stringWithFormat:@"Race Results For %@", [fileDict objectForKey:@"RaceName"]]];
+            [mailComposeViewController setMailComposeDelegate: self];
+            
+            NSString *body = [NSString stringWithFormat: @"Race Name: %@\nEvent Name: %@\n\n", [fileDict objectForKey:@"RaceName"], [fileDict objectForKey:@"EventName"]];
+            if(type == 0){
+                body = [body stringByAppendingString:@"Place | Time\n"];
+            }else if(type == 1){
+                body = [body stringByAppendingString:@"Bib | Time\n"];
+            }else{
+                body = [body stringByAppendingString:@"Place | Bib\n"];
+            }
+            
+            for(int x = 0; x < [records count]; x++){
+                if(type == 0)
+                    body = [body stringByAppendingFormat: @"%@  | %@\n", [[records objectAtIndex: x] objectForKey:@"Place"], [[records objectAtIndex: x] objectForKey:@"FTime"]];
+                else if(type == 1)
+                    body = [body stringByAppendingFormat: @"%@ | %@\n", [[records objectAtIndex: x] objectForKey:@"Bib"], [[records objectAtIndex: x] objectForKey:@"FTime"]];
+                else
+                    body = [body stringByAppendingFormat: @"%@ | %@\n", [[records objectAtIndex: x] objectForKey:@"Place"], [[records objectAtIndex: x] objectForKey:@"Bib"]];    
+            }
+            [mailComposeViewController setMessageBody:body isHTML: NO];
+            
+            [self presentModalViewController:mailComposeViewController animated:YES];
+            [mailComposeViewController release];
+        }else{
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Your device can not send mail, try uploading through RunSignUp instead." delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil];
+            [alert show];
+            [alert release];
+        }
+    }else if(buttonIndex == 1){
+        // runsignup upload
+    }
+}
+
+- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error{
+    [controller dismissModalViewControllerAnimated: YES];
 }
 
 - (void)toggleEdit{

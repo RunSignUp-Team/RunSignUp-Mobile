@@ -12,11 +12,13 @@
     UIImageView *dataTypeImage;
     UILabel *raceNameLabel;
     UILabel *dateLabel;
+    UILabel *idsLabel;
 }
 
 @property (nonatomic, retain) UIImageView *dataTypeImage;
 @property (nonatomic, retain) UILabel *raceNameLabel;
 @property (nonatomic, retain) UILabel *dateLabel;
+@property (nonatomic, retain) UILabel *idsLabel;
 
 - (void)setType:(int)type;
 

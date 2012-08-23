@@ -37,8 +37,8 @@ static RSUModel *model = nil;
     if(isOffline){
         dispatch_async(dispatch_get_main_queue(),^(){responseBlock(nil);});
     }else{
-        if([self renewCredentials] == Success){
-            NSString *url = [NSString stringWithFormat:@"https://test.runsignup.com/rest/races?tmp_key=%@&tmp_secret=%@&events=T", key, secret];
+        if([self renewCredentials] == RSUSuccess){
+            NSString *url = [NSString stringWithFormat:@"https://runsignup.com/rest/races?tmp_key=%@&tmp_secret=%@&events=T", key, secret];
             
             NSMutableURLRequest *request = [[[NSMutableURLRequest alloc] init] autorelease];
             [request setURL:[NSURL URLWithString:url]];
@@ -112,7 +112,7 @@ static RSUModel *model = nil;
     if(isOffline){
         dispatch_async(dispatch_get_main_queue(),^(){responseBlock(nil);});
     }else{
-        NSString *url = [NSString stringWithFormat:@"https://test.runsignup.com/rest/Race/%@/Results?event_id=%@&request_type=get-result-sets&tmp_key=%@&tmp_secret=%@&format=xml", raceID, eventID, key, secret];
+        NSString *url = [NSString stringWithFormat:@"https://runsignup.com/rest/Race/%@/Results?event_id=%@&request_type=get-result-sets&tmp_key=%@&tmp_secret=%@&format=xml", raceID, eventID, key, secret];
         
         NSMutableURLRequest *request = [[[NSMutableURLRequest alloc] init] autorelease];
         [request setURL:[NSURL URLWithString:url]];
@@ -147,12 +147,12 @@ static RSUModel *model = nil;
         };
         
         [NSURLConnection sendAsynchronousRequest:request queue:[[NSOperationQueue alloc] init] completionHandler:completion];
-        }
+    }
 }
 
-- (void)attemptLoginWithEmail:(NSString *)em pass:(NSString *)pa response:(void (^)(int))responseBlock{
+- (void)attemptLoginWithEmail:(NSString *)em pass:(NSString *)pa response:(void (^)(RSUConnectionResponse))responseBlock{
     if(isOffline){
-        dispatch_async(dispatch_get_main_queue(),^(){responseBlock(NoConnection);});
+        dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUNoConnection);});
     }else{
         self.email = em;
         self.password = pa;
@@ -162,7 +162,7 @@ static RSUModel *model = nil;
         NSString *postLength = [NSString stringWithFormat:@"%d", [postData length]];
         
         NSMutableURLRequest *request = [[[NSMutableURLRequest alloc] init] autorelease];
-        [request setURL:[NSURL URLWithString:@"https://test.runsignup.com/rest/login"]];
+        [request setURL:[NSURL URLWithString:@"https://runsignup.com/rest/login"]];
         [request setHTTPMethod:@"POST"];
         [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
         [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
@@ -171,9 +171,12 @@ static RSUModel *model = nil;
         void (^completion)(NSURLResponse *,NSData *,NSError *) = ^(NSURLResponse *response,NSData *urlData,NSError *error){
             if(!urlData){
                 NSLog(@"URLData is nil");
-                dispatch_async(dispatch_get_main_queue(),^(){responseBlock(NoConnection);});
+                dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUNoConnection);});
                 return;
             }
+            
+            NSString *string = [[NSString alloc] initWithData:urlData encoding:NSUTF8StringEncoding];
+            NSLog(string);
             
             if(self.renewTimer == nil)
                 self.renewTimer = [NSTimer scheduledTimerWithTimeInterval:15.0 target:self selector:@selector(renewCredentials) userInfo:nil repeats:NO];
@@ -191,35 +194,35 @@ static RSUModel *model = nil;
                 if(tmp_key != nil && tmp_secret != nil){
                     self.key = [tmp_key text];
                     self.secret = [tmp_secret text];
-                    dispatch_async(dispatch_get_main_queue(),^(){responseBlock(Success);});
+                    dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUSuccess);});
                     return;
                 }else{
-                    dispatch_async(dispatch_get_main_queue(),^(){responseBlock(NoConnection);});
+                    dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUNoConnection);});
                     return;
                 }
             }else if([[rootXML tag] isEqualToString:@"error"]){
                 RXMLElement *error_code = [rootXML child:@"error_code"];
                 
                 if([error_code textAsInt] == 101){
-                    dispatch_async(dispatch_get_main_queue(),^(){responseBlock(InvalidEmail);});
+                    dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUInvalidEmail);});
                     return;
                 }else if([error_code textAsInt] == 102){
-                    dispatch_async(dispatch_get_main_queue(),^(){responseBlock(InvalidPassword);});
+                    dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUInvalidPassword);});
                     return;
                 }
             }
-            dispatch_async(dispatch_get_main_queue(),^(){responseBlock(NoConnection);});
+            dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUNoConnection);});
         };
         
         [NSURLConnection sendAsynchronousRequest:request queue:[[NSOperationQueue alloc] init] completionHandler:completion];
     }
 }
 
-- (void)addFinishingTimes:(NSArray *)finishingTimes response:(void (^)(int))responseBlock{
+- (void)addFinishingTimes:(NSArray *)finishingTimes response:(void (^)(RSUConnectionResponse))responseBlock{
     if(isOffline){
-        dispatch_async(dispatch_get_main_queue(),^(){responseBlock(NoConnection);});
+        dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUNoConnection);});
     }else{
-        NSString *url = [NSString stringWithFormat:@"https://test.runsignup.com/rest/Race/%@/Results?event_id=%@&request_type=finishing-times&tmp_key=%@&tmp_secret=%@&format=xml", currentRaceID, currentEventID, key, secret];
+        NSString *url = [NSString stringWithFormat:@"https://runsignup.com/rest/Race/%@/Results?event_id=%@&request_type=finishing-times&tmp_key=%@&tmp_secret=%@&format=xml", currentRaceID, currentEventID, key, secret];
         
         NSString *jsonRequest = [NSString stringWithFormat: @"{\"last_finishing_time_id\": %@,\"finishing_times\": %@}", lastFinishingTimeID, [finishingTimes JSONRepresentation]];
         
@@ -237,12 +240,13 @@ static RSUModel *model = nil;
         void (^completion)(NSURLResponse *,NSData *,NSError *) = ^(NSURLResponse *response,NSData *urlData,NSError *error){
             if(!urlData){
                 NSLog(@"URLData is nil");
-                dispatch_async(dispatch_get_main_queue(),^(){responseBlock(NoConnection);});
+                dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUNoConnection);});
                 return;
             }
                     
             NSString *string = [[NSString alloc] initWithData:urlData encoding:NSUTF8StringEncoding];
             NSLog(string);
+            
             RXMLElement *rootXML = [[RXMLElement alloc] initFromXMLData:urlData];
             if([[rootXML tag] isEqualToString: @"event_individual_results_upload"]){
                 RXMLElement *finishingTimes = [rootXML child:@"finishing_times"];
@@ -250,23 +254,41 @@ static RSUModel *model = nil;
                 if(finishingTimeArray != nil && [finishingTimeArray count] > 0){
                     RXMLElement *finishingTimeID = [[finishingTimeArray objectAtIndex: [finishingTimeArray count] - 1] child:@"finishing_time_id"];
                     self.lastFinishingTimeID = [finishingTimeID text];
-                    dispatch_async(dispatch_get_main_queue(),^(){responseBlock(Success);});
+                    dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUSuccess);});
                     return;
+                }
+            }else if([[rootXML tag] isEqualToString: @"error"]){
+                RXMLElement *errorCode = [rootXML child: @"error_code"];
+                RXMLElement *errorDetails = [rootXML child: @"error_details"];
+                
+                if(errorCode != nil && [[errorCode text] isEqualToString:@"12"]){
+                    if(errorDetails != nil){
+                        RXMLElement *errorMessage = [errorDetails child: @"error_msg"];
+                        if(errorMessage != nil && [[[errorMessage text] substringToIndex:27] isEqualToString:@"Last finishing time id was "]){
+                            NSString *timeIDString = [[errorMessage text] substringFromIndex: 27];
+                            timeIDString = [timeIDString stringByReplacingOccurrencesOfString:@"\"" withString:@""];
+                            self.lastFinishingTimeID = timeIDString;
+                            
+                            [self addFinishingTimes:finishingTimes response:responseBlock];
+                            dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUSuccess);});
+                            return;
+                        }
+                    }
                 }
             }
             
-            dispatch_async(dispatch_get_main_queue(),^(){responseBlock(NoConnection);});
+            dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUNoConnection);});
         };
         
         [NSURLConnection sendAsynchronousRequest:request queue:[[NSOperationQueue alloc] init] completionHandler:completion];
     }
 }
 
-- (void)addFinishingBibs:(NSArray *)finishingBibs response:(void (^)(int))responseBlock{
+- (void)addFinishingBibs:(NSArray *)finishingBibs response:(void (^)(RSUConnectionResponse))responseBlock{
     if(isOffline){
-        dispatch_async(dispatch_get_main_queue(),^(){responseBlock(NoConnection);});
+        dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUNoConnection);});
     }else{
-        NSString *url = [NSString stringWithFormat:@"https://test.runsignup.com/rest/Race/%@/Results?event_id=%@&request_type=bib-order&tmp_key=%@&tmp_secret=%@&format=xml", currentRaceID, currentEventID, key, secret];
+        NSString *url = [NSString stringWithFormat:@"https://runsignup.com/rest/Race/%@/Results?event_id=%@&request_type=bib-order&tmp_key=%@&tmp_secret=%@&format=xml", currentRaceID, currentEventID, key, secret];
         
         NSString *jsonRequest = [NSString stringWithFormat: @"{\"last_finishing_place\": %@,\"bib_nums\": %@}", lastBibNumber, [finishingBibs JSONRepresentation]];
         
@@ -284,7 +306,7 @@ static RSUModel *model = nil;
         void (^completion)(NSURLResponse *,NSData *,NSError *) = ^(NSURLResponse *response,NSData *urlData,NSError *error){
             if(!urlData){
                 NSLog(@"URLData is nil");
-                dispatch_async(dispatch_get_main_queue(),^(){responseBlock(NoConnection);});
+                dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUNoConnection);});
                 return;
             }
             
@@ -297,12 +319,77 @@ static RSUModel *model = nil;
                 if(finishingArray != nil && [finishingArray count] > 0){
                     RXMLElement *finishingPlace = [[finishingArray objectAtIndex: [finishingArray count] - 1] child:@"finishing_place"];
                     self.lastBibNumber = [finishingPlace text];
-                    dispatch_async(dispatch_get_main_queue(),^(){responseBlock(Success);});
+                    dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUSuccess);});
                     return;
+                }
+            }else if([[rootXML tag] isEqualToString: @"error"]){
+                RXMLElement *errorCode = [rootXML child: @"error_code"];
+                RXMLElement *errorDetails = [rootXML child: @"error_details"];
+                
+                if(errorCode != nil && [[errorCode text] isEqualToString:@"12"]){
+                    if(errorDetails != nil){
+                        RXMLElement *errorMessage = [errorDetails child: @"error_msg"];
+                        if(errorMessage != nil && [[[errorMessage text] substringToIndex:34] isEqualToString:@"Last received finishing place was "]){
+                            NSString *chuteNumberString = [[errorMessage text] substringFromIndex: 34];
+                            chuteNumberString = [chuteNumberString stringByReplacingOccurrencesOfString:@"\"" withString:@""];
+                            self.lastBibNumber = chuteNumberString;
+                            
+                            [self addFinishingBibs:finishingBibs response:responseBlock];
+                            dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUSuccess);});
+                            return;
+                        }
+                    }
                 }
             }
             
-            dispatch_async(dispatch_get_main_queue(),^(){responseBlock(NoConnection);});
+            dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUNoConnection);});
+        };
+        
+        [NSURLConnection sendAsynchronousRequest:request queue:[[NSOperationQueue alloc] init] completionHandler:completion];
+    }
+}
+
+- (void)detectDifferencesBetweenLocalAndOnline:(NSArray *)records type:(int)type response:(void (^)(RSUDifferences))responseBlock{
+    if(isOffline){
+        dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUNoDifferencesExist);});
+    }else{
+        NSString *url;
+        if(type == 0)
+            url = [NSString stringWithFormat:@"https://runsignup.com/rest/Race/%@/Results?event_id=%@&request_type=get-timing-data&tmp_key=%@&tmp_secret=%@&format=xml", currentRaceID, currentEventID, key, secret];
+        else if(type == 1)
+            url = [NSString stringWithFormat:@"https://runsignup.com/rest/Race/%@/Results?event_id=%@&request_type=get-checker-data&tmp_key=%@&tmp_secret=%@&format=xml", currentRaceID, currentEventID, key, secret];
+        else
+            url = [NSString stringWithFormat:@"https://runsignup.com/rest/Race/%@/Results?event_id=%@&request_type=get-chute-data&tmp_key=%@&tmp_secret=%@&format=xml", currentRaceID, currentEventID, key, secret];
+
+        
+        NSMutableURLRequest *request = [[[NSMutableURLRequest alloc] init] autorelease];
+        [request setURL:[NSURL URLWithString:url]];
+        [request setHTTPMethod:@"GET"];
+        
+        void (^completion)(NSURLResponse *,NSData *,NSError *) = ^(NSURLResponse *response,NSData *urlData,NSError *error){    
+            NSString *string = [[NSString alloc] initWithData:urlData encoding:NSUTF8StringEncoding];
+            NSLog([string description]);
+            
+            NSMutableArray *serverRecords = [[NSMutableArray alloc] init];
+            if(urlData != nil){
+                RXMLElement *rootXML = [[RXMLElement alloc] initFromXMLData:urlData];
+                if([[rootXML tag] isEqualToString: @"finishing_times"]){
+                    NSArray *dataTotal = [rootXML children:@"finishing_times"];
+                    if(dataTotal && [dataTotal count] > 0){
+                        for(int x = 0; x < [dataTotal count]; x++){
+                            RXMLElement *data = [[dataTotal objectAtIndex:x] child:@"time"];
+                            if([data text] != nil){
+                                [serverRecords addObject: [data text]];
+                            }
+                        }
+                    }
+                }
+            }
+            
+            if([serverRecords count] == [records count])
+                dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUNoDifferencesExist);});
+            else
+                dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUDifferencesExist);});
         };
         
         [NSURLConnection sendAsynchronousRequest:request queue:[[NSOperationQueue alloc] init] completionHandler:completion];
@@ -311,9 +398,9 @@ static RSUModel *model = nil;
 
 - (int)renewCredentials{
     if(isOffline){
-        return NoConnection;
+        return RSUNoConnection;
     }else{
-        NSString *url = [NSString stringWithFormat:@"https://test.runsignup.com/rest/user?tmp_key=%@&tmp_secret=%@", key, secret];
+        NSString *url = [NSString stringWithFormat:@"https://runsignup.com/rest/user?tmp_key=%@&tmp_secret=%@", key, secret];
         
         NSMutableURLRequest *request = [[[NSMutableURLRequest alloc] init] autorelease];
         [request setURL:[NSURL URLWithString:url]];
@@ -334,21 +421,21 @@ static RSUModel *model = nil;
             RXMLElement *rootXML = [[RXMLElement alloc] initFromXMLData:urlData];
             if(![[rootXML tag] isEqualToString:@"user"]){
                 //int attempt = [self attemptLoginWithEmail:email pass:password];
-                return NoConnection;
+                return RSUNoConnection;
             }
         }else{
-            return NoConnection;
+            return RSUNoConnection;
         }
         
-        return Success;
+        return RSUSuccess;
     }
 }
 
-- (void)createNewResultSet:(NSString *)name response:(void (^)(int))responseBlock{
+- (void)createNewResultSet:(NSString *)name response:(void (^)(RSUConnectionResponse))responseBlock{
     if(isOffline){
-        dispatch_async(dispatch_get_main_queue(),^(){responseBlock(NoConnection);});
+        dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUNoConnection);});
     }else{
-        NSString *url = [NSString stringWithFormat:@"https://test.runsignup.com/rest/Race/%@/Results?event_id=%@&request_type=new-result-set&tmp_key=%@&tmp_secret=%@&format=xml", currentRaceID, currentEventID, key, secret];
+        NSString *url = [NSString stringWithFormat:@"https://runsignup.com/rest/Race/%@/Results?event_id=%@&request_type=new-result-set&tmp_key=%@&tmp_secret=%@&format=xml", currentRaceID, currentEventID, key, secret];
         
         NSString *jsonRequest = [NSString stringWithFormat:@"{\"individual_result_set_name\": \"%@\"}", name];
         
@@ -366,12 +453,13 @@ static RSUModel *model = nil;
         void (^completion)(NSURLResponse *,NSData *,NSError *) = ^(NSURLResponse *response,NSData *urlData,NSError *error){
             if(!urlData){
                 NSLog(@"URLData is nil");
-                dispatch_async(dispatch_get_main_queue(),^(){responseBlock(NoConnection);});
+                dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUNoConnection);});
                 return;
             }
             
             NSString *string = [[NSString alloc] initWithData:urlData encoding:NSUTF8StringEncoding];
             NSLog(string);
+            
             RXMLElement *rootXML = [[RXMLElement alloc] initFromXMLData:urlData];
             if([[rootXML tag] isEqualToString: @"response"]){
                 RXMLElement *individualResultID = [rootXML child:@"individual_result_set_id"];
@@ -379,23 +467,23 @@ static RSUModel *model = nil;
                     self.currentResultSetID = [individualResultID text];
                     self.lastFinishingTimeID = @"0";
                     self.lastBibNumber = @"0";
-                    dispatch_async(dispatch_get_main_queue(),^(){responseBlock(Success);});
+                    dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUSuccess);});
                     return;
                 }
             }
             
-            dispatch_async(dispatch_get_main_queue(),^(){responseBlock(NoConnection);});
+            dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUNoConnection);});
         };
         
         [NSURLConnection sendAsynchronousRequest:request queue:[[NSOperationQueue alloc] init] completionHandler:completion];
     }
 }
 
-- (void)deleteResultSet:(NSString *)resultSetID response:(void (^)(int))responseBlock{
+- (void)deleteResultSet:(NSString *)resultSetID response:(void (^)(RSUConnectionResponse))responseBlock{
     if(isOffline){
-        dispatch_async(dispatch_get_main_queue(),^(){responseBlock(NoConnection);});
+        dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUNoConnection);});
     }else{
-        NSString *url = [NSString stringWithFormat:@"https://test.runsignup.com/rest/Race/%@/Results?event_id=%@&request_type=delete-result-set&tmp_key=%@&tmp_secret=%@&format=xml", currentRaceID, currentEventID, key, secret];
+        NSString *url = [NSString stringWithFormat:@"https://runsignup.com/rest/Race/%@/Results?event_id=%@&request_type=delete-result-set&tmp_key=%@&tmp_secret=%@&format=xml", currentRaceID, currentEventID, key, secret];
         
         NSString *post = [NSString stringWithFormat: @"individual_result_set_id=%@", resultSetID];
         NSData *postData = [post dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
@@ -411,7 +499,7 @@ static RSUModel *model = nil;
         void (^completion)(NSURLResponse *,NSData *,NSError *) = ^(NSURLResponse *response,NSData *urlData,NSError *error){    
             if(!urlData){
                 NSLog(@"URLData is nil");
-                dispatch_async(dispatch_get_main_queue(),^(){responseBlock(NoConnection);});
+                dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUNoConnection);});
                 return;
             }
             
@@ -419,38 +507,38 @@ static RSUModel *model = nil;
             if([[rootXML tag] isEqualToString: @"response"]){
                 if([rootXML child:@"success"] != nil){
                     if([[[rootXML child:@"success"] text] isEqualToString:@"T"]){
-                        dispatch_async(dispatch_get_main_queue(),^(){responseBlock(Success);});
+                        dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUSuccess);});
                         return;
                     }
                 }
             }
             
-            dispatch_async(dispatch_get_main_queue(),^(){responseBlock(NoConnection);});
+            dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUNoConnection);});
         };
         
         [NSURLConnection sendAsynchronousRequest:request queue:[[NSOperationQueue alloc] init] completionHandler:completion];
     }
 }
 
-- (void)deleteResults:(int)which response:(void (^)(int))responseBlock{
+- (void)deleteResults:(RSUClearCategory)category response:(void (^)(RSUConnectionResponse))responseBlock{
     if(isOffline){
-        dispatch_async(dispatch_get_main_queue(),^(){responseBlock(NoConnection);});
+        dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUNoConnection);});
     }else{
-        NSString *url = [NSString stringWithFormat:@"https://test.runsignup.com/rest/Race/%@/Results?event_id=%@&tmp_key=%@&tmp_secret=%@&format=xml", currentRaceID, currentEventID, key, secret];
+        NSString *url = [NSString stringWithFormat:@"https://runsignup.com/rest/Race/%@/Results?event_id=%@&tmp_key=%@&tmp_secret=%@&format=xml", currentRaceID, currentEventID, key, secret];
 
         NSString *post;
-        if(which == ClearResults)
+        if(category == RSUClearResults)
             post = [NSString stringWithFormat:@"request_type=clear-results&individual_result_set_id=%@", currentResultSetID];
-        else if(which == ClearTimer){
+        else if(category == RSUClearTimer){
             post = @"request_type=delete-timing-data";
             self.lastFinishingTimeID = @"0";
-        }else if(which == ClearChecker)
+        }else if(category == RSUClearChecker)
             post = @"request_type=delete-checker-data"; 
-        else if(which == ClearChute){
+        else if(category == RSUClearChute){
             post = @"request_type=delete-chute-data";
             self.lastBibNumber = @"0";
         }else{
-            dispatch_async(dispatch_get_main_queue(),^(){responseBlock(NoConnection);});
+            dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUNoConnection);});
             return;
         }
         
@@ -467,21 +555,24 @@ static RSUModel *model = nil;
         void (^completion)(NSURLResponse *,NSData *,NSError *) = ^(NSURLResponse *response,NSData *urlData,NSError *error){
             if(!urlData){
                 NSLog(@"URLData is nil");
-                dispatch_async(dispatch_get_main_queue(),^(){responseBlock(NoConnection);});
+                dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUNoConnection);});
                 return;
             }
+            
+            NSString *string = [[NSString alloc] initWithData:urlData encoding:NSUTF8StringEncoding];
+            NSLog(string);
             
             RXMLElement *rootXML = [[RXMLElement alloc] initFromXMLData:urlData];
             if([[rootXML tag] isEqualToString: @"response"]){
                 if([rootXML child:@"success"] != nil){
                     if([[[rootXML child:@"success"] text] isEqualToString:@"T"]){
-                        dispatch_async(dispatch_get_main_queue(),^(){responseBlock(Success);});
+                        dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUSuccess);});
                         return;
                     }
                 }
             }
             
-            dispatch_async(dispatch_get_main_queue(),^(){responseBlock(NoConnection);});
+            dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUNoConnection);});
         };
         
         [NSURLConnection sendAsynchronousRequest:request queue:[[NSOperationQueue alloc] init] completionHandler:completion];
@@ -490,7 +581,7 @@ static RSUModel *model = nil;
 
 - (void)logout{
     if(!isOffline){
-        NSString *url = [NSString stringWithFormat:@"https://test.runsignup.com/rest/logout?tmp_key=%@&tmp_secret=%@", key, secret];
+        NSString *url = [NSString stringWithFormat:@"https://runsignup.com/rest/logout?tmp_key=%@&tmp_secret=%@", key, secret];
         
         NSMutableURLRequest *request = [[[NSMutableURLRequest alloc] init] autorelease];
         [request setURL:[NSURL URLWithString:url]];
