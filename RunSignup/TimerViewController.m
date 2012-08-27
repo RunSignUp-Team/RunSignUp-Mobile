@@ -1,10 +1,20 @@
 //
 //  TimerViewController.m
-//  RunSignup
+//  RunSignUp
 //
-//  Created by Billy Connolly on 4/20/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+// Copyright 2012 RunSignUp
 //
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
 #import "TimerViewController.h"
 #import "RecordTableViewCell.h"
@@ -134,9 +144,12 @@
         void (^response)(RSUDifferences) = ^(RSUDifferences differences){
             currentDifferences = differences;
             [self showDownloadResultsAlert];
+            [startButton setEnabled: YES];
         };
         
         [[RSUModel sharedModel] detectDifferencesBetweenLocalAndOnline:(NSArray *)self.records type:0 response:response];
+    }else{
+        [startButton setEnabled: YES];
     }
 }
 
@@ -149,6 +162,20 @@
         [table setEditing:NO animated:YES];
     }else{
         [table setEditing:YES animated:YES];
+    }
+}
+
+- (void)saveStartDate{
+    [[NSUserDefaults standardUserDefaults] setObject:[timerLabel startDate] forKey:@"TimerStartDate"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    if(![[RSUModel sharedModel] isOffline]){
+        NSDateFormatter *formatter = [[[NSDateFormatter alloc] init] autorelease];
+        [formatter setTimeZone: [[NSTimeZone alloc] initWithName:@"Eastern Standard Time"]];
+        [formatter setDateFormat: @"YYYY-MM-dd hh:mm:ss"];
+        NSString *dateString = [formatter stringFromDate: [timerLabel startDate]];
+        dateString = dateString;
+        // upload startDate to server
     }
 }
 
@@ -179,7 +206,7 @@
         if(![[RSUModel sharedModel] isOffline]){
             void (^response)(RSUConnectionResponse) = ^(RSUConnectionResponse didSucceed){
                 if(didSucceed == RSUNoConnection){
-                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignUp. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
                     [alert show];
                     [alert release];
                 }
@@ -210,7 +237,7 @@
                 
         started = YES;
         [timerLabel startTiming];
-        [[NSUserDefaults standardUserDefaults] setObject:[timerLabel startDate] forKey:@"TimerStartDate"];
+        [self saveStartDate];
         [[NSUserDefaults standardUserDefaults] setObject:self.fileToSave forKey:@"CurrentTimerFile"];
         [[NSUserDefaults standardUserDefaults] synchronize];
         [recordButton setEnabled:YES];
@@ -268,7 +295,7 @@
             if(![[RSUModel sharedModel] isOffline]){
                 void (^response)(RSUConnectionResponse) = ^(RSUConnectionResponse didSucceed){
                     if(didSucceed == RSUNoConnection){
-                        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+                        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignUp. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
                         [alert show];
                         [alert release];
                     }else{
@@ -365,14 +392,14 @@
 - (void)reuploadResults{
     void (^response)(RSUConnectionResponse) = ^(RSUConnectionResponse didSucceed){
         if(didSucceed == RSUNoConnection){
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignUp. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
             [alert show];
             [alert release];
             [[self recordButton] setEnabled: YES];
         }else{
             void (^response2)(RSUConnectionResponse) = ^(RSUConnectionResponse didSucceed2){
                 if(didSucceed2 == RSUNoConnection){
-                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignUp. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
                     [alert show];
                     [alert release];
                     [[self recordButton] setEnabled: YES];
@@ -380,7 +407,7 @@
                     void (^response3)(RSUConnectionResponse) = ^(RSUConnectionResponse didSucceed3){
                         [[self recordButton] setEnabled: YES];
                         if(didSucceed3 == RSUNoConnection){
-                            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+                            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignUp. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
                             [alert show];
                             [alert release];
                         }

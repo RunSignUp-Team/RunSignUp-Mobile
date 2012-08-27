@@ -1,10 +1,20 @@
 //
 //  RSUModel.m
-//  RunSignup
+//  RunSignUp
 //
-//  Created by Billy Connolly on 6/6/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+// Copyright 2012 RunSignUp
 //
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
 #import "RSUModel.h"
 #import "RXMLElement.h"
@@ -34,7 +44,10 @@ static RSUModel *model = nil;
     return self;
 }
 
-- (void)attemptRetreiveRaceList:(void (^)(NSArray *))responseBlock{
+/* Attempt to retrieve a list of races and subsequent events that
+   the race director is currently in charge of. If no races are found
+   then an empty array is returned. */
+- (void)attemptRetrieveRaceList:(void (^)(NSArray *))responseBlock{
     if(isOffline){
         dispatch_async(dispatch_get_main_queue(),^(){responseBlock(nil);});
     }else{
@@ -109,7 +122,11 @@ static RSUModel *model = nil;
     }
 }
 
-- (void)attemptRetreiveResultSetList:(NSString *)raceID event:(NSString *)eventID response:(void (^)(NSMutableArray *))responseBlock{
+/* Attempt to retrieve a list of result sets that exist in the current
+   event that has been chosen. Result sets are matchings of timing/chute
+   data that exist independently of the actual data, and multiple result
+   sets can exist at any given time */
+- (void)attemptRetrieveResultSetList:(NSString *)raceID event:(NSString *)eventID response:(void (^)(NSMutableArray *))responseBlock{
     if(isOffline){
         dispatch_async(dispatch_get_main_queue(),^(){responseBlock(nil);});
     }else{
@@ -151,6 +168,92 @@ static RSUModel *model = nil;
     }
 }
 
+/* Attempt to retrieve the list of participants for a given event. */
+- (void)attemptRetrieveParticipants:(void (^)(NSMutableArray *))responseBlock{
+    if(isOffline){
+        dispatch_async(dispatch_get_main_queue(),^(){responseBlock(nil);});
+    }else{
+        NSString *url = [NSString stringWithFormat:@"https://runsignup.com/rest/Race/%@/participants?event_id=%@&page=1&sort=last_name,first_name&results_per_page=250&tmp_key=%@&tmp_secret=%@&format=xml", currentRaceID, currentEventID, key, secret];
+        
+        NSMutableURLRequest *request = [[[NSMutableURLRequest alloc] init] autorelease];
+        [request setURL:[NSURL URLWithString:url]];
+        [request setHTTPMethod:@"GET"];
+        
+        void (^completion)(NSURLResponse *,NSData *,NSError *) = ^(NSURLResponse *response,NSData *urlData,NSError *error){    
+            NSMutableArray *participants = [[NSMutableArray alloc] init];
+            
+            NSString *string = [[NSString alloc] initWithData:urlData encoding:NSUTF8StringEncoding];
+            NSLog(string);
+            
+            if(urlData != nil){
+                RXMLElement *rootXML = [[RXMLElement alloc] initFromXMLData:urlData];
+                if([[rootXML tag] isEqualToString: @"events"]){
+                    NSArray *events = [rootXML children: @"event"];
+                    for(int x = 0; x < [events count]; x++){
+                        RXMLElement *event = [events objectAtIndex: x];
+                        RXMLElement *eventParticipants = [event child:@"participants"];
+                        NSArray *participantsArray = [eventParticipants children: @"participant"];
+                        for(int y = 0; y < [participantsArray count]; y++){
+                            NSMutableDictionary *participantDict = [[NSMutableDictionary alloc] init];
+                            RXMLElement *user = [[participantsArray objectAtIndex: y] child: @"user"];
+                            RXMLElement *regID = [[participantsArray objectAtIndex: y] child: @"registration_id"];
+                            RXMLElement *bib = [[participantsArray objectAtIndex: y] child: @"bib_num"];
+                            RXMLElement *age = [[participantsArray objectAtIndex: y] child: @"age"];
+                            
+                            if(user){
+                                RXMLElement *firstName = [user child: @"first_name"];
+                                RXMLElement *lastName = [user child: @"last_name"];
+                                RXMLElement *address = [user child: @"address"];
+                                RXMLElement *gender = [user child: @"gender"];
+                                
+                                if(firstName && [firstName text]){
+                                    [participantDict setObject:[firstName text] forKey:@"FirstName"];
+                                }
+                                if(lastName && [lastName text]){
+                                    [participantDict setObject:[lastName text] forKey:@"LastName"];
+                                }
+                                if(address){
+                                    RXMLElement *city = [address child: @"city"];
+                                    RXMLElement *state = [address child: @"state"];
+                                    
+                                    if(city && [city text]){
+                                        [participantDict setObject:[city text] forKey:@"City"];
+                                    }
+                                    if(state && [state text]){
+                                        [participantDict setObject:[state text] forKey:@"State"];
+                                    }
+                                }
+                                if(gender && [gender text]){
+                                    [participantDict setObject:[gender text] forKey:@"Gender"];
+                                }
+                            }
+                            if(regID && [regID text]){
+                                [participantDict setObject:[regID text] forKey:@"RegistrationID"];
+                            }
+                            if(bib && [bib text]){
+                                [participantDict setObject:[bib text] forKey:@"Bib"];
+                            }
+                            if(age && [age text]){
+                                [participantDict setObject:[age text] forKey:@"Age"];
+                            }
+                            
+                            [participants addObject: participantDict];
+                        }
+                    }
+                }
+                
+            }
+            
+            dispatch_async(dispatch_get_main_queue(),^(){responseBlock(participants);});
+        };
+        
+        [NSURLConnection sendAsynchronousRequest:request queue:[[NSOperationQueue alloc] init] completionHandler:completion];
+    }
+}
+
+/* Attempt to log in with the given email and password. Multiple responses
+   can be returned: no connection, invalid email, invalid pass, success. If
+   successful, then the secret and key are stored inside the RSUModel object. */
 - (void)attemptLoginWithEmail:(NSString *)em pass:(NSString *)pa response:(void (^)(RSUConnectionResponse))responseBlock{
     if(isOffline){
         dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUNoConnection);});
@@ -219,6 +322,9 @@ static RSUModel *model = nil;
     }
 }
 
+/* Add the array of finishing times to the end of the existing timing
+   data on the results server. If the results are recieved out of order,
+   then save the last_finishing_time_id and retry uploading. */
 - (void)addFinishingTimes:(NSArray *)finishingTimes response:(void (^)(RSUConnectionResponse))responseBlock{
     if(isOffline){
         dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUNoConnection);});
@@ -285,6 +391,9 @@ static RSUModel *model = nil;
     }
 }
 
+/* Add finishing bib numbers to the end of the existing chute data on the
+   results server. If they are recieved out of order, save the last_finishing_place
+   and retry uploading. */
 - (void)addFinishingBibs:(NSArray *)finishingBibs response:(void (^)(RSUConnectionResponse))responseBlock{
     if(isOffline){
         dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUNoConnection);});
@@ -350,6 +459,68 @@ static RSUModel *model = nil;
     }
 }
 
+/* Add a participant into the listings for a given event. Data expected in participant
+   dictionary is: FirstName, LastName, Gender, Bib, Age, City, State */
+- (void)addParticipants:(NSArray *)participants response:(void (^)(RSUConnectionResponse, NSString *))responseBlock{
+    if(isOffline){
+        dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUNoConnection, nil);});
+    }else{
+        NSMutableArray *actualParticipants = [[NSMutableArray alloc] init];
+        for(int x = 0; x < [participants count]; x++){
+            NSMutableDictionary *actualParticipant = [[NSMutableDictionary alloc] init];
+            NSDictionary *addressDict = [[NSDictionary alloc] initWithObjectsAndKeys:[[participants objectAtIndex: x] objectForKey:@"State"], @"state", [[participants objectAtIndex: x] objectForKey:@"City"], @"city", nil];
+            NSDictionary *userDict = [[NSDictionary alloc] initWithObjectsAndKeys:[[participants objectAtIndex: x] objectForKey:@"FirstName"], @"first_name", [[participants objectAtIndex: x] objectForKey:@"LastName"], @"last_name", addressDict, @"address", nil];
+            
+            [actualParticipant setObject:userDict forKey:@"user"];
+            [actualParticipant setObject:[[participants objectAtIndex: x] objectForKey:@"Age"] forKey:@"age"];
+            [actualParticipant setObject:[[participants objectAtIndex: x] objectForKey:@"Gender"] forKey:@"gender"];
+            [actualParticipant setObject:[[participants objectAtIndex: x] objectForKey:@"Bib"] forKey:@"bib_num"];
+            [actualParticipants addObject: actualParticipant];
+        }
+        
+        NSString *url = [NSString stringWithFormat:@"https://runsignup.com/rest/Race/%@/participants?event_id=%@&tmp_key=%@&tmp_secret=%@&format=xml", currentRaceID, currentEventID, key, secret];
+        
+        NSString *jsonRequest = [NSString stringWithFormat: @"{\"participants\": %@}", [actualParticipants JSONRepresentation]];
+        
+        NSString *post = [NSString stringWithFormat:@"request_format=json&request=%@", jsonRequest];
+        NSData *postData = [post dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
+        NSString *postLength = [NSString stringWithFormat:@"%d", [postData length]];
+        
+        NSMutableURLRequest *request = [[[NSMutableURLRequest alloc] init] autorelease];
+        [request setURL:[NSURL URLWithString:url]];
+        [request setHTTPMethod:@"POST"];
+        [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
+        [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+        [request setHTTPBody:postData];
+        
+        void (^completion)(NSURLResponse *,NSData *,NSError *) = ^(NSURLResponse *response,NSData *urlData,NSError *error){
+            if(!urlData){
+                NSLog(@"URLData is nil");
+                dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUNoConnection, nil);});
+                return;
+            }
+            
+            NSString *string = [[NSString alloc] initWithData:urlData encoding:NSUTF8StringEncoding];
+            NSLog(string);
+            
+            RXMLElement *rootXML = [[RXMLElement alloc] initFromXMLData:urlData];
+            if([[rootXML tag] isEqualToString: @"participant"]){
+                RXMLElement *regID = [rootXML child: @"registration_id"];
+                if(regID && [regID text]){
+                    dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUSuccess, [regID text]);});
+                    return;
+                }
+            }
+            
+            dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUNoConnection, nil);});
+        };
+        
+        [NSURLConnection sendAsynchronousRequest:request queue:[[NSOperationQueue alloc] init] completionHandler:completion];
+    }
+}
+
+/* Detect differences between data on the device and data on the server. If changes
+   are detected, allow the user to download, upload or delete all data. */
 - (void)detectDifferencesBetweenLocalAndOnline:(NSArray *)records type:(int)type response:(void (^)(RSUDifferences))responseBlock{
     if(isOffline){
         dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUDifferencesNone);});
@@ -409,6 +580,8 @@ static RSUModel *model = nil;
     }
 }
 
+/* Renew credentials every X amount of time so the user does not get logged out due to
+   inactivity. */
 - (int)renewCredentials{
     if(isOffline){
         return RSUNoConnection;
@@ -444,6 +617,8 @@ static RSUModel *model = nil;
     }
 }
 
+/* Create a new result set with a given name. Result set will automatically
+   be set as the current result set and will be empty. */
 - (void)createNewResultSet:(NSString *)name response:(void (^)(RSUConnectionResponse))responseBlock{
     if(isOffline){
         dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUNoConnection);});
@@ -492,6 +667,7 @@ static RSUModel *model = nil;
     }
 }
 
+/* Delete a given result set with a resultSetId. */
 - (void)deleteResultSet:(NSString *)resultSetID response:(void (^)(RSUConnectionResponse))responseBlock{
     if(isOffline){
         dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUNoConnection);});
@@ -533,6 +709,10 @@ static RSUModel *model = nil;
     }
 }
 
+/* Delete data from the results server given a category. 
+   RSUClearResults will call clear-results and delete all the matchings for a result set id.
+   RSUClearTimer will call delete-timing-data and delete timing but leave result sets alone.
+   RSUClearCheck and RSUClearChute do the same as RSUClearTimer but for respective data. */
 - (void)deleteResults:(RSUClearCategory)category response:(void (^)(RSUConnectionResponse))responseBlock{
     if(isOffline){
         dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUNoConnection);});
@@ -592,6 +772,8 @@ static RSUModel *model = nil;
     }
 }
 
+/* Log out the current user in a synchronous manner to tie up any loose ends. Not completely
+   necessary but good practice all the same */
 - (void)logout{
     if(!isOffline){
         NSString *url = [NSString stringWithFormat:@"https://runsignup.com/rest/logout?tmp_key=%@&tmp_secret=%@", key, secret];

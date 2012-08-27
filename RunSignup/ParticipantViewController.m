@@ -1,18 +1,31 @@
 //
 //  ParticipantViewController.m
-//  RunSignup
+//  RunSignUp
 //
-//  Created by Billy Connolly on 8/23/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+// Copyright 2012 RunSignUp
 //
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
 #import "ParticipantViewController.h"
 #import "ParticipantTableViewCell.h"
 #import "ParticipantDetailViewController.h"
+#import "RSUModel.h"
 
 @implementation ParticipantViewController
 @synthesize table;
 @synthesize participants;
+@synthesize rli;
+@synthesize row;
 @synthesize raceName;
 @synthesize eventName;
 
@@ -21,9 +34,10 @@
     if (self) {
         // Custom initialization
         self.title = @"Participants";
-        self.participants = [[NSMutableArray alloc] init];
+        self.participants = nil;
+        self.row = nil;
         
-        for(int x = 0; x < 7; x++){
+        /*for(int x = 0; x < 7; x++){
             NSMutableDictionary *participant = [[NSMutableDictionary alloc] init];
             [participant setObject: [[NSArray arrayWithObjects:@"Alex", @"Maria", @"June", @"Samantha", @"Martin", @"Justin", @"William", nil] objectAtIndex: x] forKey:@"FirstName"];
             [participant setObject: [[NSArray arrayWithObjects:@"Wang", @"San Jose", @"Schweikert", @"Schmalbach", @"Stankeveciute", @"Muise", @"Connolly", nil] objectAtIndex: x] forKey:@"LastName"];
@@ -33,7 +47,7 @@
             [participant setObject: [[NSArray arrayWithObjects:@"Moorestown", @"Collingswood", @"Schenectady", @"Philadelphia", @"Austin", @"San Fransisco", @"Cherry Hill", nil] objectAtIndex: x] forKey:@"City"];
             [participant setObject: [[NSArray arrayWithObjects:@"NJ", @"NJ", @"NY", @"PA", @"TX", @"CA", @"NJ", nil] objectAtIndex: x] forKey:@"State"];
             [participants addObject: participant];
-        }
+        }*/
     }
     return self;
 }
@@ -48,16 +62,70 @@
     [self.navigationItem setLeftBarButtonItem: cancelButton];
     [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:editButton, addButton, nil]];
     
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+        self.rli = [[RoundedLoadingIndicator alloc] initWithXLocation:160 YLocation:100];
+    else
+        self.rli = [[RoundedLoadingIndicator alloc] initWithXLocation:432 YLocation:100];
+
+    [[rli label] setText:@"Retrieving list..."];
+    [self.view addSubview: rli];
+    
+    [rli fadeIn];
+    
+    void (^response)(NSMutableArray *) = ^(NSMutableArray *list){
+        self.participants = list;
+        if([list count] == 250){
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There are too many participants in the list for a mobile device to edit. Please make any changes or edits on a desktop or laptop computer." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+            [alert show];
+            [alert release];
+        }
+        [table reloadData];
+        [rli fadeOut];
+    };
+    
+    [[RSUModel sharedModel] attemptRetrieveParticipants:response];
+    
     [cancelButton release];
     [editButton release];
     [addButton release];
 }
 
-- (void)createParticipantWithDictionary:(NSDictionary *)dict{
-    [participants addObject: [[NSMutableDictionary alloc] initWithDictionary: dict]];
-    [table reloadData];
-    NSIndexPath* indexPath = [NSIndexPath indexPathForRow:[participants count] - 1 inSection:0];
-    [table scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+- (void)viewDidAppear:(BOOL)animated{
+    if(row != nil){
+        [table deselectRowAtIndexPath:row animated:YES];
+        self.row = nil;
+    }
+}
+
+- (void)createParticipantWithDictionary:(NSDictionary *)dict response:(void (^)(RSUConnectionResponse))responseBlock{
+    NSString *key = [NSString stringWithFormat: @"%@ %@", [dict objectForKey:@"LastName"], [dict objectForKey:@"FirstName"]];
+    
+    NSUInteger rowToAdd = [participants count];
+    for(int x = 0; x < [participants count]; x++){
+        NSDictionary *partDict = [participants objectAtIndex: x];
+        NSString *partKey = [NSString stringWithFormat: @"%@ %@", [partDict objectForKey:@"LastName"], [partDict objectForKey:@"FirstName"]];
+        
+        if([key compare: partKey] == NSOrderedAscending){
+            rowToAdd = x;
+            break;
+        }
+    }
+    
+    void (^response)(RSUConnectionResponse, NSString *) = ^(RSUConnectionResponse didSucceed, NSString *regID){
+        if(didSucceed == RSUSuccess){
+            if(regID){
+                NSMutableDictionary *newParticipant = [[NSMutableDictionary alloc] initWithDictionary: dict];
+                [newParticipant setObject:regID forKey:@"RegistrationID"];
+                [participants insertObject:newParticipant atIndex:rowToAdd];
+                self.row = [NSIndexPath indexPathForRow:rowToAdd inSection:0];
+                [table reloadData];
+                [table selectRowAtIndexPath:row animated:NO scrollPosition:UITableViewScrollPositionMiddle];
+            }
+        }
+        dispatch_async(dispatch_get_main_queue(),^(){responseBlock(didSucceed);});
+    };
+    
+    [[RSUModel sharedModel] addParticipants:[NSArray arrayWithObject:dict] response:response];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -110,7 +178,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath{
-    ParticipantDetailViewController *participantDetailViewController = [[ParticipantDetailViewController alloc] initWithNibName:@"ParticipantDetailViewController" bundle:nil];
+    ParticipantDetailViewController *participantDetailViewController = [[ParticipantDetailViewController alloc] initWithNibName:@"ParticipantDetailViewController" bundle:nil isCreating:NO];
     [self.navigationController pushViewController:participantDetailViewController animated:YES];
 }
 
@@ -134,7 +202,7 @@
 }
 
 - (IBAction)addParticipant:(id)sender{
-    ParticipantDetailViewController *participantDetailViewController = [[ParticipantDetailViewController alloc] initWithNibName:@"ParticipantDetailViewController" bundle:nil];
+    ParticipantDetailViewController *participantDetailViewController = [[ParticipantDetailViewController alloc] initWithNibName:@"ParticipantDetailViewController" bundle:nil isCreating:YES];
     [participantDetailViewController setDelegate: self];
     [self.navigationController pushViewController:participantDetailViewController animated:YES];
 }

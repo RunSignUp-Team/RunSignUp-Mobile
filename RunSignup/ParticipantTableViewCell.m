@@ -1,10 +1,20 @@
 //
 //  ParticipantTableViewCell.m
-//  RunSignup
+//  RunSignUp
 //
-//  Created by Billy Connolly on 8/23/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+// Copyright 2012 RunSignUp
 //
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
 #import "ParticipantTableViewCell.h"
 
@@ -113,7 +123,7 @@
             [stateLabel setBackgroundColor: [UIColor clearColor]];
             [self.contentView addSubview: stateLabel];
             
-            d1 = [[UIView alloc] initWithFrame: CGRectMake(268, 0, 1, 44)];
+            d1 = [[UIView alloc] initWithFrame: CGRectMake(264, 0, 1, 44)];
             d2 = [[UIView alloc] initWithFrame: CGRectMake(558, 0, 1, 44)];
             d3 = [[UIView alloc] initWithFrame: CGRectMake(580, 0, 1, 44)];
             d4 = [[UIView alloc] initWithFrame: CGRectMake(638, 0, 1, 44)];

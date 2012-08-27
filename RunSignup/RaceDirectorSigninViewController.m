@@ -1,10 +1,20 @@
 //
 //  RaceDirectorSigninViewController.m
-//  RunSignup
+//  RunSignUp
 //
-//  Created by Billy Connolly on 4/26/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+// Copyright 2012 RunSignUp
 //
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
 #import "RaceDirectorSigninViewController.h"
 #import "MainMenuViewController.h"
@@ -102,7 +112,7 @@
                     [alert release];
                     [rli fadeOut];
                 }else{
-                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignUp. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
                     [alert show];
                     [alert release];
                     [rli fadeOut];
