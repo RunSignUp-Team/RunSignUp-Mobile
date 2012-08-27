@@ -170,7 +170,7 @@
 }
 
 - (IBAction)other:(id)sender{
-    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Other" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"View Results Online", @"Add/Edit Participant Data", @"Delete All Data and Results", nil];
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Other" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"View Results Online", @"Manage Participants", @"Delete All Data and Results", nil];
     [actionSheet showInView: self.view];
     [actionSheet release];
 }
@@ -201,10 +201,10 @@
         [[RSUModel sharedModel] deleteResults:RSUClearChute response:response];
         [[RSUModel sharedModel] deleteResults:RSUClearResults response:response];
         
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey: @"TimerStartDate"];
+        /*[[NSUserDefaults standardUserDefaults] removeObjectForKey: @"TimerStartDate"];
         [[NSUserDefaults standardUserDefaults] removeObjectForKey: @"CurrentTimerFile"];
         [[NSUserDefaults standardUserDefaults] removeObjectForKey: @"CurrentChuteFile"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
+        [[NSUserDefaults standardUserDefaults] synchronize];*/
     }
 }
 

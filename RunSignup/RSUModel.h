@@ -23,8 +23,11 @@ typedef enum{
 } RSUClearCategory;
 
 typedef enum{
-    RSUNoDifferencesExist = 8,
-    RSUDifferencesExist
+    RSUDifferencesNoConnection = 8,
+    RSUDifferencesNone,
+    RSUDifferencesServerEmpty,
+    RSUDifferencesClientEmpty,
+    RSUDifferencesBothDifferent
 } RSUDifferences;
 
 @interface RSUModel : NSObject{
@@ -43,6 +46,8 @@ typedef enum{
     
     NSTimer *renewTimer;
     
+    NSMutableArray *downloadedRecords;
+    
     BOOL isOffline;
 }
 
@@ -58,6 +63,8 @@ typedef enum{
 @property (nonatomic, retain) NSString *lastBibNumber;
 
 @property (nonatomic, retain) NSTimer *renewTimer;
+
+@property (nonatomic, retain) NSMutableArray *downloadedRecords;
 
 @property BOOL isOffline;
 

@@ -29,46 +29,53 @@
         self.title = @"Timer";
         started = NO;
         
-        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-        NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:(NSString *)[paths objectAtIndex:0] error:nil];
         self.fileToSave = @"";
         
-        NSString *currentTimerFile = [[NSUserDefaults standardUserDefaults] stringForKey: @"CurrentTimerFile"];
-        if(currentTimerFile != nil){
-            self.fileToSave = currentTimerFile;
-            NSString *data =  [NSString stringWithContentsOfFile:fileToSave encoding:NSUTF8StringEncoding error:nil];
-            started = YES;
-            if(data != nil){
-                self.records = (NSMutableArray *)[(NSDictionary *)[data JSONValue] objectForKey:@"Data"];
-                if([records count] == 0){
-                    self.records = [[NSMutableArray alloc] init];
-                }
-            }else{
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"We detected a timing in progress, but were unable to load the data. The timer will not be reset." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
-                [alert show];
-                [alert release];
-                
+        [self findDestinationFile];
+    }
+    return self;
+}
+
+- (void)findDestinationFile{
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:(NSString *)[paths objectAtIndex:0] error:nil];
+    
+    NSString *currentTimerFile = [[NSUserDefaults standardUserDefaults] stringForKey: @"CurrentTimerFile"];
+    if(currentTimerFile != nil){
+        self.fileToSave = currentTimerFile;
+        NSString *data =  [NSString stringWithContentsOfFile:fileToSave encoding:NSUTF8StringEncoding error:nil];
+        started = YES;
+        if(data != nil){
+            self.records = (NSMutableArray *)[(NSDictionary *)[data JSONValue] objectForKey:@"Data"];
+            if([records count] == 0){
                 self.records = [[NSMutableArray alloc] init];
             }
         }else{
-            int number = 0;
-            while(YES){
-                BOOL numberIsAvailable = YES;
-                for(NSString *string in files){
-                    if([string isEqualToString:[NSString stringWithFormat:@"%i.json", number]]){
-                        numberIsAvailable = NO;
-                    }
-                }
-                if(numberIsAvailable){
-                    self.fileToSave = [NSString stringWithFormat:@"%@/%i.json", [paths objectAtIndex:0], number];
-                    break;
-                }
-                number++;
+            if([[RSUModel sharedModel] isOffline]){
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"We detected a timing in progress, but were unable to load the data. The timer will not be reset." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+                [alert show];
+                [alert release];
             }
+            
             self.records = [[NSMutableArray alloc] init];
         }
+    }else{
+        int number = 0;
+        while(YES){
+            BOOL numberIsAvailable = YES;
+            for(NSString *string in files){
+                if([string isEqualToString:[NSString stringWithFormat:@"%i.json", number]]){
+                    numberIsAvailable = NO;
+                }
+            }
+            if(numberIsAvailable){
+                self.fileToSave = [NSString stringWithFormat:@"%@/%i.json", [paths objectAtIndex:0], number];
+                break;
+            }
+            number++;
+        }
+        self.records = [[NSMutableArray alloc] init];
     }
-    return self;
 }
 
 - (void)viewDidLoad{
@@ -91,6 +98,7 @@
     
     [startButton setBackgroundImage:stretchedBlueButton forState:UIControlStateNormal];
     [startButton setBackgroundImage:stretchedBlueButtonTap forState:UIControlStateHighlighted];
+    [startButton setBackgroundImage:stretchedGrayButton forState:UIControlStateDisabled];
     [recordButton setBackgroundImage:stretchedRedButton forState:UIControlStateNormal];
     [recordButton setBackgroundImage:stretchedRedButtonTap forState:UIControlStateHighlighted];
     [recordButton setBackgroundImage:stretchedGrayButton forState:UIControlStateDisabled];
@@ -119,33 +127,16 @@
         [timerLabel startTiming];
         [timerLabel setStartDate: [[NSUserDefaults standardUserDefaults] objectForKey: @"TimerStartDate"]];
         [recordButton setEnabled:YES];
-        
-        /*void (^response)(RSUDifferences) = ^(RSUDifferences differences){
-            if(differences == RSUNoDifferencesExist){
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
-                [alert show];
-                [alert release];
-            }else if(differences == RSUDifferencesExist){
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Data sync problem" message:@"There is more timing data on the server than the copy you have saved to the device. Would you like to download the timing data and replace your copy?" delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:@"Yes", nil];
-                [alert show];
-                [alert release];
-            }
+    }
+    
+    // Detect differences
+    if(![[RSUModel sharedModel] isOffline]){
+        void (^response)(RSUDifferences) = ^(RSUDifferences differences){
+            currentDifferences = differences;
+            [self showDownloadResultsAlert];
         };
         
-        [[RSUModel sharedModel] detectDifferencesBetweenLocalAndOnline:(NSArray *)self.records type:0 response:response];*/
-    }else{
-        if(![[RSUModel sharedModel] isOffline]){
-            void (^response)(RSUConnectionResponse) = ^(RSUConnectionResponse didSucceed){
-                if(didSucceed == RSUNoConnection){
-                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
-                    [alert show];
-                    [alert release];
-                }
-            };
-            
-            // Clear existing (if any) timing data currently in the individual_result_set
-            [[RSUModel sharedModel] deleteResults:RSUClearTimer response:response];
-        }
+        [[RSUModel sharedModel] detectDifferencesBetweenLocalAndOnline:(NSArray *)self.records type:0 response:response];
     }
 }
 
@@ -230,10 +221,68 @@
     }
 }
 
+- (void)showDownloadResultsAlert{
+    if(currentDifferences == RSUDifferencesNoConnection){
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Could not connect to RunSignUp. The data on your device and on the server for this event may not be in sync." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+        [alert show];
+        [alert release];
+    }else if(currentDifferences == RSUDifferencesBothDifferent){
+        downloadResultsAlert = [[UIAlertView alloc] initWithTitle:@"Data out of sync" message:@"The data on your device and on the results server is different. Would you like to download the server's results or upload yours?" delegate:self cancelButtonTitle:@"Download Results" otherButtonTitles:@"Delete Data", @"Upload Results", nil];
+        [downloadResultsAlert show];
+        [downloadResultsAlert release];
+        NSLog(@"Server and client both have different numbers of records and neither is empty");
+    }else if(currentDifferences == RSUDifferencesClientEmpty){
+        downloadResultsAlert = [[UIAlertView alloc] initWithTitle:@"Data out of sync" message:@"The results server has data for this event, but your device has none. Would you like to download the server's results and continue timing from there?" delegate:self cancelButtonTitle:@"Yes, download" otherButtonTitles:@"Delete Data", nil];
+        [downloadResultsAlert show];
+        [downloadResultsAlert release];
+        NSLog(@"Server has data, client has none");
+    }else if(currentDifferences == RSUDifferencesServerEmpty){
+        downloadResultsAlert = [[UIAlertView alloc] initWithTitle:@"Data out of sync" message:@"Your device has data for this event, but the server has none. Would you like to upload your results and continue timing from there?" delegate:self cancelButtonTitle:@"Yes, upload" otherButtonTitles:@"Delete data", nil];
+        [downloadResultsAlert show];
+        [downloadResultsAlert release];
+        NSLog(@"Client has data, server has none");
+    }else{
+        NSLog(@"No differences between server and client");
+    }
+}
+
 // Delegate method for making sure the user actually wants to end the race
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex{
+    NSLog(@"Button: %i", buttonIndex);
     if(alertView == downloadResultsAlert){
-        
+        if(buttonIndex == 0){
+            if(currentDifferences == RSUDifferencesBothDifferent || currentDifferences == RSUDifferencesClientEmpty){
+                [self downloadResults];
+            }else{
+                [self reuploadResults];
+            }
+        }else if(buttonIndex == 1){
+            deleteResultsAlert = [[UIAlertView alloc] initWithTitle:@"Delete Results?" message:@"Are you sure you wish to delete all timing data for this event on the server and on your device?" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
+            [deleteResultsAlert show];
+            [deleteResultsAlert release];
+        }else if(buttonIndex == 2){
+            [self reuploadResults];
+        }
+    }else if(alertView == deleteResultsAlert){
+        if(buttonIndex == 1){
+            if(![[RSUModel sharedModel] isOffline]){
+                void (^response)(RSUConnectionResponse) = ^(RSUConnectionResponse didSucceed){
+                    if(didSucceed == RSUNoConnection){
+                        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+                        [alert show];
+                        [alert release];
+                    }else{
+                        
+                        [self findDestinationFile];
+                    }
+                };
+                
+                [[RSUModel sharedModel] deleteResults:RSUClearTimer response:response];
+            }
+        }else{
+            // User did not want to delete, send them back to the previous menu
+            [self showDownloadResultsAlert];
+        }
     }else{
         if(buttonIndex == 1){
             [timerLabel stopTiming];
@@ -243,7 +292,7 @@
             
             [[NSUserDefaults standardUserDefaults] removeObjectForKey: @"TimerStartDate"];
             [[NSUserDefaults standardUserDefaults] removeObjectForKey: @"CurrentTimerFile"];
-            [[NSUserDefaults standardUserDefaults] synchronize];
+            [[NSUserDefaults standardUserDefaults] synchronize];        
         }
     }
 }
@@ -287,6 +336,29 @@
     [self saveToFile];
     if(![[RSUModel sharedModel] isOffline]){
         [self reuploadResults];
+    }
+}
+
+- (void)downloadResults{
+    if([[RSUModel sharedModel] downloadedRecords]){
+        NSMutableArray *downloadedRecords = [[RSUModel sharedModel] downloadedRecords];
+        
+        if([records count] != 0)
+            self.records = [[NSMutableArray alloc] init];
+        
+        for(int x = 0; x < [downloadedRecords count]; x++){
+            NSMutableDictionary *record = [[NSMutableDictionary alloc] init];
+            [record setObject:[NSString stringWithFormat:@"%.4i", x + 1] forKey:@"Place"];
+            [record setObject:[downloadedRecords objectAtIndex: x] forKey:@"FTime"];
+            [records insertObject:record atIndex:0];
+        }
+        
+        [table reloadData];
+        [self saveToFile];
+    }else{
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"No results could be downloaded." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+        [alert show];
+        [alert release];
     }
 }
 

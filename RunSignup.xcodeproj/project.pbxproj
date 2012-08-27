@@ -22,8 +22,10 @@
 		7728FE7915D9C68600F41E0A /* MMTimerIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7728FE7315D9C68600F41E0A /* MMTimerIcon.png */; };
 		7728FE7A15D9C68600F41E0A /* MMTimerIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7728FE7415D9C68600F41E0A /* MMTimerIcon@2x.png */; };
 		7740444A15E68E8C00ABFE28 /* ParticipantViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7740444815E68E8C00ABFE28 /* ParticipantViewController.m */; };
-		7740444B15E68E8C00ABFE28 /* ParticipantViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7740444915E68E8C00ABFE28 /* ParticipantViewController.xib */; };
+		7740444B15E68E8C00ABFE28 /* ParticipantViewController~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7740444915E68E8C00ABFE28 /* ParticipantViewController~iphone.xib */; };
 		7740444F15E698FF00ABFE28 /* ParticipantTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7740444E15E698FF00ABFE28 /* ParticipantTableViewCell.m */; };
+		7740445315E6E47700ABFE28 /* ParticipantDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7740445115E6E47600ABFE28 /* ParticipantDetailViewController.m */; };
+		7740445415E6E47700ABFE28 /* ParticipantDetailViewController~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7740445215E6E47600ABFE28 /* ParticipantDetailViewController~iphone.xib */; };
 		7758098715E1E60500B8EF35 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7758098615E1E60500B8EF35 /* MessageUI.framework */; };
 		775A8A281557221000FAC1F3 /* ArchiveDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 775A8A261557221000FAC1F3 /* ArchiveDetailViewController.m */; };
 		775FB0A11597B170001E9075 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 775FB0A01597B170001E9075 /* QuartzCore.framework */; };
@@ -38,6 +40,8 @@
 		7761D0941544DAA600C6BB3F /* Gears.png in Resources */ = {isa = PBXBuildFile; fileRef = 7761D0921544DAA600C6BB3F /* Gears.png */; };
 		7761D0951544DAA600C6BB3F /* Gears@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7761D0931544DAA600C6BB3F /* Gears@2x.png */; };
 		7761D09A1544DBBB00C6BB3F /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7761D0981544DBBA00C6BB3F /* SettingsViewController.m */; };
+		7769691115EADF8A00AC0327 /* ParticipantViewController~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7769691015EADF8A00AC0327 /* ParticipantViewController~ipad.xib */; };
+		7769691415EAE0EA00AC0327 /* ParticipantDetailViewController~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7769691315EAE0EA00AC0327 /* ParticipantDetailViewController~ipad.xib */; };
 		777A50561549F5BD004AC93A /* RaceDirectorSigninViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 777A50541549F5BD004AC93A /* RaceDirectorSigninViewController.m */; };
 		777C1FE4155B2EB3000EEBB4 /* EditIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 777C1FE2155B2EB3000EEBB4 /* EditIcon.png */; };
 		777C1FE5155B2EB3000EEBB4 /* EditIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 777C1FE3155B2EB3000EEBB4 /* EditIcon@2x.png */; };
@@ -194,9 +198,12 @@
 		7728FE7415D9C68600F41E0A /* MMTimerIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MMTimerIcon@2x.png"; sourceTree = "<group>"; };
 		7740444715E68E8C00ABFE28 /* ParticipantViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParticipantViewController.h; sourceTree = "<group>"; };
 		7740444815E68E8C00ABFE28 /* ParticipantViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParticipantViewController.m; sourceTree = "<group>"; };
-		7740444915E68E8C00ABFE28 /* ParticipantViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ParticipantViewController.xib; sourceTree = "<group>"; };
+		7740444915E68E8C00ABFE28 /* ParticipantViewController~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "ParticipantViewController~iphone.xib"; sourceTree = "<group>"; };
 		7740444D15E698FF00ABFE28 /* ParticipantTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParticipantTableViewCell.h; sourceTree = "<group>"; };
 		7740444E15E698FF00ABFE28 /* ParticipantTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParticipantTableViewCell.m; sourceTree = "<group>"; };
+		7740445015E6E47600ABFE28 /* ParticipantDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParticipantDetailViewController.h; sourceTree = "<group>"; };
+		7740445115E6E47600ABFE28 /* ParticipantDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParticipantDetailViewController.m; sourceTree = "<group>"; };
+		7740445215E6E47600ABFE28 /* ParticipantDetailViewController~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "ParticipantDetailViewController~iphone.xib"; sourceTree = "<group>"; };
 		7758098615E1E60500B8EF35 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		775A8A251557221000FAC1F3 /* ArchiveDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArchiveDetailViewController.h; sourceTree = "<group>"; };
 		775A8A261557221000FAC1F3 /* ArchiveDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArchiveDetailViewController.m; sourceTree = "<group>"; };
@@ -214,6 +221,8 @@
 		7761D0931544DAA600C6BB3F /* Gears@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Gears@2x.png"; sourceTree = "<group>"; };
 		7761D0971544DBBA00C6BB3F /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		7761D0981544DBBA00C6BB3F /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
+		7769691015EADF8A00AC0327 /* ParticipantViewController~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "ParticipantViewController~ipad.xib"; sourceTree = "<group>"; };
+		7769691315EAE0EA00AC0327 /* ParticipantDetailViewController~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "ParticipantDetailViewController~ipad.xib"; sourceTree = "<group>"; };
 		777A50531549F5BD004AC93A /* RaceDirectorSigninViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RaceDirectorSigninViewController.h; sourceTree = "<group>"; };
 		777A50541549F5BD004AC93A /* RaceDirectorSigninViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RaceDirectorSigninViewController.m; sourceTree = "<group>"; };
 		777C1FE2155B2EB3000EEBB4 /* EditIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = EditIcon.png; sourceTree = "<group>"; };
@@ -437,7 +446,12 @@
 				77B1EE0C1599072B0058C57F /* ChuteViewController~ipad.xib */,
 				7740444715E68E8C00ABFE28 /* ParticipantViewController.h */,
 				7740444815E68E8C00ABFE28 /* ParticipantViewController.m */,
-				7740444915E68E8C00ABFE28 /* ParticipantViewController.xib */,
+				7740444915E68E8C00ABFE28 /* ParticipantViewController~iphone.xib */,
+				7769691015EADF8A00AC0327 /* ParticipantViewController~ipad.xib */,
+				7740445015E6E47600ABFE28 /* ParticipantDetailViewController.h */,
+				7740445115E6E47600ABFE28 /* ParticipantDetailViewController.m */,
+				7740445215E6E47600ABFE28 /* ParticipantDetailViewController~iphone.xib */,
+				7769691315EAE0EA00AC0327 /* ParticipantDetailViewController~ipad.xib */,
 			);
 			name = "Main Views";
 			sourceTree = "<group>";
@@ -946,7 +960,10 @@
 				7728FE7A15D9C68600F41E0A /* MMTimerIcon@2x.png in Resources */,
 				771FE9E815E4227D005A9DCB /* MMOtherIcon.png in Resources */,
 				771FE9E915E4227D005A9DCB /* MMOtherIcon@2x.png in Resources */,
-				7740444B15E68E8C00ABFE28 /* ParticipantViewController.xib in Resources */,
+				7740444B15E68E8C00ABFE28 /* ParticipantViewController~iphone.xib in Resources */,
+				7740445415E6E47700ABFE28 /* ParticipantDetailViewController~iphone.xib in Resources */,
+				7769691115EADF8A00AC0327 /* ParticipantViewController~ipad.xib in Resources */,
+				7769691415EAE0EA00AC0327 /* ParticipantDetailViewController~ipad.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -987,6 +1004,7 @@
 				77E0C12E15D99B2B00F6A37D /* SBJsonWriter.m in Sources */,
 				7740444A15E68E8C00ABFE28 /* ParticipantViewController.m in Sources */,
 				7740444F15E698FF00ABFE28 /* ParticipantTableViewCell.m in Sources */,
+				7740445315E6E47700ABFE28 /* ParticipantDetailViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

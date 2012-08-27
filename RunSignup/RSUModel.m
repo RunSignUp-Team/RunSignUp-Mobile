@@ -23,6 +23,7 @@ static RSUModel *model = nil;
 @synthesize lastFinishingTimeID;
 @synthesize lastBibNumber;
 @synthesize renewTimer;
+@synthesize downloadedRecords;
 @synthesize isOffline;
 
 - (id)init{
@@ -351,7 +352,7 @@ static RSUModel *model = nil;
 
 - (void)detectDifferencesBetweenLocalAndOnline:(NSArray *)records type:(int)type response:(void (^)(RSUDifferences))responseBlock{
     if(isOffline){
-        dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUNoDifferencesExist);});
+        dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUDifferencesNone);});
     }else{
         NSString *url;
         if(type == 0)
@@ -367,29 +368,41 @@ static RSUModel *model = nil;
         [request setHTTPMethod:@"GET"];
         
         void (^completion)(NSURLResponse *,NSData *,NSError *) = ^(NSURLResponse *response,NSData *urlData,NSError *error){    
-            NSString *string = [[NSString alloc] initWithData:urlData encoding:NSUTF8StringEncoding];
-            NSLog([string description]);
+            self.downloadedRecords = [[NSMutableArray alloc] init];
             
-            NSMutableArray *serverRecords = [[NSMutableArray alloc] init];
-            if(urlData != nil){
-                RXMLElement *rootXML = [[RXMLElement alloc] initFromXMLData:urlData];
-                if([[rootXML tag] isEqualToString: @"finishing_times"]){
-                    NSArray *dataTotal = [rootXML children:@"finishing_times"];
-                    if(dataTotal && [dataTotal count] > 0){
-                        for(int x = 0; x < [dataTotal count]; x++){
-                            RXMLElement *data = [[dataTotal objectAtIndex:x] child:@"time"];
-                            if([data text] != nil){
-                                [serverRecords addObject: [data text]];
-                            }
+            if(!urlData){
+                NSLog(@"URLData is nil");
+                dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUNoConnection);});
+                return;
+            }
+            
+            NSString *string = [[NSString alloc] initWithData:urlData encoding:NSUTF8StringEncoding];
+            NSLog(string);
+            
+            RXMLElement *rootXML = [[RXMLElement alloc] initFromXMLData:urlData];
+            if([[rootXML tag] isEqualToString: @"finishing_times"]){
+                NSArray *dataTotal = [rootXML children:@"finishing_time"];
+                if(dataTotal && [dataTotal count] > 0){
+                    for(int x = 0; x < [dataTotal count]; x++){
+                        RXMLElement *data = [[dataTotal objectAtIndex:x] child:@"time"];
+                        if([data text] != nil){
+                            [downloadedRecords addObject: [data text]];
                         }
                     }
                 }
             }
             
-            if([serverRecords count] == [records count])
-                dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUNoDifferencesExist);});
-            else
-                dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUDifferencesExist);});
+            
+            if([downloadedRecords count] == [records count])
+                dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUDifferencesNone);});
+            else{
+                if([downloadedRecords count] == 0)
+                    dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUDifferencesServerEmpty);});
+                else if([records count] == 0)
+                    dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUDifferencesClientEmpty);});
+                else
+                    dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUDifferencesBothDifferent);});
+            }
         };
         
         [NSURLConnection sendAsynchronousRequest:request queue:[[NSOperationQueue alloc] init] completionHandler:completion];

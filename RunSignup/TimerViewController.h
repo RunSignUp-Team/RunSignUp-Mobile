@@ -20,6 +20,9 @@
     NSMutableArray *records;
     
     UIAlertView *downloadResultsAlert;
+    UIAlertView *deleteResultsAlert;
+    
+    RSUDifferences currentDifferences;
     
     BOOL started;
     NSString *raceID;
@@ -47,6 +50,10 @@
 - (void)updateRecordNumbersAfterDeletion;
 
 - (void)saveToFile;
+- (void)findDestinationFile;
+
+- (void)showDownloadResultsAlert;
 - (void)reuploadResults;
+- (void)downloadResults;
 
 @end
