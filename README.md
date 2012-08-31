@@ -17,6 +17,14 @@ You may also use the chute to collect bib numbers and places.
 
 ![Chute view](http://i.imgur.com/itlSM.png)
 
+You may manage participants using the "other" button on the main menu:
+
+![Participant management](http://i.imgur.com/MXUci.png)
+
+A glimpse of the add participant screen:
+
+![Add participant](http://i.imgur.com/sFk4L.png)
+
 The app will be released on the app store soon! For now, if you wish to try out the application yourself, go ahead and create an account on RunSignUp.com so you can get the most use out of the app. After you do this, make sure to download XCode (only available for Mac OS X), fork the code here on Github, and get build the project.
 
 The most useful code to take a look at is the RSUModel.h and RSUModel.m. This object handles all the interaction between the application and RunSignUp.com. It will internally handle all the credentials specifics, and all subsequent calls to the methods that require an event and raceid will use the ones specified when the user views SelectRaceViewController.
