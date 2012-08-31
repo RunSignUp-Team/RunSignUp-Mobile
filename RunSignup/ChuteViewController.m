@@ -42,51 +42,8 @@
     if (self) {
         self.title = @"Chute";
         
-        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-        NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:(NSString *)[paths objectAtIndex:0] error:nil];
         self.fileToSave = @"";
-        
-        NSString *currentChuteFile = [[NSUserDefaults standardUserDefaults] stringForKey: @"CurrentChuteFile"];
-        if(currentChuteFile != nil){
-            self.fileToSave = currentChuteFile;
-            NSString *data =  [NSString stringWithContentsOfFile:fileToSave encoding:NSUTF8StringEncoding error:nil];
-            
-            if(data != nil){
-                self.records = (NSMutableArray *)[(NSDictionary *)[data JSONValue] objectForKey:@"Data"];
-                if([records count] == 0){
-                    self.records = [[NSMutableArray alloc] init];
-                }
-            }
-        }else{
-            int number = 0;
-            while(YES){
-                BOOL numberIsAvailable = YES;
-                for(NSString *string in files){
-                    if([string isEqualToString:[NSString stringWithFormat:@"%i.json", number]]){
-                        numberIsAvailable = NO;
-                    }
-                }
-                if(numberIsAvailable){
-                    self.fileToSave = [NSString stringWithFormat:@"%@/%i.json", [paths objectAtIndex:0], number];
-                    break;
-                }
-                number++;
-            }
-            
-            self.records = [[NSMutableArray alloc] init];
-            if(![[RSUModel sharedModel] isOffline]){
-                void (^response)(RSUConnectionResponse) = ^(RSUConnectionResponse didSucceed){
-                    if(didSucceed == RSUNoConnection){
-                        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
-                        [alert show];
-                        [alert release];
-                    }
-                };
-                
-                // Clear existing (if any) chute data
-                [[RSUModel sharedModel] deleteResults:RSUClearChute response:response];
-            }
-        }
+        [self findDestinationFile];
         
         self.zbarReaderViewController = [[ZBarReaderViewController alloc] init];
         zbarReaderViewController.readerDelegate = self;
@@ -95,6 +52,48 @@
         [zbarReaderViewController.view addSubview: rbv];
     }
     return self;
+}
+
+- (void)findDestinationFile{
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:(NSString *)[paths objectAtIndex:0] error:nil];
+    
+    NSString *currentChuteFile = [[NSUserDefaults standardUserDefaults] stringForKey: @"CurrentChuteFile"];
+    if(currentChuteFile != nil){
+        self.fileToSave = currentChuteFile;
+        NSString *data =  [NSString stringWithContentsOfFile:fileToSave encoding:NSUTF8StringEncoding error:nil];
+        
+        if(data != nil){
+            self.records = (NSMutableArray *)[(NSDictionary *)[data JSONValue] objectForKey:@"Data"];
+            if([records count] == 0){
+                self.records = [[NSMutableArray alloc] init];
+            }
+        }else{
+            if([[RSUModel sharedModel] isOffline]){
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"We detected a timing in progress, but were unable to load the data. The timer will not be reset." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+                [alert show];
+                [alert release];
+            }
+            
+            self.records = [[NSMutableArray alloc] init];
+        }
+    }else{
+        int number = 0;
+        while(YES){
+            BOOL numberIsAvailable = YES;
+            for(NSString *string in files){
+                if([string isEqualToString:[NSString stringWithFormat:@"%i.json", number]]){
+                    numberIsAvailable = NO;
+                }
+            }
+            if(numberIsAvailable){
+                self.fileToSave = [NSString stringWithFormat:@"%@/%i.json", [paths objectAtIndex:0], number];
+                break;
+            }
+            number++;
+        }
+        self.records = [[NSMutableArray alloc] init];
+    }
 }
 
 - (void)viewDidLoad{
@@ -135,6 +134,16 @@
         [numpadView setRecordButton: recordButton];
         [self.view addSubview: numpadView];
     }
+    
+    // Detect differences
+    if(![[RSUModel sharedModel] isOffline]){
+        void (^response)(RSUDifferences) = ^(RSUDifferences differences){
+            currentDifferences = differences;
+            [self showDownloadResultsAlert];
+        };
+        
+        [[RSUModel sharedModel] detectDifferencesBetweenLocalAndOnline:(NSArray *)self.records type:2 response:response];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -168,34 +177,38 @@
 
 - (IBAction)record:(id)sender{
     if([records count] < 10000){
-        NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:[bibField text], @"Bib", [NSString stringWithFormat:@"%.4i", [records count]+1], @"Place", nil];
-        [records insertObject:dict atIndex:0];
-        
-        if(![[RSUModel sharedModel] isOffline]){
-            void (^response)(RSUConnectionResponse) = ^(RSUConnectionResponse didSucceed){
-                if(didSucceed == RSUNoConnection){
-                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
-                    [alert show];
-                    [alert release];
-                }
-            };
+        if([[bibField text] length] > 0){
+            NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:[bibField text], @"Bib", [NSString stringWithFormat:@"%.4i", [records count]+1], @"Place", nil];
+            [records insertObject:dict atIndex:0];
             
-            [[RSUModel sharedModel] addFinishingBibs:[NSArray arrayWithObject: [bibField text]] response:response];
+            if(![[RSUModel sharedModel] isOffline]){
+                void (^response)(RSUConnectionResponse) = ^(RSUConnectionResponse didSucceed){
+                    if(didSucceed == RSUNoConnection){
+                        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+                        [alert show];
+                        [alert release];
+                    }
+                };
+                
+                [[RSUModel sharedModel] addFinishingBibs:[NSArray arrayWithObject: [bibField text]] response:response];
+            }
+            
+            if([[NSUserDefaults standardUserDefaults] objectForKey:@"CurrentChuteFile"] == nil){
+                [[NSUserDefaults standardUserDefaults] setObject:self.fileToSave forKey:@"CurrentChuteFile"];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+            }
+            
+            NSIndexPath *index = [NSIndexPath indexPathForRow:0 inSection:0];
+            [table beginUpdates];
+            [table insertRowsAtIndexPaths:[NSArray arrayWithObject:index] withRowAnimation:UITableViewRowAnimationBottom];
+            [table endUpdates];
+            
+            [bibField setText:@""];
+            [recordButton setEnabled:NO];
+            [self saveToFile];
+        }else{
+            [recordButton setEnabled: NO];
         }
-        
-        if([[NSUserDefaults standardUserDefaults] objectForKey:@"CurrentChuteFile"] == nil){
-            [[NSUserDefaults standardUserDefaults] setObject:self.fileToSave forKey:@"CurrentChuteFile"];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-        }
-        
-        NSIndexPath *index = [NSIndexPath indexPathForRow:0 inSection:0];
-        [table beginUpdates];
-        [table insertRowsAtIndexPaths:[NSArray arrayWithObject:index] withRowAnimation:UITableViewRowAnimationBottom];
-        [table endUpdates];
-        
-        [bibField setText:@""];
-        [recordButton setEnabled:NO];
-        [self saveToFile];
     }
 }
 
@@ -206,20 +219,52 @@
 }
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex{
-    if(buttonIndex == 1){
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey: @"CurrentChuteFile"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        [recordButton setEnabled: NO];
-        [barcodeButton setEnabled: NO];
-        [bibField setEnabled: NO];
-        if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
-        [UIView beginAnimations:@"Slide" context:nil];
-            [recordButton setFrame: CGRectMake(recordButton.frame.origin.x, 365, recordButton.frame.size.width, recordButton.frame.size.height)];
-            [barcodeButton setFrame: CGRectMake(barcodeButton.frame.origin.x, 365, barcodeButton.frame.size.width, barcodeButton.frame.size.height)];
-            [bibField setFrame: CGRectMake(bibField.frame.origin.x, 365, bibField.frame.size.width, bibField.frame.size.height)];
-            [table setFrame: CGRectMake(table.frame.origin.x, table.frame.origin.y, table.frame.size.width, 362)];
-            [UIView setAnimationDuration: 0.5f];
-            [UIView commitAnimations];
+    if(alertView == downloadResultsAlert){
+        if(buttonIndex == 0){
+            if(currentDifferences == RSUDifferencesBothDifferent || currentDifferences == RSUDifferencesClientEmpty){
+                [self downloadResults];
+            }else{
+                [self reuploadResults];
+            }
+        }else if(buttonIndex == 1){
+            deleteResultsAlert = [[UIAlertView alloc] initWithTitle:@"Delete Results?" message:@"Are you sure you wish to delete all timing data for this event on the server and on your device?" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
+            [deleteResultsAlert show];
+            [deleteResultsAlert release];
+        }else if(buttonIndex == 2){
+            [self reuploadResults];
+        }
+    }else if(alertView == deleteResultsAlert){
+        if(buttonIndex == 1){
+            void (^response)(RSUConnectionResponse) = ^(RSUConnectionResponse didSucceed){
+                if(didSucceed == RSUNoConnection){
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignUp. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+                    [alert show];
+                    [alert release];
+                }else{
+                    [self findDestinationFile];
+                }
+            };
+            
+            [[RSUModel sharedModel] deleteResults:RSUClearTimer response:response];
+        }else{
+            [self showDownloadResultsAlert];
+        }
+    }else{
+        if(buttonIndex == 1){
+            [[NSUserDefaults standardUserDefaults] removeObjectForKey: @"CurrentChuteFile"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            [recordButton setEnabled: NO];
+            [barcodeButton setEnabled: NO];
+            [bibField setEnabled: NO];
+            if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
+            [UIView beginAnimations:@"Slide" context:nil];
+                [recordButton setFrame: CGRectMake(recordButton.frame.origin.x, 365, recordButton.frame.size.width, recordButton.frame.size.height)];
+                [barcodeButton setFrame: CGRectMake(barcodeButton.frame.origin.x, 365, barcodeButton.frame.size.width, barcodeButton.frame.size.height)];
+                [bibField setFrame: CGRectMake(bibField.frame.origin.x, 365, bibField.frame.size.width, bibField.frame.size.height)];
+                [table setFrame: CGRectMake(table.frame.origin.x, table.frame.origin.y, table.frame.size.width, 362)];
+                [UIView setAnimationDuration: 0.5f];
+                [UIView commitAnimations];
+            }
         }
     }
 }
@@ -312,6 +357,31 @@
     }
 }
 
+- (void)showDownloadResultsAlert{
+    if(currentDifferences == RSUDifferencesNoConnection){
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Could not connect to RunSignUp. The data on your device and on the server for this event may not be in sync." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+        [alert show];
+        [alert release];
+    }else if(currentDifferences == RSUDifferencesBothDifferent){
+        downloadResultsAlert = [[UIAlertView alloc] initWithTitle:@"Data out of sync" message:@"The data on your device and on the results server is different. Would you like to download the server's results or upload yours?" delegate:self cancelButtonTitle:@"Download Results" otherButtonTitles:@"Delete Data", @"Upload Results", nil];
+        [downloadResultsAlert show];
+        [downloadResultsAlert release];
+        NSLog(@"Server and client both have different numbers of records and neither is empty");
+    }else if(currentDifferences == RSUDifferencesClientEmpty){
+        downloadResultsAlert = [[UIAlertView alloc] initWithTitle:@"Data out of sync" message:@"The results server has data for this event, but your device has none. Would you like to download the server's results and continue timing from there?" delegate:self cancelButtonTitle:@"Yes, download" otherButtonTitles:@"Delete Data", nil];
+        [downloadResultsAlert show];
+        [downloadResultsAlert release];
+        NSLog(@"Server has data, client has none");
+    }else if(currentDifferences == RSUDifferencesServerEmpty){
+        downloadResultsAlert = [[UIAlertView alloc] initWithTitle:@"Data out of sync" message:@"Your device has data for this event, but the server has none. Would you like to upload your results and continue timing from there?" delegate:self cancelButtonTitle:@"Yes, upload" otherButtonTitles:@"Delete data", nil];
+        [downloadResultsAlert show];
+        [downloadResultsAlert release];
+        NSLog(@"Client has data, server has none");
+    }else{
+        NSLog(@"No differences between server and client");
+    }
+}
+
 - (void)reuploadResults{
     void (^response)(RSUConnectionResponse) = ^(RSUConnectionResponse didSucceed){
         if(didSucceed == RSUNoConnection){
@@ -327,22 +397,24 @@
                     [alert release];
                     [[self recordButton] setEnabled: YES];
                 }else{
-                    void (^response3)(RSUConnectionResponse) = ^(RSUConnectionResponse didSucceed3){
-                        [[self recordButton] setEnabled: YES];
+                    if([records count] > 0){
+                        void (^response3)(RSUConnectionResponse) = ^(RSUConnectionResponse didSucceed3){
+                            [[self recordButton] setEnabled: YES];
+                            
+                            if(didSucceed3 == RSUNoConnection){
+                                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+                                [alert show];
+                                [alert release];
+                            }
+                        };
                         
-                        if(didSucceed3 == RSUNoConnection){
-                            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
-                            [alert show];
-                            [alert release];
+                        NSMutableArray *bibs = [[NSMutableArray alloc] init];
+                        for(int x = [records count] - 1; x >= 0; x--){
+                            [bibs addObject: [[records objectAtIndex: x] objectForKey:@"Bib"]];
                         }
-                    };
-                    
-                    NSMutableArray *bibs = [[NSMutableArray alloc] init];
-                    for(int x = [records count] - 1; x >= 0; x--){
-                        [bibs addObject: [[records objectAtIndex: x] objectForKey:@"Bib"]];
+                        
+                        [[RSUModel sharedModel] addFinishingBibs:bibs response:response3];
                     }
-                    
-                    [[RSUModel sharedModel] addFinishingBibs:bibs response:response3];
                 }
             };
             [[RSUModel sharedModel] deleteResults:RSUClearResults response:response2];
@@ -351,6 +423,29 @@
     
     [[self recordButton] setEnabled: NO];
     [[RSUModel sharedModel] deleteResults:RSUClearChute response:response];
+}
+
+- (void)downloadResults{
+    if([[RSUModel sharedModel] downloadedRecords]){
+        NSMutableArray *downloadedRecords = [[RSUModel sharedModel] downloadedRecords];
+        
+        if([records count] != 0)
+            self.records = [[NSMutableArray alloc] init];
+        
+        for(int x = 0; x < [downloadedRecords count]; x++){
+            NSMutableDictionary *record = [[NSMutableDictionary alloc] init];
+            [record setObject:[NSString stringWithFormat:@"%.4i", x + 1] forKey:@"Place"];
+            [record setObject:[downloadedRecords objectAtIndex: x] forKey:@"Bib"];
+            [records insertObject:record atIndex:0];
+        }
+        
+        [table reloadData];
+        [self saveToFile];
+    }else{
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"No results could be downloaded." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+        [alert show];
+        [alert release];
+    }
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{

@@ -551,13 +551,29 @@ static RSUModel *model = nil;
             NSLog(string);
             
             RXMLElement *rootXML = [[RXMLElement alloc] initFromXMLData:urlData];
-            if([[rootXML tag] isEqualToString: @"finishing_times"]){
-                NSArray *dataTotal = [rootXML children:@"finishing_time"];
-                if(dataTotal && [dataTotal count] > 0){
-                    for(int x = 0; x < [dataTotal count]; x++){
-                        RXMLElement *data = [[dataTotal objectAtIndex:x] child:@"time"];
-                        if([data text] != nil){
-                            [downloadedRecords addObject: [data text]];
+            if(type == 0){
+                if([[rootXML tag] isEqualToString: @"finishing_times"]){
+                    NSArray *dataTotal = [rootXML children:@"finishing_time"];
+                    if(dataTotal && [dataTotal count] > 0){
+                        for(int x = 0; x < [dataTotal count]; x++){
+                            RXMLElement *data = [[dataTotal objectAtIndex:x] child:@"time"];
+                            if([data text] != nil){
+                                [downloadedRecords addObject: [data text]];
+                            }
+                        }
+                    }
+                }
+            }else if(type == 1){
+                // checker
+            }else if(type == 2){
+                if([[rootXML tag] isEqualToString: @"bib_finishing_order"]){
+                    NSArray *dataTotal = [rootXML children:@"bib_finish"];
+                    if(dataTotal && [dataTotal count] > 0){
+                        for(int x = 0; x < [dataTotal count]; x++){
+                            RXMLElement *data = [[dataTotal objectAtIndex:x] child:@"bib_num"];
+                            if([data text] != nil){
+                                [downloadedRecords addObject: [data text]];
+                            }
                         }
                     }
                 }

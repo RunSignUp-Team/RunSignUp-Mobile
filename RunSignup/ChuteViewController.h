@@ -19,6 +19,7 @@
 #import <UIKit/UIKit.h>
 #import "ZBarSDK.h"
 #import "NumpadView.h"
+#import "RSUModel.h"
 
 @interface ChuteViewController : UIViewController <ZBarReaderDelegate, UIAlertViewDelegate, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate>{
     UIButton *recordButton;
@@ -28,6 +29,11 @@
     NSMutableArray *records;
     
     UITextField *bibField;
+    
+    RSUDifferences currentDifferences;
+    
+    UIAlertView *downloadResultsAlert;
+    UIAlertView *deleteResultsAlert;
     
     NSString *raceID;
     NSString *raceName;
@@ -53,10 +59,15 @@
 @property (nonatomic, retain) ZBarReaderViewController *zbarReaderViewController;
 @property (nonatomic, retain) NumpadView *numpadView;
 
+- (void)findDestinationFile;
 
 - (IBAction)record:(id)sender;
 - (IBAction)stopRace:(id)sender;
 - (IBAction)barcodeScanner:(id)sender;
+
+- (void)showDownloadResultsAlert;
+- (void)downloadResults;
+- (void)reuploadResults;
 
 - (void)toggleEditing;
 - (void)updateRecordNumbersAfterDeletion;

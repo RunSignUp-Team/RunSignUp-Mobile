@@ -404,21 +404,23 @@
                     [alert release];
                     [[self recordButton] setEnabled: YES];
                 }else{
-                    void (^response3)(RSUConnectionResponse) = ^(RSUConnectionResponse didSucceed3){
-                        [[self recordButton] setEnabled: YES];
-                        if(didSucceed3 == RSUNoConnection){
-                            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignUp. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
-                            [alert show];
-                            [alert release];
+                    if([records count] > 0){
+                        void (^response3)(RSUConnectionResponse) = ^(RSUConnectionResponse didSucceed3){
+                            [[self recordButton] setEnabled: YES];
+                            if(didSucceed3 == RSUNoConnection){
+                                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignUp. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+                                [alert show];
+                                [alert release];
+                            }
+                        };
+                        
+                        NSMutableArray *formattedTimes = [[NSMutableArray alloc] init];
+                        for(int x = [records count] - 1; x >= 0; x--){
+                            [formattedTimes addObject: [[records objectAtIndex: x] objectForKey:@"FTime"]];
                         }
-                    };
-                    
-                    NSMutableArray *formattedTimes = [[NSMutableArray alloc] init];
-                    for(int x = [records count] - 1; x >= 0; x--){
-                        [formattedTimes addObject: [[records objectAtIndex: x] objectForKey:@"FTime"]];
+                        
+                        [[RSUModel sharedModel] addFinishingTimes:formattedTimes response:response3];
                     }
-                    
-                    [[RSUModel sharedModel] addFinishingTimes:formattedTimes response:response3];
                 }
             };
             [[RSUModel sharedModel] deleteResults:RSUClearResults response:response2];
