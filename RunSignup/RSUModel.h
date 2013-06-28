@@ -95,6 +95,9 @@ typedef enum{
 
 - (void)detectDifferencesBetweenLocalAndOnline:(NSArray *)records type:(int)type response:(void (^)(RSUDifferences))responseBlock;
 
+- (void)recordStartDateOfTimer:(NSString *)startDate response:(void (^)(RSUConnectionResponse))responseBlock;
+- (void)retrieveStartDateOfTimer:(void (^)(RSUConnectionResponse, NSString *))responseBlock;
+
 - (void)addFinishingTimes:(NSArray *)finishingTimes response:(void (^)(RSUConnectionResponse))responseBlock;
 - (void)addFinishingBibs:(NSArray *)finishingBibs response:(void (^)(RSUConnectionResponse))responseBlock;
 

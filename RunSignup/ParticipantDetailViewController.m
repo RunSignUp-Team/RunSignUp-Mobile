@@ -49,6 +49,9 @@
 - (void)viewDidLoad{
     [super viewDidLoad];
     
+    if([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
+        [self setEdgesForExtendedLayout: UIExtendedEdgeNone];
+    
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
         self.rli = [[RoundedLoadingIndicator alloc] initWithXLocation:160 YLocation:100];
     else
@@ -156,20 +159,24 @@
         [dict setObject:@"F" forKey:@"Gender"];
     }
     
-    void (^response)(RSUConnectionResponse) = ^(RSUConnectionResponse didSucceed){
-        if(didSucceed == RSUNoConnection){
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignUp. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
-            [alert show];
-            [alert release];
-        }else{
-            [self.navigationController popViewControllerAnimated: YES];
-        }
+    if(creating){
+        void (^response)(RSUConnectionResponse) = ^(RSUConnectionResponse didSucceed){
+            if(didSucceed == RSUNoConnection){
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignUp. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+                [alert show];
+                [alert release];
+            }else{
+                [self.navigationController popViewControllerAnimated: YES];
+            }
+            
+            [rli fadeOut];
+        };
         
-        [rli fadeOut];
-    };
-    
-    [rli fadeIn];
-    [delegate createParticipantWithDictionary:dict response:response];
+        [rli fadeIn];
+        [delegate createParticipantWithDictionary:dict response:response];
+    }else{
+        // edit/upload participant
+    }
     
 }
 

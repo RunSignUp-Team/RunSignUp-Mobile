@@ -99,6 +99,9 @@
 - (void)viewDidLoad{
     [super viewDidLoad];
     
+    if([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
+        [self setEdgesForExtendedLayout: UIExtendedEdgeNone];
+    
     // Images created for stretching to variably sized UIButtons (see buttons in resources)
     UIImage *blueButtonImage = [UIImage imageNamed:@"BlueButton.png"];
     UIImage *stretchedBlueButton = [blueButtonImage stretchableImageWithLeftCapWidth:12 topCapHeight:12];
@@ -118,15 +121,17 @@
     [barcodeButton setBackgroundImage:stretchedBlueButtonTap forState:UIControlStateHighlighted];
     [barcodeButton setBackgroundImage:stretchedGrayButton forState:UIControlStateDisabled];
 
-    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
-        [self.bibField becomeFirstResponder];
+    //if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+     //   [self.bibField becomeFirstResponder];
         
     // Set up right bar button (upper right corner) of UINavigationBar to edit button
     UIBarButtonItem *editButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(toggleEditing)];
-    UIBarButtonItem *stopButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemStop target:self action:@selector(stopRace:)];
-    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:editButton, stopButton, nil] animated:YES];
+    //UIBarButtonItem *cameraButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Barcode"] style:UIBarButtonItemStyleBordered target:self action:@selector(barcodeScanner:)];
+    UIBarButtonItem *cameraButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(barcodeScanner:)];
+    
+    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:editButton, cameraButton, nil] animated:YES];
     [editButton release];
-    [stopButton release];
+    [cameraButton release];
     
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
         self.numpadView = [[NumpadView alloc] initWithFrame: CGRectMake(576, 54, 448, 538)];
@@ -256,6 +261,11 @@
             [recordButton setEnabled: NO];
             [barcodeButton setEnabled: NO];
             [bibField setEnabled: NO];
+            
+            UIBarButtonItem *editButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(toggleEditing)];
+            [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObject:editButton] animated:YES];
+            [editButton release];
+            
             if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
             [UIView beginAnimations:@"Slide" context:nil];
                 [recordButton setFrame: CGRectMake(recordButton.frame.origin.x, 365, recordButton.frame.size.width, recordButton.frame.size.height)];

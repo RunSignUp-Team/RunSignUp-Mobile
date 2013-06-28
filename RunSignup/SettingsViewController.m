@@ -88,9 +88,13 @@
 }
 
 - (void)viewDidLoad{
+    [super viewDidLoad];
+    
+    if([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
+        [self setEdgesForExtendedLayout: UIExtendedEdgeNone];
+    
     [bigRecordSwitch setOn: [[NSUserDefaults standardUserDefaults] boolForKey:@"BigRecordButton"]];
     [timerHoursSwitch setOn: [[NSUserDefaults standardUserDefaults] boolForKey:@"TimerHours"]];     
-    [super viewDidLoad];
 }
 
 - (IBAction)done:(id)sender{

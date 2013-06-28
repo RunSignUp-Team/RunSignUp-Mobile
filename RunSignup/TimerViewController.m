@@ -91,6 +91,9 @@
 - (void)viewDidLoad{
     [super viewDidLoad];
     
+    if([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
+        [self setEdgesForExtendedLayout: UIExtendedEdgeNone];
+    
     self.timerLabel = [[TimerLabel alloc] initWithFrame:CGRectMake(0, 0, 320, 92)];
     [self.view addSubview: timerLabel];
     
@@ -172,10 +175,19 @@
     if(![[RSUModel sharedModel] isOffline]){
         NSDateFormatter *formatter = [[[NSDateFormatter alloc] init] autorelease];
         [formatter setTimeZone: [[NSTimeZone alloc] initWithName:@"Eastern Standard Time"]];
-        [formatter setDateFormat: @"YYYY-MM-dd hh:mm:ss"];
+        [formatter setDateFormat: @"YYYY-MM-dd HH:mm:ss"];
         NSString *dateString = [formatter stringFromDate: [timerLabel startDate]];
-        dateString = dateString;
-        // upload startDate to server
+        NSLog(@"DateString: %@", dateString);
+        
+        void (^response)(RSUConnectionResponse) = ^(RSUConnectionResponse didSucceed){
+            if(didSucceed == RSUNoConnection){
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignUp. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+                [alert show];
+                [alert release];
+            }
+        };
+        
+        [[RSUModel sharedModel] recordStartDateOfTimer:dateString response:response];
     }
 }
 
@@ -299,8 +311,12 @@
                         [alert show];
                         [alert release];
                     }else{
-                        
-                        [self findDestinationFile];
+                        if(records && [records count] == 0)
+                            [self findDestinationFile];
+                        else{
+                            started = YES;
+                            [self start: nil]; // end race
+                        }
                     }
                 };
                 
@@ -316,6 +332,10 @@
             [recordButton setEnabled: NO];
             [startButton setEnabled: NO];
             started = NO;
+            
+            [UIView beginAnimations:@"Slide" context:nil];
+            [table setFrame: CGRectMake(0, 92, 320, 388)];
+            [UIView commitAnimations];
             
             [[NSUserDefaults standardUserDefaults] removeObjectForKey: @"TimerStartDate"];
             [[NSUserDefaults standardUserDefaults] removeObjectForKey: @"CurrentTimerFile"];
@@ -382,6 +402,39 @@
         
         [table reloadData];
         [self saveToFile];
+        
+        void (^response)(RSUConnectionResponse, NSString *) = ^(RSUConnectionResponse didSucceed, NSString *startDate){
+            if(didSucceed == RSUNoConnection || startDate == nil){
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignUp. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+                [alert show];
+                [alert release];
+            }else{
+                NSDateFormatter *formatter = [[[NSDateFormatter alloc] init] autorelease];
+                [formatter setTimeZone: [[NSTimeZone alloc] initWithName:@"Eastern Standard Time"]];
+                [formatter setDateFormat: @"YYYY-MM-dd HH:mm:ss"];
+                
+                NSDate *date = [formatter dateFromString: startDate];
+                if(date != nil){
+                    [timerLabel startTiming];
+                    [timerLabel setStartDate: date];
+                    
+                    started = YES;
+                    
+                    if([[NSUserDefaults standardUserDefaults] boolForKey:@"BigRecordButton"]){
+                        [startButton setTitle:@"End\nRace" forState:UIControlStateNormal];
+                    }else{
+                        [startButton setTitle:@"End Race" forState:UIControlStateNormal];
+                    }
+                    
+                    [recordButton setEnabled:YES];
+                    
+                    [[NSUserDefaults standardUserDefaults] setObject:date forKey:@"TimerStartDate"];
+                    [[NSUserDefaults standardUserDefaults] synchronize];
+                }
+            }
+        };
+        
+        [[RSUModel sharedModel] retrieveStartDateOfTimer: response];
     }else{
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"No results could be downloaded." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
         [alert show];

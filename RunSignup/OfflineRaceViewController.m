@@ -55,6 +55,11 @@
 }
 
 - (void)viewDidLoad{
+    [super viewDidLoad];
+    
+    if([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
+        [self setEdgesForExtendedLayout: UIExtendedEdgeNone];
+    
     UIImage *blueButtonImage = [UIImage imageNamed:@"BlueButton.png"];
     UIImage *stretchedBlueButton = [blueButtonImage stretchableImageWithLeftCapWidth:12 topCapHeight:12];
     UIImage *blueButtonTapImage = [UIImage imageNamed:@"BlueButtonTap.png"];
@@ -64,7 +69,6 @@
     [createButton setBackgroundImage:stretchedBlueButtonTap forState:UIControlStateHighlighted];
     
     [nameField becomeFirstResponder];
-    [super viewDidLoad];
 }
 
 - (void)viewDidUnload{

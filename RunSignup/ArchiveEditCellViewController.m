@@ -44,6 +44,11 @@
 }
 
 - (void)viewDidLoad{
+    [super viewDidLoad];
+
+    if([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
+        [self setEdgesForExtendedLayout: UIExtendedEdgeNone];
+
     UIImage *redButtonImage = [UIImage imageNamed:@"RedButton.png"];
     UIImage *stretchedRedButton = [redButtonImage stretchableImageWithLeftCapWidth:12 topCapHeight:12];
     UIImage *redButtonTapImage = [UIImage imageNamed:@"RedButtonTap.png"];
@@ -90,7 +95,6 @@
         [bibField becomeFirstResponder];
 
     }
-    [super viewDidLoad];
 }
 
 - (void)setPickerGivenTime{

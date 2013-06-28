@@ -44,7 +44,7 @@
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"TimerHours"];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
-    
+        
     // Push main menu onto stack as the first view controller
     
     MainMenuViewController *mainMenuViewController = [[[MainMenuViewController alloc] initWithNibName:@"MainMenuViewController" bundle:nil] autorelease];

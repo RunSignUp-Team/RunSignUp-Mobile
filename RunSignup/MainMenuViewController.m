@@ -59,6 +59,11 @@
 @synthesize raceDirectorEventID;
 
 - (void)viewDidLoad{
+    [super viewDidLoad];
+    
+    if([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
+        [self setEdgesForExtendedLayout: UIExtendedEdgeNone];
+    
     self.title = @"Menu";
     UIImage *blueButtonImage = [UIImage imageNamed:@"BlueButton.png"];
     UIImage *stretchedBlueButton = [blueButtonImage stretchableImageWithLeftCapWidth:12 topCapHeight:12];
@@ -92,7 +97,7 @@
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:@"yyyy"];
     [formatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0.0]];
-    [copyrightLabel setText:[NSString stringWithFormat:@"© %@ RunSignup, LLC", [formatter stringFromDate: date]]];
+    [copyrightLabel setText:[NSString stringWithFormat:@"© %@ RunSignUp, LLC", [formatter stringFromDate: date]]];
     [formatter release];
     
     raceLabel.layer.borderColor = [UIColor blackColor].CGColor;
@@ -101,8 +106,6 @@
     emailLabel.layer.borderWidth = 1.0f;
     
     self.contentSizeForViewInPopover = CGSizeMake(320, 400);
-    
-    [super viewDidLoad];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -180,24 +183,25 @@
 }
 
 - (IBAction)other:(id)sender{
-    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Other" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"View Results Online", @"Manage Participants", @"Delete All Data and Results", nil];
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Other" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"View Results Online", /*@"Manage Participants",*/ @"Delete All Data and Results", nil];
     [actionSheet showInView: self.view];
     [actionSheet release];
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex{
     if(buttonIndex == 0){
-        [[UIApplication sharedApplication] openURL: [NSURL URLWithString: @"https://runsignup.com/beta/nofrills"]];
-    }else if(buttonIndex == 1){
+        NSString *urlString = [NSString stringWithFormat:@"https://runsignup.com/Race/Results/?raceId=%@&eventId=%@", raceDirectorRaceID, raceDirectorEventID];
+        [[UIApplication sharedApplication] openURL: [NSURL URLWithString: urlString]];
+    /*else if(buttonIndex == 1){
         ParticipantViewController *participantViewController = [[ParticipantViewController alloc] initWithNibName:@"ParticipantViewController" bundle:nil];
-        [participantViewController setRaceName: @"Cooper River Annual Race"];
-        [participantViewController setEventName: @"10K Run"];
+        [participantViewController setRaceName: raceDirectorRaceName];
+        [participantViewController setEventName: raceDirectorEventName];
         
         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController: participantViewController];
         [self presentModalViewController:navController animated:YES];
         
         [participantViewController release];
-    }else if(buttonIndex == 2){
+    */}else if(buttonIndex == 1){ // CHANGE TO TWO TWO TWO TWO TWO DONT FORGET BILLY PLEASE DONT FORGET CHANGE TO TWO! 0 1 2
         void (^response)(RSUConnectionResponse) = ^(RSUConnectionResponse didSucceed){
             if(didSucceed == RSUNoConnection){
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignUp. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
@@ -211,10 +215,10 @@
         [[RSUModel sharedModel] deleteResults:RSUClearChute response:response];
         [[RSUModel sharedModel] deleteResults:RSUClearResults response:response];
         
-        /*[[NSUserDefaults standardUserDefaults] removeObjectForKey: @"TimerStartDate"];
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey: @"TimerStartDate"];
         [[NSUserDefaults standardUserDefaults] removeObjectForKey: @"CurrentTimerFile"];
         [[NSUserDefaults standardUserDefaults] removeObjectForKey: @"CurrentChuteFile"];
-        [[NSUserDefaults standardUserDefaults] synchronize];*/
+        [[NSUserDefaults standardUserDefaults] synchronize];
     }
 }
 
@@ -255,7 +259,7 @@
         if(didSucceed == RSUSuccess){
             self.raceDirectorEmail = email;
             [emailLabel setHidden: NO];
-            [emailLabel setText:raceDirectorEmail];
+            [emailLabel setText:[NSString stringWithFormat:@" %@", raceDirectorEmail]];
             [signedInAs setHidden: NO];
             [signOutButton setHidden: NO];
             [signOutButton setTitle:@"Sign Out" forState:UIControlStateNormal];
@@ -267,7 +271,7 @@
                 [selectRaceButton setFrame: CGRectMake(402, 230, 220, 46)];
             }
             [raceLabel setHidden: NO];
-            [raceLabel setText:@"No Event Selected"];
+            [raceLabel setText:@" No Event Selected"];
             [timingFor setHidden: NO];
             [hintLabel setText:@"To proceed, choose today's event."];
             [hintLabel2 setHidden:YES];
@@ -295,17 +299,17 @@
     [[RSUModel sharedModel] setIsOffline: YES];
     
     [emailLabel setHidden: NO];
-    [emailLabel setText:raceDirectorEmail];
+    [emailLabel setText:[NSString stringWithFormat:@" %@", raceDirectorEmail]];
     [signedInAs setHidden: NO];
     [raceLabel setHidden: NO];
-    [raceLabel setText:name];
+    [raceLabel setText:[NSString stringWithFormat:@" %@", name]];
     [timingFor setHidden: NO];
     [hintLabel setHidden: YES];
     [hintLabel2 setHidden: YES];
     [timerButton setHidden: NO];
     [chuteButton setHidden: NO];
-    [otherButton setHidden: NO];
-    //[chuteButton setFrame: CGRectMake([chuteButton frame].origin.x, [chuteButton frame].origin.y, 284, [chuteButton frame].size.height)];
+    [otherButton setHidden: YES];
+    [chuteButton setFrame: CGRectMake([chuteButton frame].origin.x, [chuteButton frame].origin.y, 284, [chuteButton frame].size.height)];
     [checkerButton setHidden: NO];
     [selectRaceButton setHidden: YES];
     [signOutButton setTitle:@"Back to Start Menu" forState:UIControlStateNormal];
@@ -324,7 +328,7 @@
     self.raceDirectorEventID = eventID;
     
     [timingFor setHidden: NO];
-    [raceLabel setText: [NSString stringWithFormat:@"%@ - %@", raceDirectorRaceName, raceDirectorEventName]];
+    [raceLabel setText: [NSString stringWithFormat:@" %@ - %@", raceDirectorRaceName, raceDirectorEventName]];
     [timerButton setHidden: NO];
     [chuteButton setHidden: NO];
     [chuteButton setFrame: CGRectMake([chuteButton frame].origin.x, [chuteButton frame].origin.y, 134, [chuteButton frame].size.height)];

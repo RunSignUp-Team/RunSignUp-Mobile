@@ -44,6 +44,9 @@
 - (void)viewDidLoad{
     [super viewDidLoad];
     
+    if([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
+        [self setEdgesForExtendedLayout: UIExtendedEdgeNone];
+    
     UIBarButtonItem *editButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(toggleEdit)];
     UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addResultSet)];
     [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:editButton, addButton, nil]];
@@ -66,6 +69,10 @@
         self.resultSetList = list;
         [table reloadData];
         [rli fadeOut];
+        
+        if([resultSetList count] == 0){
+            [self addResultSet];
+        }
     };
     
     self.resultSetList = nil;

@@ -79,6 +79,9 @@
 
 - (void)viewDidLoad{
     [super viewDidLoad];
+    
+    if([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
+        [self setEdgesForExtendedLayout: UIExtendedEdgeNone];
 }
 
 - (void)viewDidAppear:(BOOL)animated{

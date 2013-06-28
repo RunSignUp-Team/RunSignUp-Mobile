@@ -68,6 +68,9 @@
 - (void)viewDidLoad{
     [super viewDidLoad];
     
+    if([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
+        [self setEdgesForExtendedLayout: UIExtendedEdgeNone];
+    
     self.timerLabel = [[TimerLabel alloc] initWithFrame:CGRectMake(0, 0, 320, 92)];
     [self.view addSubview: timerLabel];
     
@@ -100,6 +103,10 @@
     UIBarButtonItem *editButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(toggleEditing)];
     [self.navigationItem setRightBarButtonItem:editButton animated:YES];
     [editButton release];
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"RunSignUp Beta" message:@"Due to the fact that RunSignUp Mobile Timer is currently in development, the checker portion does not interface with RunSignUp online. You may still record data, view it in the archive, and email it but the data is not recorded on the results server." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+    [alert show];
+    [alert release];
     
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
         self.numpadView = [[NumpadView alloc] initWithFrame: CGRectMake(576, 54, 448, 538)];

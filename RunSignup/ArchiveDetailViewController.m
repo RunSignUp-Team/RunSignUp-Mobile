@@ -45,12 +45,16 @@
         UIBarButtonItem *editItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(toggleEdit)];
         [self.navigationItem setRightBarButtonItem: editItem];
         [editItem release];
-        
     }
     return self;
 }
 
 - (void)viewDidLoad{
+    [super viewDidLoad];
+    
+    if([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
+        [self setEdgesForExtendedLayout: UIExtendedEdgeNone];
+    
     UIImage *blueButtonImage = [UIImage imageNamed:@"BlueButton.png"];
     UIImage *stretchedBlueButton = [blueButtonImage stretchableImageWithLeftCapWidth:12 topCapHeight:12];
     UIImage *blueButtonTapImage = [UIImage imageNamed:@"BlueButtonTap.png"];
@@ -85,7 +89,6 @@
     }else{
         [typeLabel setText:@"Chute (Place # and Bib #)"];
     }
-    [super viewDidLoad];    
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -222,7 +225,7 @@
 }
 
 - (IBAction)share:(id)sender{
-    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Share" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"E-mail", @"Upload to RunSignUp", nil];
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Share" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"E-mail"/*, @"Upload to RunSignUp"*/, nil];
     [actionSheet showInView: self.view];
     [actionSheet release];
 }
@@ -262,6 +265,29 @@
                     body = [body stringByAppendingFormat: @"%@ | %@\n", [[records objectAtIndex: x] objectForKey:@"Place"], [[records objectAtIndex: x] objectForKey:@"Bib"]];    
             }
             [mailComposeViewController setMessageBody:body isHTML: NO];
+            
+            NSString *csvString;
+            if(type == 0){
+                csvString = @"Place,FTime,Time\n";
+                for(int x = 0; x < [records count]; x++){
+                    csvString = [csvString stringByAppendingFormat:@"%@,%@,%@\n", [[records objectAtIndex: x] objectForKey:@"Place"], [[records objectAtIndex: x] objectForKey:@"FTime"], [[records objectAtIndex: x] objectForKey:@"Time"]];
+                }
+            }else if(type == 1){
+                csvString = @"Bib,FTime,Time\n";
+                for(int x = 0; x < [records count]; x++){
+                    csvString = [csvString stringByAppendingFormat:@"%@,%@,%@\n", [[records objectAtIndex: x] objectForKey:@"Bib"], [[records objectAtIndex: x] objectForKey:@"FTime"], [[records objectAtIndex: x] objectForKey:@"Time"]];
+                }
+            }else{
+                csvString = @"Place,Bib\n";
+                for(int x = 0; x < [records count]; x++){
+                    csvString = [csvString stringByAppendingFormat:@"%@,%@\n", [[records objectAtIndex: x] objectForKey:@"Place"], [[records objectAtIndex: x] objectForKey:@"Bib"]];
+                }
+            }
+            
+            NSData *jsonData = [[records JSONRepresentation] dataUsingEncoding:NSUTF8StringEncoding];
+            NSData *csvData = [csvString dataUsingEncoding: NSUTF8StringEncoding];
+            [mailComposeViewController addAttachmentData:jsonData mimeType:@"text/plain" fileName:@"Results.json"];
+            [mailComposeViewController addAttachmentData:csvData mimeType:@"text/plain" fileName:@"Results.csv"];
             
             [self presentModalViewController:mailComposeViewController animated:YES];
             [mailComposeViewController release];

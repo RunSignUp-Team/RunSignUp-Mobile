@@ -40,6 +40,7 @@
 		7761D0941544DAA600C6BB3F /* Gears.png in Resources */ = {isa = PBXBuildFile; fileRef = 7761D0921544DAA600C6BB3F /* Gears.png */; };
 		7761D0951544DAA600C6BB3F /* Gears@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7761D0931544DAA600C6BB3F /* Gears@2x.png */; };
 		7761D09A1544DBBB00C6BB3F /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7761D0981544DBBA00C6BB3F /* SettingsViewController.m */; };
+		7766D15A15FAE4DC006030C4 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 7766D15915FAE4DC006030C4 /* Icon-72.png */; };
 		7769691115EADF8A00AC0327 /* ParticipantViewController~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7769691015EADF8A00AC0327 /* ParticipantViewController~ipad.xib */; };
 		7769691415EAE0EA00AC0327 /* ParticipantDetailViewController~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7769691315EAE0EA00AC0327 /* ParticipantDetailViewController~ipad.xib */; };
 		777A50561549F5BD004AC93A /* RaceDirectorSigninViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 777A50541549F5BD004AC93A /* RaceDirectorSigninViewController.m */; };
@@ -57,6 +58,9 @@
 		7791C0A81582E7CD00E6837C /* RXMLElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 7791C0A71582E7CD00E6837C /* RXMLElement.m */; };
 		7791C0AB1582EA2800E6837C /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7791C0AA1582EA2800E6837C /* libz.dylib */; };
 		7791C0AD1582EA3100E6837C /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7791C0AC1582EA3100E6837C /* libxml2.dylib */; };
+		77B0E600177A857000C00E5B /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 77B0E5FD177A852E00C00E5B /* Default-568h@2x.png */; };
+		77B0E601177A857000C00E5B /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 77B0E5FE177A852E00C00E5B /* Default.png */; };
+		77B0E602177A857000C00E5B /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 77B0E5FF177A852E00C00E5B /* Default@2x.png */; };
 		77B1EDDE1598EB900058C57F /* MainMenuViewController~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 77B1EDDC1598EB900058C57F /* MainMenuViewController~ipad.xib */; };
 		77B1EDF01598FFA80058C57F /* ArchiveDetailViewController~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 77B1EDE41598FFA70058C57F /* ArchiveDetailViewController~iphone.xib */; };
 		77B1EDF11598FFA80058C57F /* ArchiveEditCellViewController~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 77B1EDE51598FFA70058C57F /* ArchiveEditCellViewController~iphone.xib */; };
@@ -221,6 +225,7 @@
 		7761D0931544DAA600C6BB3F /* Gears@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Gears@2x.png"; sourceTree = "<group>"; };
 		7761D0971544DBBA00C6BB3F /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		7761D0981544DBBA00C6BB3F /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
+		7766D15915FAE4DC006030C4 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72.png"; sourceTree = "<group>"; };
 		7769691015EADF8A00AC0327 /* ParticipantViewController~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "ParticipantViewController~ipad.xib"; sourceTree = "<group>"; };
 		7769691315EAE0EA00AC0327 /* ParticipantDetailViewController~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "ParticipantDetailViewController~ipad.xib"; sourceTree = "<group>"; };
 		777A50531549F5BD004AC93A /* RaceDirectorSigninViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RaceDirectorSigninViewController.h; sourceTree = "<group>"; };
@@ -243,6 +248,9 @@
 		7791C0A71582E7CD00E6837C /* RXMLElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RXMLElement.m; sourceTree = "<group>"; };
 		7791C0AA1582EA2800E6837C /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		7791C0AC1582EA3100E6837C /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
+		77B0E5FD177A852E00C00E5B /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		77B0E5FE177A852E00C00E5B /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		77B0E5FF177A852E00C00E5B /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		77B1EDDC1598EB900058C57F /* MainMenuViewController~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "MainMenuViewController~ipad.xib"; sourceTree = "<group>"; };
 		77B1EDE41598FFA70058C57F /* ArchiveDetailViewController~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "ArchiveDetailViewController~iphone.xib"; sourceTree = "<group>"; };
 		77B1EDE51598FFA70058C57F /* ArchiveEditCellViewController~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "ArchiveEditCellViewController~iphone.xib"; sourceTree = "<group>"; };
@@ -273,8 +281,8 @@
 		77C5F2A415431B6A005CAB30 /* RedButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "RedButton@2x.png"; sourceTree = "<group>"; };
 		77C5F2A515431B6A005CAB30 /* RedButtonTap.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = RedButtonTap.png; sourceTree = "<group>"; };
 		77C5F2A615431B6A005CAB30 /* RedButtonTap@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "RedButtonTap@2x.png"; sourceTree = "<group>"; };
-		77CB2E34159E907300EC83E8 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
-		77CB2E35159E907300EC83E8 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
+		77CB2E34159E907300EC83E8 /* Icon.png */ = {isa = PBXFileReference; explicitFileType = image.icns; path = Icon.png; sourceTree = "<group>"; };
+		77CB2E35159E907300EC83E8 /* Icon@2x.png */ = {isa = PBXFileReference; explicitFileType = image.icns; path = "Icon@2x.png"; sourceTree = "<group>"; };
 		77CD553615979A49007A21DD /* OfflineRaceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OfflineRaceViewController.h; sourceTree = "<group>"; };
 		77CD553715979A49007A21DD /* OfflineRaceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OfflineRaceViewController.m; sourceTree = "<group>"; };
 		77DC82FE15420B8E0021D240 /* RunSignup.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RunSignup.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -533,6 +541,7 @@
 				7728FE7415D9C68600F41E0A /* MMTimerIcon@2x.png */,
 				77CB2E34159E907300EC83E8 /* Icon.png */,
 				77CB2E35159E907300EC83E8 /* Icon@2x.png */,
+				7766D15915FAE4DC006030C4 /* Icon-72.png */,
 				777C1FE2155B2EB3000EEBB4 /* EditIcon.png */,
 				777C1FE3155B2EB3000EEBB4 /* EditIcon@2x.png */,
 				777C2C781555BEAF00AEC90B /* CheckerIcon.png */,
@@ -627,6 +636,9 @@
 		77DC8322154212E80021D240 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				77B0E5FD177A852E00C00E5B /* Default-568h@2x.png */,
+				77B0E5FE177A852E00C00E5B /* Default.png */,
+				77B0E5FF177A852E00C00E5B /* Default@2x.png */,
 				77E0C0B615D98B8E00F6A37D /* Loading */,
 				777C2C771555BEA400AEC90B /* Icons */,
 				77C5F2A315431B6A005CAB30 /* RedButton.png */,
@@ -839,6 +851,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				77B0E600177A857000C00E5B /* Default-568h@2x.png in Resources */,
+				77B0E601177A857000C00E5B /* Default.png in Resources */,
+				77B0E602177A857000C00E5B /* Default@2x.png in Resources */,
 				77DC830D15420B8E0021D240 /* InfoPlist.strings in Resources */,
 				77DC8326154212E80021D240 /* BlueButton.png in Resources */,
 				77DC8327154212E80021D240 /* BlueButton@2x.png in Resources */,
@@ -964,6 +979,7 @@
 				7740445415E6E47700ABFE28 /* ParticipantDetailViewController~iphone.xib in Resources */,
 				7769691115EADF8A00AC0327 /* ParticipantViewController~ipad.xib in Resources */,
 				7769691415EAE0EA00AC0327 /* ParticipantDetailViewController~ipad.xib in Resources */,
+				7766D15A15FAE4DC006030C4 /* Icon-72.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1027,7 +1043,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Bob Bickel";
+				COMPRESS_PNG_FILES = YES;
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1043,6 +1060,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				VALID_ARCHS = armv7;
 			};
@@ -1053,7 +1071,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Bob Bickel";
+				COMPRESS_PNG_FILES = YES;
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_THUMB_SUPPORT = NO;
@@ -1063,6 +1082,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 				VALID_ARCHS = armv7;
@@ -1072,6 +1092,7 @@
 		77DC831D15420B8E0021D240 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Shaun Connolly (T2FZ84TP6H)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "RunSignup/RunSignup-Prefix.pch";
 				GCC_THUMB_SUPPORT = NO;

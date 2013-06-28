@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>52B774B1-FD62-4311-8C0B-72FE90B028B7</string>
+	<key>IDESourceControlProjectName</key>
+	<string>RunSignup</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>2D4C2CBF-E53A-41DA-B312-2476780C100E</key>
+		<string>ssh://github.com/RunSignUp-Team/RunSignUp-Mobile.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>RunSignup.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>2D4C2CBF-E53A-41DA-B312-2476780C100E</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>ssh://github.com/RunSignUp-Team/RunSignUp-Mobile.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>2D4C2CBF-E53A-41DA-B312-2476780C100E</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>2D4C2CBF-E53A-41DA-B312-2476780C100E</string>
+			<key>IDESourceControlWCCName</key>
+			<string>RunSignup</string>
+		</dict>
+	</array>
+</dict>
+</plist>

@@ -46,6 +46,11 @@
 }
 
 - (void)viewDidLoad{
+    [super viewDidLoad];
+    
+    if([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
+        [self setEdgesForExtendedLayout: UIExtendedEdgeNone];
+    
     // Images created for stretching to variably sized UIButtons (see buttons in resources)
     UIImage *blueButtonImage = [UIImage imageNamed:@"BlueButton.png"];
     UIImage *stretchedBlueButton = [blueButtonImage stretchableImageWithLeftCapWidth:12 topCapHeight:12];
@@ -63,8 +68,6 @@
     }else{
         [emailField becomeFirstResponder];
     }
-    
-    [super viewDidLoad];
 }
 
 // When return is pressed on email -> go to password field. When return is pressed on password -> sign in.

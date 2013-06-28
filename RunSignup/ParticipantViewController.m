@@ -55,12 +55,15 @@
 - (void)viewDidLoad{
     [super viewDidLoad];
     
+    if([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
+        [self setEdgesForExtendedLayout: UIExtendedEdgeNone];
+    
     UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(goBack:)];
-    UIBarButtonItem *editButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(toggleEdit:)];
+    //UIBarButtonItem *editButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(toggleEdit:)];
     UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addParticipant:)];
     
     [self.navigationItem setLeftBarButtonItem: cancelButton];
-    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:editButton, addButton, nil]];
+    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:addButton, nil]];
     
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
         self.rli = [[RoundedLoadingIndicator alloc] initWithXLocation:160 YLocation:100];
@@ -86,7 +89,7 @@
     [[RSUModel sharedModel] attemptRetrieveParticipants:response];
     
     [cancelButton release];
-    [editButton release];
+    //[editButton release];
     [addButton release];
 }
 
@@ -179,6 +182,15 @@
 
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath{
     ParticipantDetailViewController *participantDetailViewController = [[ParticipantDetailViewController alloc] initWithNibName:@"ParticipantDetailViewController" bundle:nil isCreating:NO];
+    [[participantDetailViewController firstNameField] setText: [[participants objectAtIndex: indexPath.row] objectForKey:@"FirstName"]];
+    [[participantDetailViewController lastNameField] setText: [[participants objectAtIndex: indexPath.row] objectForKey:@"LastName"]];
+    NSInteger index = ([[[participants objectAtIndex: indexPath.row] objectForKey:@"Gender"] isEqualToString:@"F"]);
+    [[participantDetailViewController genderControl] setSelectedSegmentIndex: index];
+    [[participantDetailViewController bibField] setText: [[participants objectAtIndex: indexPath.row] objectForKey:@"Bib"]];
+    [[participantDetailViewController ageField] setText: [[participants objectAtIndex: indexPath.row] objectForKey:@"Age"]];
+    [[participantDetailViewController cityField] setText: [[participants objectAtIndex: indexPath.row] objectForKey:@"City"]];
+    [[participantDetailViewController stateField] setText: [[participants objectAtIndex: indexPath.row] objectForKey:@"State"]];
+
     [self.navigationController pushViewController:participantDetailViewController animated:YES];
 }
 

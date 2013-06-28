@@ -596,6 +596,87 @@ static RSUModel *model = nil;
     }
 }
 
+- (void)recordStartDateOfTimer:(NSString *)startDate response:(void (^)(RSUConnectionResponse))responseBlock{
+    if(isOffline){
+        dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUNoConnection);});
+    }else{
+        NSString *url = [NSString stringWithFormat:@"https://runsignup.com/rest/Race/%@/Results?event_id=%@&request_type=start-time&tmp_key=%@&tmp_secret=%@&format=xml", currentRaceID, currentEventID, key, secret];
+        
+        NSString *jsonRequest = [NSString stringWithFormat: @"{\"start_time\": \"%@\"}", startDate];
+        
+        NSString *post = [NSString stringWithFormat:@"request_format=json&request=%@", jsonRequest];
+        NSData *postData = [post dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
+        NSString *postLength = [NSString stringWithFormat:@"%d", [postData length]];
+        
+        NSMutableURLRequest *request = [[[NSMutableURLRequest alloc] init] autorelease];
+        [request setURL:[NSURL URLWithString:url]];
+        [request setHTTPMethod:@"POST"];
+        [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
+        [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+        [request setHTTPBody:postData];
+                
+        void (^completion)(NSURLResponse *,NSData *,NSError *) = ^(NSURLResponse *response,NSData *urlData,NSError *error){
+            if(!urlData){
+                NSLog(@"URLData is nil");
+                dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUNoConnection);});
+                return;
+            }
+            
+            RXMLElement *rootXML = [[RXMLElement alloc] initFromXMLData:urlData];
+            if([[rootXML tag] isEqualToString: @"response"]){
+                if([rootXML child:@"success"] != nil){
+                    if([[[rootXML child:@"success"] text] isEqualToString:@"T"]){
+                        dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUSuccess);});
+                        return;
+                    }
+                }
+            }
+            
+            
+            dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUNoConnection);});
+        };
+        
+        [NSURLConnection sendAsynchronousRequest:request queue:[[NSOperationQueue alloc] init] completionHandler:completion];
+    }
+}
+
+- (void)retrieveStartDateOfTimer:(void (^)(RSUConnectionResponse, NSString *))responseBlock{
+    if(isOffline){
+        dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUNoConnection, nil);});
+    }else{
+        NSString *url = [NSString stringWithFormat:@"https://runsignup.com/rest/Race/%@/Results?event_id=%@&request_type=start-time&tmp_key=%@&tmp_secret=%@&format=xml", currentRaceID, currentEventID, key, secret];
+        
+        NSMutableURLRequest *request = [[[NSMutableURLRequest alloc] init] autorelease];
+        [request setURL:[NSURL URLWithString:url]];
+        [request setHTTPMethod:@"GET"];
+        
+        void (^completion)(NSURLResponse *,NSData *,NSError *) = ^(NSURLResponse *response,NSData *urlData,NSError *error){
+            if(!urlData){
+                NSLog(@"URLData is nil");
+                dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUNoConnection, nil);});
+                return;
+            }
+            
+            NSString *string = [[NSString alloc] initWithData:urlData encoding:NSUTF8StringEncoding];
+            NSLog(string);
+            
+            RXMLElement *rootXML = [[RXMLElement alloc] initFromXMLData:urlData];
+            if([[rootXML tag] isEqualToString: @"event_start"]){
+                RXMLElement *startTime = [rootXML child: @"start_time"];
+                if(startTime && [startTime text]){
+                    NSString *startDateString = [startTime text];
+                    dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUSuccess, startDateString);});
+                    return;
+                }
+            }
+            
+            dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUNoConnection, nil);});
+        };
+        
+        [NSURLConnection sendAsynchronousRequest:request queue:[[NSOperationQueue alloc] init] completionHandler:completion];
+    }
+}
+
 /* Renew credentials every X amount of time so the user does not get logged out due to
    inactivity. */
 - (int)renewCredentials{
