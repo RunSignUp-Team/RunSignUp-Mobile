@@ -20,8 +20,9 @@
 #import "ZBarSDK.h"
 #import "NumpadView.h"
 #import "RSUModel.h"
+#import "EditBibViewController.h"
 
-@interface ChuteViewController : UIViewController <ZBarReaderDelegate, UIAlertViewDelegate, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate>{
+@interface ChuteViewController : UIViewController <ZBarReaderDelegate, UIAlertViewDelegate, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, EditBibDelegate>{
     UIButton *recordButton;
     UIButton *barcodeButton;
     

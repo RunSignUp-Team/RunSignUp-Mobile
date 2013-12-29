@@ -100,7 +100,7 @@
     [super viewDidLoad];
     
     if([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
-        [self setEdgesForExtendedLayout: UIExtendedEdgeNone];
+        [self setEdgesForExtendedLayout: UIRectEdgeNone];
     
     // Images created for stretching to variably sized UIButtons (see buttons in resources)
     UIImage *blueButtonImage = [UIImage imageNamed:@"BlueButton.png"];
@@ -121,8 +121,8 @@
     [barcodeButton setBackgroundImage:stretchedBlueButtonTap forState:UIControlStateHighlighted];
     [barcodeButton setBackgroundImage:stretchedGrayButton forState:UIControlStateDisabled];
 
-    //if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
-     //   [self.bibField becomeFirstResponder];
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+        [self.bibField becomeFirstResponder];
         
     // Set up right bar button (upper right corner) of UINavigationBar to edit button
     UIBarButtonItem *editButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(toggleEditing)];
@@ -153,6 +153,8 @@
 
 - (void)viewWillAppear:(BOOL)animated{
     [self.navigationController setNavigationBarHidden:NO animated:animated];
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+        [self.bibField performSelector:@selector(becomeFirstResponder) withObject:nil afterDelay:0.1f];
 }
 
 - (void)toggleEditing{
@@ -232,7 +234,7 @@
                 [self reuploadResults];
             }
         }else if(buttonIndex == 1){
-            deleteResultsAlert = [[UIAlertView alloc] initWithTitle:@"Delete Results?" message:@"Are you sure you wish to delete all timing data for this event on the server and on your device?" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
+            deleteResultsAlert = [[UIAlertView alloc] initWithTitle:@"Delete Results?" message:@"Are you sure you wish to delete all chute data for this event on the server and on your device?" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
             [deleteResultsAlert show];
             [deleteResultsAlert release];
         }else if(buttonIndex == 2){
@@ -250,7 +252,7 @@
                 }
             };
             
-            [[RSUModel sharedModel] deleteResults:RSUClearTimer response:response];
+            [[RSUModel sharedModel] deleteResults:RSUClearChute response:response];
         }else{
             [self showDownloadResultsAlert];
         }
@@ -292,7 +294,16 @@
             [self record:nil];
             
             RoundedBarcodeView *rbv = (RoundedBarcodeView *)[reader.view viewWithTag: 11];
+            [rbv changeToPositive];
             [[rbv numberLabel] setText: symbol.data];
+            [NSObject cancelPreviousPerformRequestsWithTarget:rbv selector:@selector(fadeIn) object:nil];
+            [NSObject cancelPreviousPerformRequestsWithTarget:rbv selector:@selector(fadeOut) object:nil];
+            [rbv fadeIn];
+            [rbv performSelector:@selector(fadeOut) withObject:nil afterDelay:1.0f];
+        }else if([symbol.data length] != 0){
+            RoundedBarcodeView *rbv = (RoundedBarcodeView *)[reader.view viewWithTag: 11];
+            [rbv changeToNegative];
+            [[rbv numberLabel] setText: @""];
             [NSObject cancelPreviousPerformRequestsWithTarget:rbv selector:@selector(fadeIn) object:nil];
             [NSObject cancelPreviousPerformRequestsWithTarget:rbv selector:@selector(fadeOut) object:nil];
             [rbv fadeIn];
@@ -322,10 +333,20 @@
         cell = [[RecordTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier withMode:2];
         cell.showsReorderControl = YES;
     }
-    
+
+    if([[[records objectAtIndex: indexPath.row] objectForKey: @"Bib"] isEqualToString: @""]){
+        [[cell dataLabel] setText: @"No Bib"];
+    }else{
+        [[cell dataLabel] setText: [[records objectAtIndex: indexPath.row] objectForKey:@"Bib"]];
+    }
     [[cell textLabel] setText: [[records objectAtIndex: indexPath.row] objectForKey:@"Place"]];
-    [[cell dataLabel] setText: [[records objectAtIndex: indexPath.row] objectForKey:@"Bib"]];
-    
+
+    UIButton *accessoryButton = [UIButton buttonWithType: UIButtonTypeCustom];
+    [accessoryButton setBackgroundImage:[UIImage imageNamed: @"EditIcon.png"] forState:UIControlStateNormal];
+    [accessoryButton setFrame: CGRectMake(0, 0, 25, 25)];
+    [accessoryButton addTarget:self action:@selector(accessoryButtonTapped:withEvent:) forControlEvents:UIControlEventTouchUpInside];
+    [cell setAccessoryView: accessoryButton];
+
     return cell;
 }
 
@@ -458,6 +479,30 @@
     }
 }
 
+- (void)accessoryButtonTapped: (UIControl *) button withEvent: (UIEvent *) event{
+    NSIndexPath * indexPath = [self.table indexPathForRowAtPoint: [[[event touchesForView: button] anyObject] locationInView: self.table]];
+    if (indexPath == nil )
+        return;
+    
+    [self.table.delegate tableView: self.table accessoryButtonTappedForRowWithIndexPath: indexPath];
+}
+
+- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath{
+    EditBibViewController *editBibViewController = [[EditBibViewController alloc] initWithNibName:@"EditBibViewController" bundle:nil];
+    [editBibViewController setBibNumber: [[records objectAtIndex: indexPath.row] objectForKey: @"Bib"]];
+    [editBibViewController setDelegate: self];
+    [editBibViewController setIndexPath: indexPath];
+    [self presentModalViewController:editBibViewController animated:YES];
+    [editBibViewController release];
+}
+
+- (void)didSaveBib:(NSString *)bib withIndex:(NSIndexPath *)indexPath{
+    [[records objectAtIndex: indexPath.row] setObject:bib forKey:@"Bib"];
+    NSArray *indexArray = [NSArray arrayWithObject: indexPath];
+    [table reloadRowsAtIndexPaths:indexArray withRowAnimation:UITableViewRowAnimationFade];
+    [self saveToFile];
+}
+
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
     return @"Place                           Bib #";
 }
@@ -474,7 +519,7 @@
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
         return (interfaceOrientation == UIInterfaceOrientationPortrait);
     else
-        return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft);
+        return UIInterfaceOrientationIsLandscape(interfaceOrientation);
 }
 
 @end

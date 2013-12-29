@@ -92,7 +92,7 @@
     [super viewDidLoad];
     
     if([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
-        [self setEdgesForExtendedLayout: UIExtendedEdgeNone];
+        [self setEdgesForExtendedLayout: UIRectEdgeNone];
     
     self.timerLabel = [[TimerLabel alloc] initWithFrame:CGRectMake(0, 0, 320, 92)];
     [self.view addSubview: timerLabel];
@@ -333,9 +333,11 @@
             [startButton setEnabled: NO];
             started = NO;
             
-            [UIView beginAnimations:@"Slide" context:nil];
-            [table setFrame: CGRectMake(0, 92, 320, 388)];
-            [UIView commitAnimations];
+            if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
+                [UIView beginAnimations:@"Slide" context:nil];
+                [table setFrame: CGRectMake(0, 92, 320, 388)];
+                [UIView commitAnimations];
+            }
             
             [[NSUserDefaults standardUserDefaults] removeObjectForKey: @"TimerStartDate"];
             [[NSUserDefaults standardUserDefaults] removeObjectForKey: @"CurrentTimerFile"];
@@ -500,7 +502,7 @@
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
         return (interfaceOrientation == UIInterfaceOrientationPortrait);
     else
-        return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft);
+        return UIInterfaceOrientationIsLandscape(interfaceOrientation);
 }
 
 @end

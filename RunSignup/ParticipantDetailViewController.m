@@ -50,7 +50,7 @@
     [super viewDidLoad];
     
     if([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
-        [self setEdgesForExtendedLayout: UIExtendedEdgeNone];
+        [self setEdgesForExtendedLayout: UIRectEdgeNone];
     
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
         self.rli = [[RoundedLoadingIndicator alloc] initWithXLocation:160 YLocation:100];

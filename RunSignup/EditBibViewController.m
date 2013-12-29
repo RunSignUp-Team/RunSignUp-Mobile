@@ -36,8 +36,14 @@
 - (void)viewDidLoad{
     [super viewDidLoad];
     
-    if([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
-        [self setEdgesForExtendedLayout: UIExtendedEdgeNone];
+    if([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0){
+        [self setEdgesForExtendedLayout: UIRectEdgeNone];
+        for(UIView *subView in [self.view subviews]){
+            CGRect frame = [subView frame];
+            frame.origin.y += 20;
+            [subView setFrame: frame];
+        }
+    }
     
     UIImage *blueButtonImage = [UIImage imageNamed:@"BlueButton.png"];
     UIImage *stretchedBlueButton = [blueButtonImage stretchableImageWithLeftCapWidth:12 topCapHeight:12];
@@ -62,6 +68,14 @@
     }else if([string length] == 0){
         return YES;
     }
+    return NO;
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField{
+    if(textField.text.length == 0)
+        [self goBack: nil];
+    else
+        [self saveAndExit: nil];
     return NO;
 }
 

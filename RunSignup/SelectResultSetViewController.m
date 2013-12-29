@@ -45,7 +45,7 @@
     [super viewDidLoad];
     
     if([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
-        [self setEdgesForExtendedLayout: UIExtendedEdgeNone];
+        [self setEdgesForExtendedLayout: UIRectEdgeNone];
     
     UIBarButtonItem *editButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(toggleEdit)];
     UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addResultSet)];
@@ -242,7 +242,7 @@
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
         return (interfaceOrientation == UIInterfaceOrientationPortrait);
     else
-        return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft);
+        return UIInterfaceOrientationIsLandscape(interfaceOrientation);
 }
 
 @end

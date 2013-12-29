@@ -32,7 +32,10 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return 2;
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+        return 2;
+    else
+        return 1;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
@@ -53,20 +56,12 @@
     
     switch(indexPath.row){
         case 0:
-            if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
-                [bigRecordSwitch setFrame: CGRectMake(220, 9, 0, 0)];
-            else
-                [bigRecordSwitch setFrame: CGRectMake(220, 9, 0, 0)];
-            [bigRecordSwitch setFrame: CGRectMake(220, 9, 0, 0)];
-            [cell addSubview: bigRecordSwitch];
-            break;
-        case 1:
-            if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
-                [timerHoursSwitch setFrame: CGRectMake(220, 9, 0, 0)];
-            else
-                [timerHoursSwitch setFrame: CGRectMake(892, 9, 0, 0)];
             [timerHoursSwitch setFrame: CGRectMake(220, 9, 0, 0)];
             [cell addSubview: timerHoursSwitch];
+            break;
+        case 1:
+            [bigRecordSwitch setFrame: CGRectMake(220, 9, 0, 0)];
+            [cell addSubview: bigRecordSwitch];
             break;
         default:
             break;
@@ -90,8 +85,14 @@
 - (void)viewDidLoad{
     [super viewDidLoad];
     
-    if([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
-        [self setEdgesForExtendedLayout: UIExtendedEdgeNone];
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone && [[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0){
+        [self setEdgesForExtendedLayout: UIRectEdgeNone];
+        for(UIView *subView in [self.view subviews]){
+            CGRect frame = [subView frame];
+            frame.origin.y += 20;
+            [subView setFrame: frame];
+        }
+    }
     
     [bigRecordSwitch setOn: [[NSUserDefaults standardUserDefaults] boolForKey:@"BigRecordButton"]];
     [timerHoursSwitch setOn: [[NSUserDefaults standardUserDefaults] boolForKey:@"TimerHours"]];     
@@ -109,7 +110,7 @@
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
         return (interfaceOrientation == UIInterfaceOrientationPortrait);
     else
-        return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft);
+        return UIInterfaceOrientationIsLandscape(interfaceOrientation);
 }
 
 @end

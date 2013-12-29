@@ -62,7 +62,7 @@
     [super viewDidLoad];
     
     if([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
-        [self setEdgesForExtendedLayout: UIExtendedEdgeNone];
+        [self setEdgesForExtendedLayout: UIRectEdgeNone];
     
     self.title = @"Menu";
     UIImage *blueButtonImage = [UIImage imageNamed:@"BlueButton.png"];
@@ -264,10 +264,10 @@
             [signOutButton setHidden: NO];
             [signOutButton setTitle:@"Sign Out" forState:UIControlStateNormal];
             if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
-                [signOutButton setFrame: CGRectMake(22, 360, 278, 46)];
-                [selectRaceButton setFrame: CGRectMake(50, 107, 220, 46)];
+                [signOutButton setFrame: CGRectMake(22, 384, 278, 46)];
+                [selectRaceButton setFrame: CGRectMake(50, 127, 220, 46)];
             }else{
-                [signOutButton setFrame: CGRectMake(374, 644, 278, 46)];
+                [signOutButton setFrame: CGRectMake(384, 644, 278, 46)];
                 [selectRaceButton setFrame: CGRectMake(402, 230, 220, 46)];
             }
             [raceLabel setHidden: NO];
@@ -314,7 +314,7 @@
     [selectRaceButton setHidden: YES];
     [signOutButton setTitle:@"Back to Start Menu" forState:UIControlStateNormal];
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
-        [signOutButton setFrame: CGRectMake(22, 360, 278, 46)];
+        [signOutButton setFrame: CGRectMake(22, 384, 278, 46)];
     [signOutButton setHidden: NO];
     [signInButton setHidden: YES];
     [offlineButton setHidden: YES];
@@ -338,15 +338,15 @@
     [signOutButton setTitle:@"Sign Out" forState:UIControlStateNormal];
     // Animate selectRaceButton from top of view to bottom right
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
-        if(selectRaceButton.frame.origin.x == 50){ //50,128,220,46 to 166,376,138,46
+        if(selectRaceButton.frame.origin.x == 50){ //50,128,220,46 to 166,384,138,46
             [UIView beginAnimations:nil context:nil];
             [UIView setAnimationDuration: 0.75f];
-            [signOutButton setFrame: CGRectMake(22, 360, 138, 46)];
-            [selectRaceButton setFrame: CGRectMake(166, 360, 138, 46)];
+            [signOutButton setFrame: CGRectMake(22, 384, 138, 46)];
+            [selectRaceButton setFrame: CGRectMake(166, 384, 138, 46)];
             [UIView commitAnimations];
         }
     }else{
-        if(selectRaceButton.frame.origin.y == 230){ //50,128,220,46 to 166,376,138,46
+        if(selectRaceButton.frame.origin.y == 230){ //50,128,220,46 to 166,384,138,46
             [UIView beginAnimations:nil context:nil];
             [UIView setAnimationDuration: 0.75f];
             [selectRaceButton setFrame: CGRectMake(402, 500, 220, 46)];
@@ -397,7 +397,7 @@
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
         return (interfaceOrientation == UIInterfaceOrientationPortrait);
     else
-        return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft);
+        return UIInterfaceOrientationIsLandscape(interfaceOrientation);
 }
 
 @end

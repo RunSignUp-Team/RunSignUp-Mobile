@@ -57,8 +57,14 @@
 - (void)viewDidLoad{
     [super viewDidLoad];
     
-    if([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
-        [self setEdgesForExtendedLayout: UIExtendedEdgeNone];
+    if([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0){
+        [self setEdgesForExtendedLayout: UIRectEdgeNone];
+        for(UIView *subView in [self.view subviews]){
+            CGRect frame = [subView frame];
+            frame.origin.y += 20;
+            [subView setFrame: frame];
+        }
+    }
     
     UIImage *blueButtonImage = [UIImage imageNamed:@"BlueButton.png"];
     UIImage *stretchedBlueButton = [blueButtonImage stretchableImageWithLeftCapWidth:12 topCapHeight:12];
@@ -81,7 +87,7 @@
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
         return (interfaceOrientation == UIInterfaceOrientationPortrait);
     else
-        return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft);
+        return UIInterfaceOrientationIsLandscape(interfaceOrientation);
 }
 
 @end

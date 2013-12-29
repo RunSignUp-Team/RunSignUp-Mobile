@@ -20,7 +20,9 @@
 #import <QuartzCore/QuartzCore.h>
 
 @implementation RoundedBarcodeView
+@synthesize feedbackLabel;
 @synthesize numberLabel;
+@synthesize imageView;
 
 - (id)initWithYLocation:(int)loc{
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
@@ -28,17 +30,21 @@
     else
         self = [super initWithFrame:CGRectMake(274, loc + 40, 220, 120)];
     if(self){
-        UIImageView *checkImage = [[UIImageView alloc] initWithImage: [UIImage imageNamed:@"Check.png"]];
-        [checkImage setFrame: CGRectMake(94, 45, 32, 28)];
-        [self addSubview: checkImage];
         
-        UILabel *label = [[UILabel alloc] initWithFrame: CGRectMake(12, 10, 196, 20)];
-        [label setFont: [UIFont systemFontOfSize: 18.0f]];
-        [label setBackgroundColor: [UIColor clearColor]];
-        [label setTextColor: [UIColor whiteColor]];
-        [label setTextAlignment: UITextAlignmentCenter];
-        [label setText:@"Bib number saved to list"];
-        [self addSubview: label];
+        checkImage = [UIImage imageNamed:@"Check.png"];
+        xImage = [UIImage imageNamed:@"X.png"];
+        
+        self.imageView = [[UIImageView alloc] initWithImage: checkImage];
+        [imageView setFrame: CGRectMake(94, 45, 32, 28)];
+        [self addSubview: imageView];
+        
+        self.feedbackLabel = [[UILabel alloc] initWithFrame: CGRectMake(12, 10, 196, 20)];
+        [feedbackLabel setFont: [UIFont systemFontOfSize: 18.0f]];
+        [feedbackLabel setBackgroundColor: [UIColor clearColor]];
+        [feedbackLabel setTextColor: [UIColor whiteColor]];
+        [feedbackLabel setTextAlignment: UITextAlignmentCenter];
+        [feedbackLabel setText:@"Bib number saved to list"];
+        [self addSubview: feedbackLabel];
         
         self.numberLabel = [[UILabel alloc] initWithFrame: CGRectMake(10, 88, 200, 28)];
         [numberLabel setFont: [UIFont systemFontOfSize: 26.0f]];
@@ -81,6 +87,17 @@
     [UIView commitAnimations];
     [self performSelector:@selector(setHidden:) withObject:[NSNumber numberWithBool:YES] afterDelay:0.5f];
 }
+
+- (void)changeToPositive{
+    [feedbackLabel setText: @"Bib number saved to list"];
+    [imageView setImage: checkImage];
+}
+
+- (void)changeToNegative{
+    [feedbackLabel setText: @"Bib number unreadable"];
+    [imageView setImage: xImage];
+}
+
 /*
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.

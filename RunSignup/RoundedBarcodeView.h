@@ -19,14 +19,24 @@
 #import <UIKit/UIKit.h>
 
 @interface RoundedBarcodeView : UIView{
+    UILabel *feedbackLabel;
     UILabel *numberLabel;
+    UIImageView *imageView;
+    
+    UIImage *checkImage;
+    UIImage *xImage;
 }
 
 - (id)initWithYLocation:(int)loc;
 
+@property (nonatomic, retain) UILabel *feedbackLabel;
 @property (nonatomic, retain) UILabel *numberLabel;
+@property (nonatomic, retain) UIImageView *imageView;
 
 - (void)fadeOut;
 - (void)fadeIn;
+
+- (void)changeToPositive;
+- (void)changeToNegative;
 
 @end
