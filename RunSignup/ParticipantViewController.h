@@ -26,24 +26,17 @@
     NSMutableArray *participants;
     
     RoundedLoadingIndicator *rli;
-    
-    NSIndexPath *row;
-    
-    NSString *raceName;
-    NSString *eventName;
 }
 
 @property (nonatomic, retain) IBOutlet UITableView *table;
 @property (nonatomic, retain) NSMutableArray *participants;
 @property (nonatomic, retain) RoundedLoadingIndicator *rli;
-@property (nonatomic, retain) NSIndexPath *row;
-@property (nonatomic, retain) NSString *raceName;
-@property (nonatomic, retain) NSString *eventName;
 
 - (IBAction)goBack:(id)sender;
 - (IBAction)toggleEdit:(id)sender;
 - (IBAction)addParticipant:(id)sender;
 
 - (void)createParticipantWithDictionary:(NSDictionary *)dict response:(void (^)(RSUConnectionResponse))responseBlock;
+- (void)editParticipantWithDictionary:(NSDictionary *)dict editPath:(NSIndexPath *)editPath response:(void (^)(RSUConnectionResponse))responseBlock;
 
 @end

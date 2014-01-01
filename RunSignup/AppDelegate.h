@@ -17,8 +17,17 @@
 // limitations under the License.
 
 #import <UIKit/UIKit.h>
+#import "RSUNavigationControllerViewController.h"
 
 @class MainMenuViewController;
+
+@interface UINavigationController (autorotation)
+
+-(BOOL)shouldAutorotate;
+-(NSUInteger)supportedInterfaceOrientations;
+
+@end
+
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>{
     UINavigationController *navController;

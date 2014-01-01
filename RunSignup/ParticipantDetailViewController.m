@@ -25,6 +25,8 @@
 @synthesize bibField;
 @synthesize ageField;
 @synthesize stateField;
+@synthesize editDictionary;
+@synthesize editPath;
 @synthesize rli;
 @synthesize cityField;
 @synthesize genderControl;
@@ -40,6 +42,9 @@
             self.title = @"Edit Participant";
         }
         
+        self.editDictionary = nil;
+        self.editPath = nil;
+        
         UIBarButtonItem *submitButton = [[UIBarButtonItem alloc] initWithTitle:@"Submit" style:UIBarButtonItemStyleDone target:self action:@selector(submit:)];
         [self.navigationItem setRightBarButtonItem: submitButton];
     }
@@ -53,7 +58,10 @@
         [self setEdgesForExtendedLayout: UIRectEdgeNone];
     
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
-        self.rli = [[RoundedLoadingIndicator alloc] initWithXLocation:160 YLocation:100];
+        if([[UIScreen mainScreen] bounds].size.height > 480.0f)
+            self.rli = [[RoundedLoadingIndicator alloc] initWithXLocation:160 YLocation:2];
+        else
+            self.rli = [[RoundedLoadingIndicator alloc] initWithXLocation:204 YLocation:2];
     else
         self.rli = [[RoundedLoadingIndicator alloc] initWithXLocation:432 YLocation:100];
     
@@ -63,7 +71,17 @@
         [[rli label] setText:@"Editing..."];
 
     [self.view addSubview: rli];
-
+    
+    if(!creating && editDictionary != nil){
+        [firstNameField setText: [editDictionary objectForKey:@"FirstName"]];
+        [lastNameField setText: [editDictionary objectForKey:@"LastName"]];
+        NSInteger index = [[editDictionary objectForKey:@"Gender"] isEqualToString:@"F"];
+        [genderControl setSelectedSegmentIndex: index];
+        [bibField setText: [editDictionary objectForKey:@"Bib"]];
+        [ageField setText: [editDictionary objectForKey:@"Age"]];
+        [cityField setText: [editDictionary objectForKey:@"City"]];
+        [stateField setText: [editDictionary objectForKey:@"State"]];
+    }
     
     [firstNameField becomeFirstResponder];
 }
@@ -136,7 +154,6 @@
 }
 
 - (IBAction)submit:(id)sender{
-    
     // Auto capitalize the names for proper alphabetization
     if([[firstNameField text] length] >= 1)
         [firstNameField setText: [[firstNameField text] stringByReplacingCharactersInRange:NSMakeRange(0,1) withString:[[[firstNameField text] substringToIndex:1] capitalizedString]]];
@@ -144,6 +161,13 @@
         [lastNameField setText: [[lastNameField text] stringByReplacingCharactersInRange:NSMakeRange(0,1) withString:[[[lastNameField text] substringToIndex:1] capitalizedString]]];
     if([[cityField text] length] >= 1)
         [cityField setText: [[cityField text] stringByReplacingCharactersInRange:NSMakeRange(0,1) withString:[[[cityField text] substringToIndex:1] capitalizedString]]];
+    
+    if([[firstNameField text] length] < 1 || [[lastNameField text] length] < 1 || [[cityField text] length] < 1){
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"One or more fields are blank. Please enter the information and try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+        [alert show];
+        [alert release];
+        return;
+    }
     
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
     [dict setObject:[firstNameField text] forKey:@"FirstName"];
@@ -159,29 +183,45 @@
         [dict setObject:@"F" forKey:@"Gender"];
     }
     
-    if(creating){
-        void (^response)(RSUConnectionResponse) = ^(RSUConnectionResponse didSucceed){
-            if(didSucceed == RSUNoConnection){
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignUp. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
-                [alert show];
-                [alert release];
-            }else{
-                [self.navigationController popViewControllerAnimated: YES];
-            }
-            
-            [rli fadeOut];
-        };
+    void (^response)(RSUConnectionResponse) = ^(RSUConnectionResponse didSucceed){
+        if(didSucceed == RSUNoConnection){
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignUp. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+            [alert show];
+            [alert release];
+        }else{
+            [self.navigationController popViewControllerAnimated: YES];
+        }
         
-        [rli fadeIn];
+        [rli fadeOut];
+    };
+    
+    [rli fadeIn];
+    
+    if(creating){
         [delegate createParticipantWithDictionary:dict response:response];
     }else{
-        // edit/upload participant
+        [delegate editParticipantWithDictionary:dict editPath:editPath response:response];
     }
     
 }
 
+
+- (NSUInteger)supportedInterfaceOrientations{
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+        return UIInterfaceOrientationMaskLandscape;
+    else
+        return UIInterfaceOrientationMaskLandscape;
+}
+
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation{
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+        return UIInterfaceOrientationLandscapeLeft;
+    else
+        return UIInterfaceOrientationLandscapeLeft;
+}
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation{
-    return (UIInterfaceOrientationIsLandscape(interfaceOrientation));
+    return UIInterfaceOrientationIsLandscape(interfaceOrientation);
 }
 
 @end

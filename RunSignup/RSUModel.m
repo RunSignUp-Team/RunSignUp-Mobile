@@ -52,7 +52,7 @@ static RSUModel *model = nil;
         dispatch_async(dispatch_get_main_queue(),^(){responseBlock(nil);});
     }else{
         if([self renewCredentials] == RSUSuccess){
-            NSString *url = [NSString stringWithFormat:@"https://runsignup.com/rest/races?tmp_key=%@&tmp_secret=%@&events=T", key, secret];
+            NSString *url = [NSString stringWithFormat:@"%s/rest/races?tmp_key=%@&tmp_secret=%@&events=T", RSUDOMAIN, key, secret];
             
             NSMutableURLRequest *request = [[[NSMutableURLRequest alloc] init] autorelease];
             [request setURL:[NSURL URLWithString:url]];
@@ -130,7 +130,7 @@ static RSUModel *model = nil;
     if(isOffline){
         dispatch_async(dispatch_get_main_queue(),^(){responseBlock(nil);});
     }else{
-        NSString *url = [NSString stringWithFormat:@"https://runsignup.com/rest/Race/%@/Results?event_id=%@&request_type=get-result-sets&tmp_key=%@&tmp_secret=%@&format=xml", raceID, eventID, key, secret];
+        NSString *url = [NSString stringWithFormat:@"%s/rest/Race/%@/Results?event_id=%@&request_type=get-result-sets&tmp_key=%@&tmp_secret=%@&format=xml", RSUDOMAIN, raceID, eventID, key, secret];
         
         NSMutableURLRequest *request = [[[NSMutableURLRequest alloc] init] autorelease];
         [request setURL:[NSURL URLWithString:url]];
@@ -151,8 +151,20 @@ static RSUModel *model = nil;
                             RXMLElement *individualResult = [[rootXML children:@"individual_results_set"] objectAtIndex: x];
                             RXMLElement *individualResultName = [individualResult child: @"individual_result_set_name"];
                             RXMLElement *individualResultID = [individualResult child: @"individual_result_set_id"];
+                            //RXMLElement *resultsHeaders = [individualResult child: @"results_headers"];
                             
                             if(individualResultID != nil && individualResultName != nil){
+                                /*NSMutableArray *headersArray = [[NSMutableArray alloc] init];
+                                
+                                if(resultsHeaders != nil){
+                                    for(RXMLElement *field in [resultsHeaders children: @"field"]){
+                                        RXMLElement *name = [field child: @"name"];
+                                        
+                                        if(name != nil && [name text] != nil)
+                                            [headersArray addObject: [name text]];
+                                    }
+                                }
+                                */
                                 NSDictionary *dict = [[NSDictionary alloc] initWithObjectsAndKeys:[individualResultName text], @"ResultSetName", [individualResultID text], @"ResultSetID", nil];
                                 [resultSetList addObject: dict];
                             }
@@ -173,7 +185,7 @@ static RSUModel *model = nil;
     if(isOffline){
         dispatch_async(dispatch_get_main_queue(),^(){responseBlock(nil);});
     }else{
-        NSString *url = [NSString stringWithFormat:@"https://runsignup.com/rest/Race/%@/participants?event_id=%@&page=1&sort=last_name,first_name&results_per_page=250&tmp_key=%@&tmp_secret=%@&format=xml", currentRaceID, currentEventID, key, secret];
+        NSString *url = [NSString stringWithFormat:@"%s/rest/Race/%@/participants?event_id=%@&page=1&sort=last_name,first_name&results_per_page=250&tmp_key=%@&tmp_secret=%@&format=xml", RSUDOMAIN, currentRaceID, currentEventID, key, secret];
         
         NSMutableURLRequest *request = [[[NSMutableURLRequest alloc] init] autorelease];
         [request setURL:[NSURL URLWithString:url]];
@@ -251,6 +263,76 @@ static RSUModel *model = nil;
     }
 }
 
+- (void)attemptRetrieveResults:(void (^)(NSMutableArray *))responseBlock{
+    if(isOffline){
+        dispatch_async(dispatch_get_main_queue(),^(){responseBlock(nil);});
+    }else{
+        NSString *url = [NSString stringWithFormat:@"%s/rest/Race/%@/results/get-results/?event_id=%@&page=1&sort=last_name,first_name&results_per_page=250&tmp_key=%@&tmp_secret=%@&format=csv", RSUDOMAIN, currentRaceID, currentEventID, key, secret];
+        
+        NSMutableURLRequest *request = [[[NSMutableURLRequest alloc] init] autorelease];
+        [request setURL:[NSURL URLWithString:url]];
+        [request setHTTPMethod:@"GET"];
+        
+        void (^completion)(NSURLResponse *,NSData *,NSError *) = ^(NSURLResponse *response,NSData *urlData,NSError *error){            
+            NSString *csvString = [[NSString alloc] initWithData:urlData encoding:NSUTF8StringEncoding];
+            
+            if(urlData != nil){
+                NSMutableArray *results = [self parseCSV:csvString];
+                if([results count] > 0){
+                    dispatch_async(dispatch_get_main_queue(),^(){responseBlock(results);});
+                    return;
+                }
+            }
+            
+            dispatch_async(dispatch_get_main_queue(),^(){responseBlock(nil);});
+        };
+        
+        [NSURLConnection sendAsynchronousRequest:request queue:[[NSOperationQueue alloc] init] completionHandler:completion];
+    }
+}
+
+- (NSMutableArray *)parseCSV:(NSString *)csv{
+    resultsArray = [[NSMutableArray alloc] init];
+    keyArray = [[NSMutableArray alloc] init];
+    currentEntry = nil;
+    readingKeys = NO;
+    
+    csvParser = [[CHCSVParser alloc] initWithCSVString: csv];
+    [csvParser setDelegate: self];
+    [csvParser parse];
+    [csvParser release];
+    
+    return resultsArray;
+}
+
+- (void)parser:(CHCSVParser *)parser didBeginLine:(NSUInteger)recordNumber{
+    if(recordNumber == 1){
+        readingKeys = YES;
+    }else{
+        readingKeys = NO;
+        currentEntry = [[NSMutableDictionary alloc] init];
+    }
+}
+
+- (void)parser:(CHCSVParser *)parser didReadField:(NSString *)field atIndex:(NSInteger)fieldIndex{
+    if(readingKeys){
+        [keyArray addObject: field];
+    }else{
+        if([field length] > 0 && ![field isEqualToString:@"null"])
+            [currentEntry setObject:field forKey:[keyArray objectAtIndex: fieldIndex]]; // utilize keyArray as the key lookup
+    }
+}
+
+- (void)parser:(CHCSVParser *)parser didEndLine:(NSUInteger)recordNumber{
+    if(!readingKeys){
+        if([[currentEntry allKeys] count] > 0){
+            [resultsArray addObject: currentEntry];
+            [currentEntry release];
+            currentEntry = nil;
+        }
+    }
+}
+
 /* Attempt to log in with the given email and password. Multiple responses
    can be returned: no connection, invalid email, invalid pass, success. If
    successful, then the secret and key are stored inside the RSUModel object. */
@@ -266,7 +348,7 @@ static RSUModel *model = nil;
         NSString *postLength = [NSString stringWithFormat:@"%d", [postData length]];
         
         NSMutableURLRequest *request = [[[NSMutableURLRequest alloc] init] autorelease];
-        [request setURL:[NSURL URLWithString:@"https://runsignup.com/rest/login"]];
+        [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"%s/rest/login", RSUDOMAIN]]];
         [request setHTTPMethod:@"POST"];
         [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
         [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
@@ -329,7 +411,7 @@ static RSUModel *model = nil;
     if(isOffline){
         dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUNoConnection);});
     }else{
-        NSString *url = [NSString stringWithFormat:@"https://runsignup.com/rest/Race/%@/Results?event_id=%@&request_type=finishing-times&tmp_key=%@&tmp_secret=%@&format=xml", currentRaceID, currentEventID, key, secret];
+        NSString *url = [NSString stringWithFormat:@"%s/rest/Race/%@/Results?event_id=%@&request_type=finishing-times&tmp_key=%@&tmp_secret=%@&format=xml", RSUDOMAIN, currentRaceID, currentEventID, key, secret];
         
         NSString *jsonRequest = [NSString stringWithFormat: @"{\"last_finishing_time_id\": %@,\"finishing_times\": %@}", lastFinishingTimeID, [finishingTimes JSONRepresentation]];
         
@@ -398,7 +480,7 @@ static RSUModel *model = nil;
     if(isOffline){
         dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUNoConnection);});
     }else{
-        NSString *url = [NSString stringWithFormat:@"https://runsignup.com/rest/Race/%@/Results?event_id=%@&request_type=bib-order&tmp_key=%@&tmp_secret=%@&format=xml", currentRaceID, currentEventID, key, secret];
+        NSString *url = [NSString stringWithFormat:@"%s/rest/Race/%@/Results?event_id=%@&request_type=bib-order&tmp_key=%@&tmp_secret=%@&format=xml", RSUDOMAIN, currentRaceID, currentEventID, key, secret];
         
         NSString *jsonRequest = [NSString stringWithFormat: @"{\"last_finishing_place\": %@,\"bib_nums\": %@}", lastBibNumber, [finishingBibs JSONRepresentation]];
         
@@ -461,7 +543,7 @@ static RSUModel *model = nil;
 
 /* Add a participant into the listings for a given event. Data expected in participant
    dictionary is: FirstName, LastName, Gender, Bib, Age, City, State */
-- (void)addParticipants:(NSArray *)participants response:(void (^)(RSUConnectionResponse, NSString *))responseBlock{
+- (void)editParticipants:(NSArray *)participants response:(void (^)(RSUConnectionResponse, NSString *))responseBlock{
     if(isOffline){
         dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUNoConnection, nil);});
     }else{
@@ -475,10 +557,12 @@ static RSUModel *model = nil;
             [actualParticipant setObject:[[participants objectAtIndex: x] objectForKey:@"Age"] forKey:@"age"];
             [actualParticipant setObject:[[participants objectAtIndex: x] objectForKey:@"Gender"] forKey:@"gender"];
             [actualParticipant setObject:[[participants objectAtIndex: x] objectForKey:@"Bib"] forKey:@"bib_num"];
+            if([[participants objectAtIndex: x] objectForKey: @"RegistrationID"] != nil)
+                [actualParticipant setObject:[[participants objectAtIndex: x] objectForKey:@"RegistrationID"] forKey:@"registration_id"];
             [actualParticipants addObject: actualParticipant];
         }
         
-        NSString *url = [NSString stringWithFormat:@"https://runsignup.com/rest/Race/%@/participants?event_id=%@&tmp_key=%@&tmp_secret=%@&format=xml", currentRaceID, currentEventID, key, secret];
+        NSString *url = [NSString stringWithFormat:@"%s/rest/Race/%@/participants?event_id=%@&tmp_key=%@&tmp_secret=%@&format=xml", RSUDOMAIN, currentRaceID, currentEventID, key, secret];
         
         NSString *jsonRequest = [NSString stringWithFormat: @"{\"participants\": %@}", [actualParticipants JSONRepresentation]];
         
@@ -527,11 +611,11 @@ static RSUModel *model = nil;
     }else{
         NSString *url;
         if(type == 0)
-            url = [NSString stringWithFormat:@"https://runsignup.com/rest/Race/%@/Results?event_id=%@&request_type=get-timing-data&tmp_key=%@&tmp_secret=%@&format=xml", currentRaceID, currentEventID, key, secret];
+            url = [NSString stringWithFormat:@"%s/rest/Race/%@/Results?event_id=%@&request_type=get-timing-data&tmp_key=%@&tmp_secret=%@&format=xml", RSUDOMAIN, currentRaceID, currentEventID, key, secret];
         else if(type == 1)
-            url = [NSString stringWithFormat:@"https://runsignup.com/rest/Race/%@/Results?event_id=%@&request_type=get-checker-data&tmp_key=%@&tmp_secret=%@&format=xml", currentRaceID, currentEventID, key, secret];
+            url = [NSString stringWithFormat:@"%s/rest/Race/%@/Results?event_id=%@&request_type=get-checker-data&tmp_key=%@&tmp_secret=%@&format=xml", RSUDOMAIN, currentRaceID, currentEventID, key, secret];
         else
-            url = [NSString stringWithFormat:@"https://runsignup.com/rest/Race/%@/Results?event_id=%@&request_type=get-chute-data&tmp_key=%@&tmp_secret=%@&format=xml", currentRaceID, currentEventID, key, secret];
+            url = [NSString stringWithFormat:@"%s/rest/Race/%@/Results?event_id=%@&request_type=get-chute-data&tmp_key=%@&tmp_secret=%@&format=xml", RSUDOMAIN, currentRaceID, currentEventID, key, secret];
 
         
         NSMutableURLRequest *request = [[[NSMutableURLRequest alloc] init] autorelease];
@@ -600,7 +684,7 @@ static RSUModel *model = nil;
     if(isOffline){
         dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUNoConnection);});
     }else{
-        NSString *url = [NSString stringWithFormat:@"https://runsignup.com/rest/Race/%@/Results?event_id=%@&request_type=start-time&tmp_key=%@&tmp_secret=%@&format=xml", currentRaceID, currentEventID, key, secret];
+        NSString *url = [NSString stringWithFormat:@"%s/rest/Race/%@/Results?event_id=%@&request_type=start-time&tmp_key=%@&tmp_secret=%@&format=xml", RSUDOMAIN, currentRaceID, currentEventID, key, secret];
         
         NSString *jsonRequest = [NSString stringWithFormat: @"{\"start_time\": \"%@\"}", startDate];
         
@@ -644,7 +728,7 @@ static RSUModel *model = nil;
     if(isOffline){
         dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUNoConnection, nil);});
     }else{
-        NSString *url = [NSString stringWithFormat:@"https://runsignup.com/rest/Race/%@/Results?event_id=%@&request_type=start-time&tmp_key=%@&tmp_secret=%@&format=xml", currentRaceID, currentEventID, key, secret];
+        NSString *url = [NSString stringWithFormat:@"%s/rest/Race/%@/Results?event_id=%@&request_type=start-time&tmp_key=%@&tmp_secret=%@&format=xml", RSUDOMAIN, currentRaceID, currentEventID, key, secret];
         
         NSMutableURLRequest *request = [[[NSMutableURLRequest alloc] init] autorelease];
         [request setURL:[NSURL URLWithString:url]];
@@ -683,7 +767,7 @@ static RSUModel *model = nil;
     if(isOffline){
         return RSUNoConnection;
     }else{
-        NSString *url = [NSString stringWithFormat:@"https://runsignup.com/rest/user?tmp_key=%@&tmp_secret=%@", key, secret];
+        NSString *url = [NSString stringWithFormat:@"%s/rest/user?tmp_key=%@&tmp_secret=%@", RSUDOMAIN, key, secret];
         
         NSMutableURLRequest *request = [[[NSMutableURLRequest alloc] init] autorelease];
         [request setURL:[NSURL URLWithString:url]];
@@ -720,7 +804,7 @@ static RSUModel *model = nil;
     if(isOffline){
         dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUNoConnection);});
     }else{
-        NSString *url = [NSString stringWithFormat:@"https://runsignup.com/rest/Race/%@/Results?event_id=%@&request_type=new-result-set&tmp_key=%@&tmp_secret=%@&format=xml", currentRaceID, currentEventID, key, secret];
+        NSString *url = [NSString stringWithFormat:@"%s/rest/Race/%@/Results?event_id=%@&request_type=new-result-set&tmp_key=%@&tmp_secret=%@&format=xml", RSUDOMAIN, currentRaceID, currentEventID, key, secret];
         
         NSString *jsonRequest = [NSString stringWithFormat:@"{\"individual_result_set_name\": \"%@\"}", name];
         
@@ -769,7 +853,7 @@ static RSUModel *model = nil;
     if(isOffline){
         dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUNoConnection);});
     }else{
-        NSString *url = [NSString stringWithFormat:@"https://runsignup.com/rest/Race/%@/Results?event_id=%@&request_type=delete-result-set&tmp_key=%@&tmp_secret=%@&format=xml", currentRaceID, currentEventID, key, secret];
+        NSString *url = [NSString stringWithFormat:@"%s/rest/Race/%@/Results?event_id=%@&request_type=delete-result-set&tmp_key=%@&tmp_secret=%@&format=xml", RSUDOMAIN, currentRaceID, currentEventID, key, secret];
         
         NSString *post = [NSString stringWithFormat: @"individual_result_set_id=%@", resultSetID];
         NSData *postData = [post dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
@@ -814,7 +898,7 @@ static RSUModel *model = nil;
     if(isOffline){
         dispatch_async(dispatch_get_main_queue(),^(){responseBlock(RSUNoConnection);});
     }else{
-        NSString *url = [NSString stringWithFormat:@"https://runsignup.com/rest/Race/%@/Results?event_id=%@&tmp_key=%@&tmp_secret=%@&format=xml", currentRaceID, currentEventID, key, secret];
+        NSString *url = [NSString stringWithFormat:@"%s/rest/Race/%@/Results?event_id=%@&tmp_key=%@&tmp_secret=%@&format=xml", RSUDOMAIN, currentRaceID, currentEventID, key, secret];
 
         NSString *post;
         if(category == RSUClearResults)
@@ -873,7 +957,7 @@ static RSUModel *model = nil;
    necessary but good practice all the same */
 - (void)logout{
     if(!isOffline){
-        NSString *url = [NSString stringWithFormat:@"https://runsignup.com/rest/logout?tmp_key=%@&tmp_secret=%@", key, secret];
+        NSString *url = [NSString stringWithFormat:@"%s/rest/logout?tmp_key=%@&tmp_secret=%@", RSUDOMAIN, key, secret];
         
         NSMutableURLRequest *request = [[[NSMutableURLRequest alloc] init] autorelease];
         [request setURL:[NSURL URLWithString:url]];

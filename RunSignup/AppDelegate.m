@@ -20,6 +20,21 @@
 
 #import "MainMenuViewController.h"
 
+@implementation UINavigationController (autorotation)
+
+-(BOOL)shouldAutorotate{
+    
+    //return [self.topViewController shouldAutorotate];;
+    return YES;
+    
+}
+
+-(NSUInteger)supportedInterfaceOrientations{
+    return [self.topViewController supportedInterfaceOrientations];
+}
+
+@end
+
 @implementation AppDelegate
 
 @synthesize window = _window;
@@ -36,15 +51,15 @@
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
     
     //Set up default values for various settings (first thing called when app launches for the first time)
+    if([[NSUserDefaults standardUserDefaults] objectForKey:@"AutoSignIn"] == nil){
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"AutoSignIn"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
     if([[NSUserDefaults standardUserDefaults] objectForKey:@"BigRecordButton"] == nil){
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"BigRecordButton"];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
-    if([[NSUserDefaults standardUserDefaults] objectForKey:@"TimerHours"] == nil){
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"TimerHours"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-    }
-        
+    
     // Push main menu onto stack as the first view controller
     
     MainMenuViewController *mainMenuViewController = [[[MainMenuViewController alloc] initWithNibName:@"MainMenuViewController" bundle:nil] autorelease];

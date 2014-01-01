@@ -17,6 +17,9 @@
 // limitations under the License.
 
 #import <Foundation/Foundation.h>
+#import "CHCSVParser.h"
+
+#define RSUDOMAIN "https://test.runsignup.com"
 
 typedef enum{
     RSUNoConnection = 0,
@@ -40,7 +43,7 @@ typedef enum{
     RSUDifferencesBothDifferent
 } RSUDifferences;
 
-@interface RSUModel : NSObject{
+@interface RSUModel : NSObject <CHCSVParserDelegate>{
     NSString *key;
     NSString *secret;
         
@@ -57,6 +60,13 @@ typedef enum{
     NSTimer *renewTimer;
     
     NSMutableArray *downloadedRecords;
+    
+    CHCSVParser *csvParser;
+    NSMutableDictionary *currentEntry;
+    NSMutableArray *resultsArray;
+    NSMutableArray *keyArray;
+    
+    BOOL readingKeys;
     
     BOOL isOffline;
 }
@@ -88,6 +98,9 @@ typedef enum{
 - (void)attemptRetrieveRaceList:(void (^)(NSArray *))responseBlock;
 - (void)attemptRetrieveResultSetList:(NSString *)raceID event:(NSString *)eventID response:(void (^)(NSMutableArray *))responseBlock;
 - (void)attemptRetrieveParticipants:(void (^)(NSMutableArray *))responseBlock;
+- (void)attemptRetrieveResults:(void (^)(NSMutableArray *))responseBlock;
+
+- (NSMutableArray *)parseCSV:(NSString *)csv;
 
 - (void)createNewResultSet:(NSString *)name response:(void (^)(RSUConnectionResponse))responseBlock;
 - (void)deleteResultSet:(NSString *)resultSetID response:(void (^)(RSUConnectionResponse))responseBlock;
@@ -101,6 +114,6 @@ typedef enum{
 - (void)addFinishingTimes:(NSArray *)finishingTimes response:(void (^)(RSUConnectionResponse))responseBlock;
 - (void)addFinishingBibs:(NSArray *)finishingBibs response:(void (^)(RSUConnectionResponse))responseBlock;
 
-- (void)addParticipants:(NSArray *)participants response:(void (^)(RSUConnectionResponse, NSString *))responseBlock;
+- (void)editParticipants:(NSArray *)participants response:(void (^)(RSUConnectionResponse, NSString *))responseBlock;
 
 @end

@@ -20,8 +20,8 @@
 
 @implementation SettingsViewController
 @synthesize settings;
+@synthesize autoSignInSwitch;
 @synthesize bigRecordSwitch;
-@synthesize timerHoursSwitch;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil{
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -52,15 +52,15 @@
     if(cell == nil)
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     
-    [cell.textLabel setText: [[NSArray arrayWithObjects:@"Big Record Button:", @"Timer Shows Hours:", nil] objectAtIndex:indexPath.row]];
+    [cell.textLabel setText: [[NSArray arrayWithObjects:@"Automatically Sign In:", @"Big Record Button:", nil] objectAtIndex:indexPath.row]];
     
     switch(indexPath.row){
         case 0:
-            [timerHoursSwitch setFrame: CGRectMake(220, 9, 0, 0)];
-            [cell addSubview: timerHoursSwitch];
+            [autoSignInSwitch setFrame: CGRectMake(220, 7, 0, 0)];
+            [cell addSubview: autoSignInSwitch];
             break;
         case 1:
-            [bigRecordSwitch setFrame: CGRectMake(220, 9, 0, 0)];
+            [bigRecordSwitch setFrame: CGRectMake(220, 7, 0, 0)];
             [cell addSubview: bigRecordSwitch];
             break;
         default:
@@ -70,15 +70,13 @@
     return cell;
 }
 
-// Change big record button setting
 - (IBAction)bigRecordChange:(id)sender{
     [[NSUserDefaults standardUserDefaults] setBool:bigRecordSwitch.on forKey:@"BigRecordButton"];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
-// Change timer shows hours setting
-- (IBAction)timerHoursChange:(id)sender{
-    [[NSUserDefaults standardUserDefaults] setBool:timerHoursSwitch.on forKey:@"TimerHours"];
+- (IBAction)autoSignInChange:(id)sender{
+    [[NSUserDefaults standardUserDefaults] setBool:autoSignInSwitch.on forKey:@"AutoSignIn"];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
@@ -94,8 +92,11 @@
         }
     }
     
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+        [bigRecordSwitch setHidden: YES];
+    
+    [autoSignInSwitch setOn: [[NSUserDefaults standardUserDefaults] boolForKey:@"AutoSignIn"]];
     [bigRecordSwitch setOn: [[NSUserDefaults standardUserDefaults] boolForKey:@"BigRecordButton"]];
-    [timerHoursSwitch setOn: [[NSUserDefaults standardUserDefaults] boolForKey:@"TimerHours"]];     
 }
 
 - (IBAction)done:(id)sender{
@@ -104,6 +105,20 @@
 
 - (void)viewDidUnload{
     [super viewDidUnload];
+}
+
+- (NSUInteger)supportedInterfaceOrientations{
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+        return UIInterfaceOrientationMaskPortrait;
+    else
+        return UIInterfaceOrientationMaskLandscape;
+}
+
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation{
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+        return UIInterfaceOrientationPortrait;
+    else
+        return UIInterfaceOrientationLandscapeLeft;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation{

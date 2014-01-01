@@ -23,11 +23,11 @@
 }
 
 @property (nonatomic, retain) IBOutlet UITableView *settings;
+@property (nonatomic, retain) IBOutlet UISwitch *autoSignInSwitch;
 @property (nonatomic, retain) IBOutlet UISwitch *bigRecordSwitch;
-@property (nonatomic, retain) IBOutlet UISwitch *timerHoursSwitch;
 
+- (IBAction)autoSignInChange:(id)sender;
 - (IBAction)bigRecordChange:(id)sender;
-- (IBAction)timerHoursChange:(id)sender;
 - (IBAction)done:(id)sender;
 
 @end

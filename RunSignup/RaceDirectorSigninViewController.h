@@ -18,6 +18,7 @@
 
 #import <UIKit/UIKit.h>
 #import "RoundedLoadingIndicator.h"
+#import "KeychainItemWrapper.h"
 
 @class MainMenuViewController;
 
@@ -31,6 +32,8 @@
     UILabel *passLabel;
     
     UISwitch *rememberSwitch;
+    
+    KeychainItemWrapper *keychain;
     
     MainMenuViewController *delegate;
     

@@ -19,6 +19,7 @@
 #import "RaceDirectorSigninViewController.h"
 #import "MainMenuViewController.h"
 #import "RSUModel.h"
+#import "KeychainItemWrapper.h"
 
 @implementation RaceDirectorSigninViewController
 @synthesize delegate;
@@ -35,6 +36,8 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
+        keychain = [[KeychainItemWrapper alloc] initWithIdentifier:@"RSULogin" accessGroup:nil];
+        
         if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
             self.rli = [[RoundedLoadingIndicator alloc] initWithXLocation:80 YLocation:100];
         else
@@ -67,10 +70,15 @@
     [signInButton setBackgroundImage:stretchedBlueButtonTap forState:UIControlStateHighlighted];
     
     // Set email field to have keyboard open on load
-    if([[NSUserDefaults standardUserDefaults] objectForKey:@"RememberEmail"] != nil){
-        [emailField setText:[[NSUserDefaults standardUserDefaults] objectForKey:@"RememberEmail"]];
+    if([[NSUserDefaults standardUserDefaults] objectForKey:@"RememberMe"] != nil){
+        [emailField setText: [keychain objectForKey: kSecAttrAccount]];
+        [passField setText: [keychain objectForKey: kSecValueData]];
         [rememberSwitch setOn:YES];
         [passField becomeFirstResponder];
+        
+        if([[NSUserDefaults standardUserDefaults] boolForKey:@"AutoSignIn"]){
+            [self performSelector:@selector(signIn:) withObject:nil afterDelay:0.1f];
+        }
     }else{
         [emailField becomeFirstResponder];
     }
@@ -97,14 +105,16 @@
                 if(didSucceed == RSUSuccess){
                     [rli fadeOut];
                     
-                    if([[NSUserDefaults standardUserDefaults] objectForKey:@"RememberEmail"] == nil){
+                    if([[NSUserDefaults standardUserDefaults] objectForKey:@"RememberMe"] == nil){
                         if([rememberSwitch isOn]){
-                            [[NSUserDefaults standardUserDefaults] setObject:[emailField text] forKey:@"RememberEmail"];
+                            [keychain setObject:[emailField text] forKey:kSecAttrAccount];
+                            [keychain setObject:[passField text] forKey:kSecValueData];
+                            [[NSUserDefaults standardUserDefaults] setObject:@"Yes" forKey:@"RememberMe"];
                             [[NSUserDefaults standardUserDefaults] synchronize];
                         }
                     }else{
                         if(![rememberSwitch isOn]){
-                            [[NSUserDefaults standardUserDefaults] setObject:nil forKey:@"RememberEmail"];
+                            [[NSUserDefaults standardUserDefaults] setObject:nil forKey:@"RememberMe"];
                             [[NSUserDefaults standardUserDefaults] synchronize];
                         }
                     }
@@ -136,6 +146,20 @@
 
 - (IBAction)cancel:(id)sender{
     [self dismissModalViewControllerAnimated:YES];
+}
+
+- (NSUInteger)supportedInterfaceOrientations{
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+        return UIInterfaceOrientationMaskPortrait;
+    else
+        return UIInterfaceOrientationMaskLandscape;
+}
+
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation{
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+        return UIInterfaceOrientationPortrait;
+    else
+        return UIInterfaceOrientationLandscapeLeft;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation{

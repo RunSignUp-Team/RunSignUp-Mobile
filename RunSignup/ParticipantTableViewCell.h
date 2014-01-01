@@ -35,6 +35,7 @@
     UIView *d4;
     UIView *d5;
     UIView *d6;
+    UIView *d7;
 }
 
 @property (nonatomic, retain) UILabel *firstNameLabel;

@@ -19,7 +19,7 @@
 #import <UIKit/UIKit.h>
 #import "RSUModel.h"
 
-@interface MainMenuViewController : UIViewController <UIActionSheetDelegate>{
+@interface MainMenuViewController : UIViewController <UIActionSheetDelegate, UIAlertViewDelegate>{
     UIButton *timerButton;
     UIButton *signInButton;
     UIButton *offlineButton;

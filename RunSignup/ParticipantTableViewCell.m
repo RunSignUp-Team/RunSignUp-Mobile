@@ -30,7 +30,6 @@
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if(self){
-        
         if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
             self.firstNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(8, 4, 90, 36)];
             [firstNameLabel setAdjustsFontSizeToFitWidth: YES];
@@ -80,6 +79,7 @@
             d4 = [[UIView alloc] initWithFrame: CGRectMake(290, 0, 1, 44)];
             d5 = [[UIView alloc] initWithFrame: CGRectMake(328, 0, 1, 44)];
             d6 = [[UIView alloc] initWithFrame: CGRectMake(444, 0, 1, 44)];
+            d7 = [[UIView alloc] initWithFrame: CGRectMake(-100, 43, 668, 1)];
         }else{
             self.firstNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(8, 4, 255, 36)];
             [firstNameLabel setAdjustsFontSizeToFitWidth: YES];
@@ -129,14 +129,16 @@
             d4 = [[UIView alloc] initWithFrame: CGRectMake(638, 0, 1, 44)];
             d5 = [[UIView alloc] initWithFrame: CGRectMake(676, 0, 1, 44)];
             d6 = [[UIView alloc] initWithFrame: CGRectMake(918, 0, 1, 44)];
+            d7 = [[UIView alloc] initWithFrame: CGRectMake(-100, 43, 1124, 1)];
         }
         
         [d1 setBackgroundColor: [UIColor colorWithWhite:0.878f alpha:1.0f]]; // Grabbed from screenshot of table divider
-        [d2 setBackgroundColor: [UIColor colorWithWhite:0.878f alpha:1.0f]];
-        [d3 setBackgroundColor: [UIColor colorWithWhite:0.878f alpha:1.0f]];
-        [d4 setBackgroundColor: [UIColor colorWithWhite:0.878f alpha:1.0f]];
-        [d5 setBackgroundColor: [UIColor colorWithWhite:0.878f alpha:1.0f]];
-        [d6 setBackgroundColor: [UIColor colorWithWhite:0.878f alpha:1.0f]];
+        [d2 setBackgroundColor: [d1 backgroundColor]];
+        [d3 setBackgroundColor: [d1 backgroundColor]];
+        [d4 setBackgroundColor: [d1 backgroundColor]];
+        [d5 setBackgroundColor: [d1 backgroundColor]];
+        [d6 setBackgroundColor: [d1 backgroundColor]];
+        [d7 setBackgroundColor: [d1 backgroundColor]];
         
         [firstNameLabel setTextAlignment: UITextAlignmentLeft];
         [lastNameLabel setTextAlignment: UITextAlignmentLeft];
@@ -146,12 +148,17 @@
         [cityLabel setTextAlignment: UITextAlignmentLeft];
         [stateLabel setTextAlignment: UITextAlignmentCenter];
         
+        UIImageView *editView = [[UIImageView alloc] initWithImage: [UIImage imageNamed:@"EditIcon.png"]];
+        [editView setFrame: CGRectMake(-35, 10, 25, 25)];
+        [self.contentView addSubview: editView];
+        
         [self.contentView addSubview: d1];
         [self.contentView addSubview: d2];
         [self.contentView addSubview: d3];
         [self.contentView addSubview: d4];
         [self.contentView addSubview: d5];
         [self.contentView addSubview: d6];
+        [self.contentView addSubview: d7];
         
     }
     return self;
@@ -213,6 +220,13 @@
         frame.size.height = 22;
         frame.origin.y = 0;
         [d6 setFrame: frame];
+        [d7 setHidden: YES];
+        
+        // Hide the edit icon
+        for(UIView *view in self.subviews){
+            if([view isKindOfClass: [UIImageView class]])
+                [view setHidden: YES];
+        }
         
         [firstNameLabel setTextAlignment: UITextAlignmentCenter];
         [lastNameLabel setTextAlignment: UITextAlignmentCenter];

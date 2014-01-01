@@ -29,6 +29,7 @@
 #import "AppDelegate.h"
 #import "RSUModel.h"
 #import <QuartzCore/QuartzCore.h>
+#import "ResultsViewController.h"
 
 @implementation MainMenuViewController
 @synthesize timerButton;
@@ -183,25 +184,35 @@
 }
 
 - (IBAction)other:(id)sender{
-    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Other" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"View Results Online", /*@"Manage Participants",*/ @"Delete All Data and Results", nil];
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Other" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"View Race Results", @"Manage Participants", @"Delete All Data and Results", nil];
     [actionSheet showInView: self.view];
     [actionSheet release];
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex{
     if(buttonIndex == 0){
-        NSString *urlString = [NSString stringWithFormat:@"https://runsignup.com/Race/Results/?raceId=%@&eventId=%@", raceDirectorRaceID, raceDirectorEventID];
-        [[UIApplication sharedApplication] openURL: [NSURL URLWithString: urlString]];
-    /*else if(buttonIndex == 1){
+        ResultsViewController *resultsViewController = [[ResultsViewController alloc] initWithNibName:@"ResultsViewController" bundle:nil];
+        
+        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController: resultsViewController];
+        [self presentModalViewController:navController animated:YES];
+        
+        [resultsViewController release];
+    }else if(buttonIndex == 1){
         ParticipantViewController *participantViewController = [[ParticipantViewController alloc] initWithNibName:@"ParticipantViewController" bundle:nil];
-        [participantViewController setRaceName: raceDirectorRaceName];
-        [participantViewController setEventName: raceDirectorEventName];
         
         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController: participantViewController];
         [self presentModalViewController:navController animated:YES];
         
         [participantViewController release];
-    */}else if(buttonIndex == 1){ // CHANGE TO TWO TWO TWO TWO TWO DONT FORGET BILLY PLEASE DONT FORGET CHANGE TO TWO! 0 1 2
+    }else if(buttonIndex == 2){ 
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Delete Results?" message:@"Are you sure you wish to delete all data and results associated with this race? This action cannot be undone." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Yes, I'm sure", nil];
+        [alert show];
+        [alert release];
+    }
+}
+
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex{
+    if(buttonIndex == 1){
         void (^response)(RSUConnectionResponse) = ^(RSUConnectionResponse didSucceed){
             if(didSucceed == RSUNoConnection){
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignUp. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
@@ -233,7 +244,6 @@
         [popoverController presentPopoverFromRect:[settingsButton frame] inView:self.view permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
     }
     [settingsViewController release];
-    
 }
 
 - (IBAction)showArchive:(id)sender{
@@ -327,6 +337,8 @@
     self.raceDirectorEventName = eventName;
     self.raceDirectorEventID = eventID;
     
+    NSLog(@"RaceID: %@, EventID: %@", raceID, eventID);
+    
     [timingFor setHidden: NO];
     [raceLabel setText: [NSString stringWithFormat:@" %@ - %@", raceDirectorRaceName, raceDirectorEventName]];
     [timerButton setHidden: NO];
@@ -391,6 +403,20 @@
 
 - (void)viewDidUnload{
     [super viewDidUnload];
+}
+
+- (NSUInteger)supportedInterfaceOrientations{
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+        return UIInterfaceOrientationMaskPortrait;
+    else
+        return UIInterfaceOrientationMaskLandscape;
+}
+
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation{
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+        return UIInterfaceOrientationPortrait;
+    else
+        return UIInterfaceOrientationLandscapeLeft;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation{

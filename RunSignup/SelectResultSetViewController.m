@@ -156,16 +156,6 @@
                 if([delegate respondsToSelector:@selector(didSelectRace:withID:withEventName:withEventID:)]){
                     [[RSUModel sharedModel] setCurrentResultSetID: [[resultSetList objectAtIndex: resultSetIndex.row] objectForKey:@"ResultSetID"]];
                     
-                    /*void (^response)(RSUConnectionResponse) = ^(RSUConnectionResponse didSucceed){
-                        if(didSucceed == RSUNoConnection){
-                            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"There was a problem establishing a connection with RunSignup. Please try again." delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil];
-                            [alert show];
-                            [alert release];
-                        }
-                    };
-                    
-                    [[RSUModel sharedModel] deleteResults:RSUClearResults response:response];*/
-                    
                     [delegate didSelectRace:raceName withID:raceID withEventName:eventName withEventID:eventID];
                     [table deselectRowAtIndexPath:resultSetIndex animated:NO];
                     
@@ -236,6 +226,20 @@
 
 - (void)goBack{
     [self.navigationController popViewControllerAnimated: YES];
+}
+
+- (NSUInteger)supportedInterfaceOrientations{
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+        return UIInterfaceOrientationMaskPortrait;
+    else
+        return UIInterfaceOrientationMaskLandscape;
+}
+
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation{
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+        return UIInterfaceOrientationPortrait;
+    else
+        return UIInterfaceOrientationLandscapeLeft;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation{

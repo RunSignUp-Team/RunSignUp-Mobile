@@ -29,6 +29,9 @@
     UITextField *cityField;
     UITextField *stateField;
     
+    NSDictionary *editDictionary;
+    NSIndexPath *editPath;
+    
     BOOL creating;
     
     RoundedLoadingIndicator *rli;
@@ -44,6 +47,8 @@
 @property (nonatomic, retain) IBOutlet UITextField *ageField;
 @property (nonatomic, retain) IBOutlet UITextField *cityField;
 @property (nonatomic, retain) IBOutlet UITextField *stateField;
+@property (nonatomic, retain) NSDictionary *editDictionary;
+@property (nonatomic, retain) NSIndexPath *editPath;
 @property (nonatomic, retain) RoundedLoadingIndicator *rli;
 @property (nonatomic, retain) IBOutlet UISegmentedControl *genderControl;
 
